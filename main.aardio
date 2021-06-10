@@ -1,0 +1,35 @@
+import win.ui;
+import raw;
+import sys;
+/*DSG{{*/
+mainForm = win.form(text="PLin上位机";right=959;bottom=591)
+mainForm.add(
+btnFlash={cls="button";text="刷新";left=299;top=31;right=386;bottom=60;z=1}
+)
+/*}}*/
+
+mainForm.show();
+
+var dllhandle = raw.loadDll("PLinApi.dll")
+//win.msgbox(dllhandle,"句柄",0)
+func = dllhandle.api("LIN_GetAvailableHardware","int ( ADDR, WORD, ADDR)")
+var pHWbuf = raw.buffer(20,2)
+var HWCount = raw.buffer(1)
+//func(pHWbuf,0,HWCount)
+ret= dllhandle.LIN_GetAvailableHardware(0,0,HWCount)
+PLinHwbuf={
+WORD buf[2]
+}
+
+ret= dllhandle.LIN_GetAvailableHardware(PLinHwbuf,20,HWCount)
+win.msgbox(
+"ret="++ret++"
+pHWbuf[1]="++PLinHwbuf.buf[1]++"
+pHWbuf[2]="++PLinHwbuf.buf[2]++"
+HWCount="++HWCount[1],"句柄",0)
+
+mainForm.btnFlash.oncommand = function(id,event){
+	
+}
+
+return win.loopMessage();
