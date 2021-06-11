@@ -1,34 +1,33 @@
 import win.ui;
 import raw;
 import sys;
+import PLin;
 /*DSG{{*/
-mainForm = win.form(text="PLin上位机";right=959;bottom=591)
+mainForm = win.form(text="PLin上位机";right=355;bottom=158;border="dialog frame";max=false)
 mainForm.add(
-btnFlash={cls="button";text="刷新";left=299;top=31;right=386;bottom=60;z=1}
+btnConnect={cls="button";text="连接";left=253;top=86;right=337;bottom=117;z=5};
+btnFlash={cls="button";text="刷新";left=252;top=48;right=337;bottom=78;z=1};
+cbbSelDev={cls="combobox";left=78;top=49;right=240;bottom=75;edge=1;font=LOGFONT(h=-16);items={"PCAN/PLIN"};mode="dropdown";z=3};
+cbbSelPLin={cls="combobox";left=18;top=90;right=240;bottom=116;edge=1;font=LOGFONT(h=-16);items={};mode="dropdown";z=2};
+static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=4}
 )
 /*}}*/
 
 mainForm.show();
 
-var dllhandle = raw.loadDll("PLinApi.dll")
-//win.msgbox(dllhandle,"句柄",0)
-func = dllhandle.api("LIN_GetAvailableHardware","int ( ADDR, WORD, ADDR)")
-var pHWbuf = raw.buffer(20,2)
-var HWCount = raw.buffer(1)
-//func(pHWbuf,0,HWCount)
-ret= dllhandle.LIN_GetAvailableHardware(0,0,HWCount)
-PLinHwbuf={
-WORD buf[2]
-}
-
-ret= dllhandle.LIN_GetAvailableHardware(PLinHwbuf,20,HWCount)
-win.msgbox(
-"ret="++ret++"
-pHWbuf[1]="++PLinHwbuf.buf[1]++"
-pHWbuf[2]="++PLinHwbuf.buf[2]++"
-HWCount="++HWCount[1],"句柄",0)
 
 mainForm.btnFlash.oncommand = function(id,event){
+    mainForm.cbbSelPLin.clear()
+	PLinHw = PLin.PLINHW()
+	PLinHw.LoadDll()
+	PLinHw.FlashHw()
+	AvailableHW = PLinHw.GetAvailableHW()
+	for(i=1;#AvailableHW;1){
+		mainForm.cbbSelPLin.add(AvailableHW[i].name)
+	}
+	if(#AvailableHW == 0)
+	mainForm.cbbSelPLin.add("未找到硬件")
+	mainForm.cbbSelPLin.selIndex = 1
 	
 }
 
