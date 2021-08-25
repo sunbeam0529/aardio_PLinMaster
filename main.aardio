@@ -3,32 +3,80 @@ import raw;
 import sys;
 import PLin;
 /*DSG{{*/
-mainForm = win.form(text="PLin上位机";right=355;bottom=158;border="dialog frame";max=false)
+mainForm = win.form(text="PLin上位机";right=799;bottom=599;border="dialog frame";max=false)
 mainForm.add(
-btnConnect={cls="button";text="连接";left=253;top=86;right=337;bottom=117;z=5};
-btnFlash={cls="button";text="刷新";left=252;top=48;right=337;bottom=78;z=1};
-cbbSelDev={cls="combobox";left=78;top=49;right=240;bottom=75;edge=1;font=LOGFONT(h=-16);items={"PCAN/PLIN"};mode="dropdown";z=3};
-cbbSelPLin={cls="combobox";left=18;top=90;right=240;bottom=116;edge=1;font=LOGFONT(h=-16);items={};mode="dropdown";z=2};
-static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=4}
+btnConnect={cls="button";text="连接";left=607;top=48;right=691;bottom=79;z=6};
+btnDisconnect={cls="button";text="断开";left=696;top=49;right=780;bottom=80;z=9};
+btnFlash={cls="button";text="刷新";left=252;top=48;right=337;bottom=78;z=2};
+cbbSelDev={cls="combobox";left=78;top=49;right=240;bottom=75;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
+cbbSelPLin={cls="combobox";left=371;top=51;right=593;bottom=77;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=3};
+edit={cls="edit";left=16;top=106;right=790;bottom=158;edge=1;multiline=1;z=8};
+groupbox={cls="groupbox";text="硬件信息";left=16;top=14;right=790;bottom=92;edge=1;z=1};
+static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=5};
+tab={cls="tab";left=16;top=165;right=790;bottom=587;edge=1;z=7}
 )
 /*}}*/
 
 mainForm.show();
+mainForm.btnConnect.disabled = true
+PLinHw = PLin.PLINHW()
+if(PLinHw.LoadDll() == 0){
+	mainForm.cbbSelDev.add("PCAN/PLIN")
+	mainForm.cbbSelDev.selIndex = 1
+	
+}
+else {
+	mainForm.cbbSelDev.add("加载驱动失败")
+	win.msgboxErr("dll加载失败，请安装PCAN驱动","错误")
+}
 
 
 mainForm.btnFlash.oncommand = function(id,event){
     mainForm.cbbSelPLin.clear()
-	PLinHw = PLin.PLINHW()
-	PLinHw.LoadDll()
+    if(mainForm.cbbSelDev.selText == "加载驱动失败"){
+    	return ; 
+    }
 	PLinHw.FlashHw()
 	AvailableHW = PLinHw.GetAvailableHW()
 	for(i=1;#AvailableHW;1){
 		mainForm.cbbSelPLin.add(AvailableHW[i].name)
 	}
-	if(#AvailableHW == 0)
-	mainForm.cbbSelPLin.add("未找到硬件")
+	if(#AvailableHW == 0){
+		mainForm.cbbSelPLin.add("未找到硬件")
+		mainForm.btnConnect.disabled = true
+	}
+	else {
+		mainForm.btnConnect.disabled = false
+	}
+		
 	mainForm.cbbSelPLin.selIndex = 1
+}
+
+mainForm.btnConnect.oncommand = function(id,event){
+	//mainForm.show(false)
+	
+	//win.loadForm("\界面\通用\general.aardio")//.doModal()
+	//publish("硬件信息",AvailableHW[1])
+	//mainForm.show(true)
+	ret = PLinHw.Connect(1,19200)
+	if(ret == 0)
+	{
+		mainForm.edit.appendText('\r\n连接成功');
+		mainForm.btnConnect.disabled = true
+		mainForm.btnDisconnect.disabled = false
+	}
+	else {
+		mainForm.edit.appendText('\r\n连接失败，错误代码'++ret)
+	}
 	
 }
+
+mainForm.btnDisconnect.oncommand = function(id,event){
+	PLinHw.Disconnect()
+	mainForm.btnConnect.disabled = false
+	mainForm.btnDisconnect.disabled = true
+	mainForm.edit.appendText('\r\n断开连接');
+}
+
 
 return win.loopMessage();

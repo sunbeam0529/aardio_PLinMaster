@@ -9,6 +9,16 @@ namespace PLin{
     	/*对象的所有成员必须用分号分隔*/
     }
     
+    CalculatePID = function(ID){
+		P0 = (ID & 0x01) ^ ((ID & 0x02) >> 1) ^ ((ID & 0x04) >> 2) ^ ((ID & 0x10) >> 4);
+		P1 = (((ID & 0x02) >> 1) ^ ((ID & 0x08) >> 3) ^ ((ID & 0x10) >> 4) ^ ((ID & 0x20) >> 5));
+		P1 = P1 ^ 0x01;
+		ID = ID | (P0 << 6) | (P1 << 7);
+
+		return ID;
+    }
+    
+    
     
     class PLINHW{
        
@@ -18,7 +28,10 @@ namespace PLin{
     	type=me;
     	/*对象的所有成员必须用分号分隔*/
     	DllHandle = null;
-    	
+    	HWconnected = null;
+    	Client = null;
+    	//AvailableHW = null;
+    	//AvailableHW[1] = {int hLINHW;int devnum;int channel;string name}
     	FlashHw = function (){
         	if(DllHandle = null){
             	//DLL为空，返回
@@ -79,6 +92,53 @@ namespace PLin{
     		
     		return 0; 
     	}
+    	
+    	Connect = function(index,burdrate){
+    		if(#AvailableHW == 0)
+    		{
+    			return 1;
+    		}
+    		var m_hClient = ..raw.buffer(1)
+    		
+    		DllHandle.LIN_RegisterClient("PLIN",null,m_hClient);
+    		Client = m_hClient[1]
+    		HWtemp = AvailableHW[index].hLINHW
+    		//return  HWtemp; 
+    		ret = DllHandle.LIN_ConnectClient(Client, HWtemp);
+    		if(ret != 0)
+    		{
+    			//return 2; 
+    		}
+    		HWconnected = HWtemp
+    		DllHandle.LIN_InitializeHardware(Client, HWtemp, 2, burdrate);
+    		
+    		return 0; 
+    	}
+    	
+    	Disconnect = function(){
+    		if(HWconnected != null && Client != null)
+    		{
+    			DllHandle.LIN_DisconnectClient(Client, HWconnected);
+    			DllHandle.LIN_RemoveClient(Client);
+    			HWconnected = null
+    			Client = null
+    		}
+    	}
+    	
+    	isConnected = function(){
+    		if(HWconnected != null)
+    		{
+    			return true; 
+    		}
+    		else 
+    		{
+    			return false; 
+    		}
+    		
+    	}
+    	
+    	
+    	
     
     }
     

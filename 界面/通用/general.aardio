@@ -1,0 +1,23 @@
+import win.ui;
+/*DSG{{*/
+var winform_general = win.form(text="通用测试界面";right=799;bottom=599;border="dialog frame";mode="popup")
+winform_general.add(
+btnReturn={cls="button";text="返回";left=458;top=38;right=590;bottom=65;z=4};
+edit={cls="edit";text="Edit";left=43;top=37;right=349;bottom=65;edge=1;readonly=1;z=3};
+groupbox={cls="groupbox";text="硬件信息";left=35;top=18;right=767;bottom=71;edge=1;z=1};
+tab={cls="tab";left=37;top=76;right=761;bottom=563;edge=1;z=2}
+)
+/*}}*/
+
+winform_general.show();
+subscribe("硬件信息",function(nowHW){
+    winform_general.edit.text = nowHW.name	
+} )
+
+winform_general.btnReturn.oncommand = function(id,event){
+	//winform_general.show(false)
+	winform_general.endModal()
+}
+
+win.loopMessage();
+return winform_general;
