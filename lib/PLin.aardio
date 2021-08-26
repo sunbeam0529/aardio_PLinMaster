@@ -9,6 +9,22 @@ namespace PLin{
     	/*对象的所有成员必须用分号分隔*/
     }
     
+    class PLINMSG{
+    	ctor(  ){
+    		//this.FrameId = PLin.CalculatePID(id)
+    		//this.Dir = dir
+    	};
+    	type=me;
+    	/*对象的所有成员必须用分号分隔*/
+    	byte FrameId;
+    	byte Len;
+    	byte Dir;
+    	byte ChecksumType;
+    	byte Data[8];
+    	byte Checksum;
+    }
+    
+    
     CalculatePID = function(ID){
 		P0 = (ID & 0x01) ^ ((ID & 0x02) >> 1) ^ ((ID & 0x04) >> 2) ^ ((ID & 0x10) >> 4);
 		P1 = (((ID & 0x02) >> 1) ^ ((ID & 0x08) >> 3) ^ ((ID & 0x10) >> 4) ^ ((ID & 0x20) >> 5));
@@ -136,6 +152,21 @@ namespace PLin{
     		}
     		
     	}
+    	
+    	TransmitID = function(id){
+    		if(HWconnected == null)
+    		{
+    			return;
+    		}
+    		msgtemp = ..raw.buffer(13)
+    		msgtemp[1] = id
+    		DllHandle.LIN_GetPID(msgtemp)
+    		msgtemp[2] = 8
+    		msgtemp[3] = 3
+    		msgtemp[4] = 2
+    		DllHandle.LIN_Write(Client,HWconnected,msgtemp)
+    	}
+    	
     	
     	
     	

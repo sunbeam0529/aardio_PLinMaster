@@ -2,6 +2,9 @@ import win.ui;
 import raw;
 import sys;
 import PLin;
+import debug;
+import debug.log;
+import console;
 /*DSG{{*/
 mainForm = win.form(text="PLin上位机";right=799;bottom=599;border="dialog frame";max=false)
 mainForm.add(
@@ -10,12 +13,28 @@ btnDisconnect={cls="button";text="断开";left=696;top=49;right=780;bottom=80;z=
 btnFlash={cls="button";text="刷新";left=252;top=48;right=337;bottom=78;z=2};
 cbbSelDev={cls="combobox";left=78;top=49;right=240;bottom=75;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
 cbbSelPLin={cls="combobox";left=371;top=51;right=593;bottom=77;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=3};
-edit={cls="edit";left=16;top=106;right=790;bottom=158;edge=1;multiline=1;z=8};
+edit={cls="edit";left=24;top=112;right=784;bottom=198;edge=1;multiline=1;z=8};
 groupbox={cls="groupbox";text="硬件信息";left=16;top=14;right=790;bottom=92;edge=1;z=1};
 static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=5};
-tab={cls="tab";left=16;top=165;right=790;bottom=587;edge=1;z=7}
+tab={cls="tab";left=24;top=208;right=774;bottom=583;edge=1;z=7}
 )
 /*}}*/
+
+/* ------------------------------------------ */
+//debug.log.setPath("/.config/log.txt");
+//debug.log.checkSize(0x20000); //设置日志大小
+//debug.log.print("程序开始..."); 
+/* ------------------------------------------ */
+
+global.onError = function( err,over ){ 
+    if(!over){
+        import debug;
+        var stack = debug.traceback(,"调用栈",3);//获取调用栈信息,此函数当前调用级别为1,调用onError的默认错误处理程序调用级别为2,真正发生错误的代码调用级别为3
+        debug.log.write(stack,'\n',err)
+    }
+    
+    if( _STUDIO_INVOKED ) return err; //在开发环境中仍然返回错误信息,不返回字符串类型的错误信息则不会显示
+}
 
 mainForm.show();
 mainForm.btnConnect.disabled = true
@@ -30,12 +49,16 @@ else {
 	win.msgboxErr("dll加载失败，请安装PCAN驱动","错误")
 }
 
+mainForm.tab.loadForm("\界面\项目\C62X.aardio");
+//frmChild.show();
+
 
 mainForm.btnFlash.oncommand = function(id,event){
     mainForm.cbbSelPLin.clear()
     if(mainForm.cbbSelDev.selText == "加载驱动失败"){
     	return ; 
     }
+    //debug.log.print("点击刷新硬件"); 
 	PLinHw.FlashHw()
 	AvailableHW = PLinHw.GetAvailableHW()
 	for(i=1;#AvailableHW;1){
@@ -68,6 +91,8 @@ mainForm.btnConnect.oncommand = function(id,event){
 	else {
 		mainForm.edit.appendText('\r\n连接失败，错误代码'++ret)
 	}
+	//publish("设备句柄",PLinHw)
+	publish("消息","已连接")
 	
 }
 

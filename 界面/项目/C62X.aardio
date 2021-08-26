@@ -1,0 +1,87 @@
+import win.ui;
+import PLin;
+import thread.command;
+
+/*DSG{{*/
+var winform = win.form(text="C62X";right=749;bottom=349)
+winform.add(
+btn_StartLIN={cls="button";text="开始";left=40;top=136;right=124;bottom=168;z=5};
+btn_StopLIN={cls="button";text="停止";left=136;top=136;right=224;bottom=170;z=6};
+cb_ID1={cls="checkbox";text="0x25";left=43;top=42;right=135;bottom=70;z=2};
+cb_ID2={cls="checkbox";text="0x01";left=43;top=67;right=139;bottom=98;z=3};
+cb_ID3={cls="checkbox";text="0x02";left=43;top=93;right=145;bottom=117;z=4};
+edit={cls="edit";text="加载成功";left=480;top=16;right=736;bottom=328;edge=1;multiline=1;z=7};
+groupbox={cls="groupbox";text="报文";left=24;top=16;right=240;bottom=216;edge=1;z=1}
+)
+/*}}*/
+
+//winform.show();
+subscribe("消息",function(str){
+    AvailableHW = PLinHw.GetAvailableHW()
+    winform.edit.appendText('\r\n'++AvailableHW[1].name++str)
+} )
+
+thread.create_suspended = true //创建线程以前可设置该值,指定线程创建后会暂停,否则直接运行
+
+var listener = thread.command();
+listener.print = function( str ){
+    //winform.edit.print( str ) //将线程传过来的参数追加输出到文本框
+    winform.edit.appendText(str)
+} 
+tx_index=0
+listener.Schedule = function(){
+	if(winform.cb_ID1.checked){
+		PLinHw.TransmitID(0x25)
+		sleep(10)
+	}
+	if(winform.cb_ID2.checked){
+		PLinHw.TransmitID(0x01)
+		sleep(10)
+	}
+	if(winform.cb_ID3.checked){
+		PLinHw.TransmitID(0x02)
+		sleep(10)
+	}
+	if( (winform.cb_ID1||winform.cb_ID2||winform.cb_ID3) == false )
+	{
+		sleep(10)
+	}
+}
+
+
+var thrdHandle = thread.create( 
+	function(listener){
+	
+		import thread.command;
+		while(1){ //这里如果高级点可以用 thread.event来实现信号判断,参考本目录下的定时器范例
+			/*
+			if(winform.cb_ID1.checked == true)
+			{
+				PLinHw.TransmitID(0x25)
+				
+			}*/
+			//winform.edit.appendText('\r\n Tx 0x25')
+			//thread.command.print('\r\n Tx 0x25')
+			listener.print('\r\n Test')
+			listener.Schedule()
+			sleep(100)
+		}
+
+	},listener
+)
+
+winform.btn_StartLIN.oncommand = function(id,event){
+    //线程恢复运行
+	thread.resume(thrdHandle)
+	winform.edit.appendText('\r\n开始线程')
+	
+}
+
+winform.btn_StopLIN.oncommand = function(id,event){
+    //线程暂停运行
+	thread.suspend(thrdHandle)
+	winform.edit.appendText('\r\n结束线程')
+}
+winform.show();
+win.loopMessage();
+return winform;
