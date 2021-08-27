@@ -1,5 +1,20 @@
 ﻿import win
 import raw
+
+class TLINRcvMsg{
+    
+    BYTE Type;                           // Frame type (see LIN Received Message Types)
+    BYTE FrameId;                               // Frame ID (6 bit) + Parity (2 bit)
+    BYTE Length;                                // Frame Length (1..8)
+    BYTE Direction;                    // Frame Direction (see LIN Message Direction Types)
+    BYTE ChecksumType;              // Frame Checksum type (see LIN Message Checksum Types)
+    BYTE Data[8];                               // Data bytes (0..7)
+    BYTE Checksum;                              // Frame Checksum
+    INT  ErrorFlags;                   // Frame error flags (see Error flags for LIN Rcv Msgs)
+    LONG64 TimeStamp;                 // Timestamp in microseconds
+    WORD hHw;
+}
+
 namespace PLin{
     class AVAILABLE_HW{
     	ctor(num){
@@ -24,6 +39,8 @@ namespace PLin{
     	byte Checksum;
     }
     
+    
+
     
     CalculatePID = function(ID){
 		P0 = (ID & 0x01) ^ ((ID & 0x02) >> 1) ^ ((ID & 0x04) >> 2) ^ ((ID & 0x10) >> 4);
@@ -110,6 +127,8 @@ namespace PLin{
     	}
     	
     	Connect = function(index,burdrate){
+    		import console;
+    		import math;
     		if(#AvailableHW == 0)
     		{
     			return 1;
@@ -120,14 +139,26 @@ namespace PLin{
     		Client = m_hClient[1]
     		HWtemp = AvailableHW[index].hLINHW
     		//return  HWtemp; 
-    		ret = DllHandle.LIN_ConnectClient(Client, HWtemp);
+    		LIN_ConnectClient := DllHandle.api("LIN_ConnectClient","INT(BYTE,WORD)")
+    		ret = LIN_ConnectClient(Client, HWtemp);
     		if(ret != 0)
     		{
     			//return 2; 
     		}
     		HWconnected = HWtemp
-    		DllHandle.LIN_InitializeHardware(Client, HWtemp, 2, burdrate);
+    		DllHandle.LIN_InitializeHardware(Client, HWconnected, 2, burdrate);
+    		var filter = 0xFFFFFFFFFFFFFFFF;
+    		//DllHandle.LIN_SetClientFilter(Client,HWconnected,filter)
     		
+    		var size = math.size64(0xFFFFFFFF,0xFFFFFFFF);
+    		
+    		LIN_SetClientFilter := DllHandle.api("LIN_SetClientFilter","INT(BYTE,WORD,LONG64)")
+    		LIN_SetClientFilter(Client,HWconnected,size)
+    		pfilter = ..raw.buffer(20)
+    		//pfilter = 0
+    		LIN_GetClientFilter  := DllHandle.api("LIN_GetClientFilter","INT(BYTE,WORD,PTR)")
+    		ret = LIN_GetClientFilter(Client,HWconnected,pfilter)
+    		//console.dumpJson(pfilter)
     		return 0; 
     	}
     	
@@ -158,13 +189,31 @@ namespace PLin{
     		{
     			return;
     		}
-    		msgtemp = ..raw.buffer(13)
+    		var msgtemp = ..raw.buffer(13)
     		msgtemp[1] = id
     		DllHandle.LIN_GetPID(msgtemp)
     		msgtemp[2] = 8
     		msgtemp[3] = 3
     		msgtemp[4] = 2
     		DllHandle.LIN_Write(Client,HWconnected,msgtemp)
+    	}
+    	
+    	ReadMsg = function(){
+    		import console;
+    		if(HWconnected == null)
+    		{
+    			return;
+    		}
+    		LIN_Read := DllHandle.api("LIN_Read","INT(BYTE,struct& rcvmsg)")
+
+    		var msgread = ..TLINRcvMsg();
+    		var ret = LIN_Read(Client,msgread)
+    		/*
+    		if(ret == 0){
+    			console.dumpJson(msgread)
+    		}
+    		*/
+    		return ret,msgread; 
     	}
     	
     	

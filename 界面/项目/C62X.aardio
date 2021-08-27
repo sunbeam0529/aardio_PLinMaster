@@ -1,17 +1,23 @@
 import win.ui;
 import PLin;
 import thread.command;
-
+import console;
 /*DSG{{*/
 var winform = win.form(text="C62X";right=749;bottom=349)
 winform.add(
 btn_StartLIN={cls="button";text="开始";left=40;top=136;right=124;bottom=168;z=5};
 btn_StopLIN={cls="button";text="停止";left=136;top=136;right=224;bottom=170;z=6};
+button={cls="button";text="清空";left=320;top=136;right=424;bottom=168;z=13};
 cb_ID1={cls="checkbox";text="0x25";left=43;top=42;right=135;bottom=70;z=2};
 cb_ID2={cls="checkbox";text="0x01";left=43;top=67;right=139;bottom=98;z=3};
 cb_ID3={cls="checkbox";text="0x02";left=43;top=93;right=145;bottom=117;z=4};
+ed_lefttimes={cls="edit";text="0";left=336;top=40;right=456;bottom=64;edge=1;multiline=1;num=1;readonly=1;z=9};
+ed_righttimes={cls="edit";text="0";left=336;top=80;right=456;bottom=104;edge=1;multiline=1;num=1;readonly=1;z=12};
 edit={cls="edit";text="加载成功";left=480;top=16;right=736;bottom=328;edge=1;multiline=1;z=7};
-groupbox={cls="groupbox";text="报文";left=24;top=16;right=240;bottom=216;edge=1;z=1}
+groupbox={cls="groupbox";text="报文";left=24;top=16;right=240;bottom=216;edge=1;z=1};
+groupbox2={cls="groupbox";text="测试";left=256;top=16;right=472;bottom=216;edge=1;z=8};
+static={cls="static";text="左次数";left=272;top=40;right=328;bottom=64;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=10};
+static2={cls="static";text="右次数";left=272;top=80;right=328;bottom=104;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=11}
 )
 /*}}*/
 
@@ -23,6 +29,18 @@ subscribe("消息",function(str){
 
 thread.create_suspended = true //创建线程以前可设置该值,指定线程创建后会暂停,否则直接运行
 
+MsgProc = function(Msg){
+	if(Msg.ErrorFlags != 0){
+		//错误处理
+		return;
+	}
+	if(Msg.FrameId == 0x25)
+	{
+		
+	}
+}
+
+
 var listener = thread.command();
 listener.print = function( str ){
     //winform.edit.print( str ) //将线程传过来的参数追加输出到文本框
@@ -30,22 +48,20 @@ listener.print = function( str ){
 } 
 tx_index=0
 listener.Schedule = function(){
-	if(winform.cb_ID1.checked){
-		PLinHw.TransmitID(0x25)
-		sleep(10)
-	}
-	if(winform.cb_ID2.checked){
-		PLinHw.TransmitID(0x01)
-		sleep(10)
-	}
-	if(winform.cb_ID3.checked){
-		PLinHw.TransmitID(0x02)
-		sleep(10)
-	}
-	if( (winform.cb_ID1||winform.cb_ID2||winform.cb_ID3) == false )
+	
+	var ret,msgtemp
+	do{
+		ret,msgtemp = PLinHw.ReadMsg()
+	}while(ret == 0)
+	
+	if(TxTableNum == 0)return;
+	
+	tx_index += 1
+	if(tx_index > TxTableNum)
 	{
-		sleep(10)
+		tx_index=1
 	}
+	PLinHw.TransmitID(TxTable[tx_index])
 }
 
 
@@ -54,17 +70,8 @@ var thrdHandle = thread.create(
 	
 		import thread.command;
 		while(1){ //这里如果高级点可以用 thread.event来实现信号判断,参考本目录下的定时器范例
-			/*
-			if(winform.cb_ID1.checked == true)
-			{
-				PLinHw.TransmitID(0x25)
-				
-			}*/
-			//winform.edit.appendText('\r\n Tx 0x25')
-			//thread.command.print('\r\n Tx 0x25')
-			listener.print('\r\n Test')
 			listener.Schedule()
-			sleep(100)
+			sleep(10)
 		}
 
 	},listener
@@ -74,14 +81,39 @@ winform.btn_StartLIN.oncommand = function(id,event){
     //线程恢复运行
 	thread.resume(thrdHandle)
 	winform.edit.appendText('\r\n开始线程')
-	
+	TxTable = {}
+	TxTableNum = 0
+	if(winform.cb_ID1.checked){
+		TxTableNum += 1
+		TxTable[TxTableNum] = (0x25)
+	}
+	if(winform.cb_ID2.checked){
+		TxTableNum += 1
+		TxTable[TxTableNum] = (0x01)
+	}
+	if(winform.cb_ID3.checked){
+		TxTableNum += 1
+		TxTable[TxTableNum] = (0x02)
+	}
+	winform.cb_ID1.disabled = true
+	winform.cb_ID2.disabled = true
+	winform.cb_ID3.disabled = true
 }
 
 winform.btn_StopLIN.oncommand = function(id,event){
     //线程暂停运行
 	thread.suspend(thrdHandle)
 	winform.edit.appendText('\r\n结束线程')
+	winform.cb_ID1.disabled = false
+	winform.cb_ID2.disabled = false
+	winform.cb_ID3.disabled = false
 }
+
+winform.button.oncommand = function(id,event){
+	winform.ed_righttimes.text = 0
+	winform.ed_lefttimes.text = 0
+}
+
 winform.show();
 win.loopMessage();
 return winform;
