@@ -129,12 +129,12 @@ namespace PLin{
     	Connect = function(index,burdrate){
     		import console;
     		import math;
-    		if(#AvailableHW == 0)
+    		if(#AvailableHW == 0 || index > #AvailableHW)
     		{
     			return 1;
     		}
     		var m_hClient = ..raw.buffer(1)
-    		
+    		//console.dumpJson(index)
     		DllHandle.LIN_RegisterClient("PLIN",null,m_hClient);
     		Client = m_hClient[1]
     		HWtemp = AvailableHW[index].hLINHW
@@ -214,6 +214,10 @@ namespace PLin{
     		}
     		*/
     		return ret,msgread; 
+    	}
+    	
+    	GetConnectedName = function(){
+    		return AvailableHW[HWconnected].name; 
     	}
     	
     	

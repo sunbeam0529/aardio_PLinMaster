@@ -1,107 +1,103 @@
 import win.ui;
+import win.util.tray;
 import raw;
 import sys;
 import PLin;
 import debug;
 import debug.log;
 import console;
+import fsys.version;
 /*DSG{{*/
 mainForm = win.form(text="PLin上位机";right=799;bottom=599;border="dialog frame";max=false)
 mainForm.add(
-btnConnect={cls="button";text="连接";left=607;top=48;right=691;bottom=79;z=6};
-btnDisconnect={cls="button";text="断开";left=696;top=49;right=780;bottom=80;z=9};
+btnConnect={cls="button";text="连接";left=608;top=48;right=692;bottom=79;z=6};
+btnDisconnect={cls="button";text="断开";left=696;top=48;right=780;bottom=79;z=8};
 btnFlash={cls="button";text="刷新";left=252;top=48;right=337;bottom=78;z=2};
-cbbSelDev={cls="combobox";left=78;top=49;right=240;bottom=75;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
-cbbSelPLin={cls="combobox";left=371;top=51;right=593;bottom=77;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=3};
-edit={cls="edit";left=24;top=112;right=784;bottom=198;edge=1;multiline=1;z=8};
+cbbSelChannel={cls="combobox";left=368;top=48;right=590;bottom=74;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=3};
+cbbSelDev={cls="combobox";left=80;top=48;right=242;bottom=74;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
 groupbox={cls="groupbox";text="硬件信息";left=16;top=14;right=790;bottom=92;edge=1;z=1};
+st_Version={cls="static";text="Version";left=688;top=584;right=744;bottom=600;transparent=1;z=9};
 static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=5};
-tab={cls="tab";left=24;top=208;right=774;bottom=583;edge=1;z=7}
+tab={cls="tab";left=24;top=104;right=774;bottom=579;edge=1;z=7}
 )
 /*}}*/
 
-/* ------------------------------------------ */
-//debug.log.setPath("/.config/log.txt");
-//debug.log.checkSize(0x20000); //设置日志大小
-//debug.log.print("程序开始..."); 
-/* ------------------------------------------ */
-
-global.onError = function( err,over ){ 
-    if(!over){
-        import debug;
-        var stack = debug.traceback(,"调用栈",3);//获取调用栈信息,此函数当前调用级别为1,调用onError的默认错误处理程序调用级别为2,真正发生错误的代码调用级别为3
-        debug.log.write(stack,'\n',err)
-    }
-    
-    if( _STUDIO_INVOKED ) return err; //在开发环境中仍然返回错误信息,不返回字符串类型的错误信息则不会显示
-}
-
 mainForm.show();
 mainForm.btnConnect.disabled = true
+mainForm.btnDisconnect.disabled = true
 PLinHw = PLin.PLINHW()
 if(PLinHw.LoadDll() == 0){
 	mainForm.cbbSelDev.add("PCAN/PLIN")
 	mainForm.cbbSelDev.selIndex = 1
-	
 }
 else {
 	mainForm.cbbSelDev.add("加载驱动失败")
 	win.msgboxErr("dll加载失败，请安装PCAN驱动","错误")
 }
 
+
+try{
+	
+	var version = fsys.version.getInfo(io._exepath).productVersion
+	mainForm.st_Version.text = 'v'++tostring(version)
+
+}
+
+
+
+
 mainForm.tab.loadForm("\界面\项目\C62X.aardio");
-//frmChild.show();
 
 
 mainForm.btnFlash.oncommand = function(id,event){
-    mainForm.cbbSelPLin.clear()
+    mainForm.cbbSelChannel.clear()
     if(mainForm.cbbSelDev.selText == "加载驱动失败"){
     	return ; 
     }
-    //debug.log.print("点击刷新硬件"); 
 	PLinHw.FlashHw()
 	AvailableHW = PLinHw.GetAvailableHW()
 	for(i=1;#AvailableHW;1){
-		mainForm.cbbSelPLin.add(AvailableHW[i].name)
+		mainForm.cbbSelChannel.add(AvailableHW[i].name)
 	}
 	if(#AvailableHW == 0){
-		mainForm.cbbSelPLin.add("未找到硬件")
+		mainForm.cbbSelChannel.add("未找到硬件")
 		mainForm.btnConnect.disabled = true
+		mainForm.btnDisconnect.disabled = true
 	}
 	else {
 		mainForm.btnConnect.disabled = false
+		mainForm.btnDisconnect.disabled = false
 	}
 		
-	mainForm.cbbSelPLin.selIndex = 1
+	mainForm.cbbSelChannel.selIndex = 1
 }
 
 mainForm.btnConnect.oncommand = function(id,event){
-	//mainForm.show(false)
 	
-	//win.loadForm("\界面\通用\general.aardio")//.doModal()
-	//publish("硬件信息",AvailableHW[1])
-	//mainForm.show(true)
-	ret = PLinHw.Connect(1,19200)
+	var ret = PLinHw.Connect(mainForm.cbbSelChannel.selIndex,19200)
 	if(ret == 0)
 	{
-		mainForm.edit.appendText('\r\n连接成功');
+		var devname = PLinHw.GetConnectedName()
+		publish("日志消息",devname++"已连接")
 		mainForm.btnConnect.disabled = true
 		mainForm.btnDisconnect.disabled = false
 	}
-	else {
-		mainForm.edit.appendText('\r\n连接失败，错误代码'++ret)
-	}
-	//publish("设备句柄",PLinHw)
-	publish("消息","已连接")
 	
 }
 
 mainForm.btnDisconnect.oncommand = function(id,event){
-	PLinHw.Disconnect()
-	mainForm.btnConnect.disabled = false
-	mainForm.btnDisconnect.disabled = true
-	mainForm.edit.appendText('\r\n断开连接');
+	if(PLinHw.isConnected() == true)
+	{
+		PLinHw.Disconnect()
+		mainForm.btnConnect.disabled = false
+		mainForm.btnDisconnect.disabled = true
+		publish("日志消息","设备已断开")
+	}
+	
 }
 
+mainForm.onClose = function(hwnd,message,wParam,lParam){
+    PLinHw.isConnected()
+}
 
 return win.loopMessage();

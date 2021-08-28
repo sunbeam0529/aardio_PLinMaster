@@ -2,44 +2,170 @@ import win.ui;
 import PLin;
 import thread.command;
 import console;
+import fsys.ini
 /*DSG{{*/
-var winform = win.form(text="C62X";right=749;bottom=349)
+var winform = win.form(text="C62X";right=749;bottom=449)
 winform.add(
-btn_StartLIN={cls="button";text="开始";left=40;top=136;right=124;bottom=168;z=5};
-btn_StopLIN={cls="button";text="停止";left=136;top=136;right=224;bottom=170;z=6};
-button={cls="button";text="清空";left=320;top=136;right=424;bottom=168;z=13};
-cb_ID1={cls="checkbox";text="0x25";left=43;top=42;right=135;bottom=70;z=2};
-cb_ID2={cls="checkbox";text="0x01";left=43;top=67;right=139;bottom=98;z=3};
-cb_ID3={cls="checkbox";text="0x02";left=43;top=93;right=145;bottom=117;z=4};
-ed_lefttimes={cls="edit";text="0";left=336;top=40;right=456;bottom=64;edge=1;multiline=1;num=1;readonly=1;z=9};
-ed_righttimes={cls="edit";text="0";left=336;top=80;right=456;bottom=104;edge=1;multiline=1;num=1;readonly=1;z=12};
-edit={cls="edit";text="加载成功";left=480;top=16;right=736;bottom=328;edge=1;multiline=1;z=7};
-groupbox={cls="groupbox";text="报文";left=24;top=16;right=240;bottom=216;edge=1;z=1};
-groupbox2={cls="groupbox";text="测试";left=256;top=16;right=472;bottom=216;edge=1;z=8};
-static={cls="static";text="左次数";left=272;top=40;right=328;bottom=64;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=10};
-static2={cls="static";text="右次数";left=272;top=80;right=328;bottom=104;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=11}
+btn_StartLIN={cls="button";text="开始";left=264;top=32;right=348;bottom=64;z=5};
+btn_StopLIN={cls="button";text="停止";left=352;top=32;right=440;bottom=66;z=6};
+button={cls="button";text="次数清0";left=320;top=248;right=424;bottom=280;z=13};
+cb_ID1={cls="checkbox";text="0x25";left=16;top=40;right=61;bottom=54;z=2};
+cb_ID2={cls="checkbox";text="0x01";left=64;top=40;right=112;bottom=56;checked=1;z=3};
+cb_ID3={cls="checkbox";text="0x02";left=112;top=40;right=160;bottom=56;checked=1;z=4};
+ed_lBase={cls="edit";text="0";left=88;top=136;right=208;bottom=157;edge=1;multiline=1;num=1;readonly=1;z=18};
+ed_lRaw={cls="edit";text="0";left=88;top=104;right=208;bottom=128;edge=1;multiline=1;num=1;readonly=1;z=17};
+ed_lSignal={cls="edit";text="0";left=88;top=176;right=208;bottom=200;edge=1;multiline=1;num=1;readonly=1;z=19};
+ed_lefttimes={cls="edit";text="0";left=88;top=208;right=208;bottom=232;edge=1;multiline=1;num=1;readonly=1;z=9};
+ed_rBase={cls="edit";text="0";left=304;top=136;right=424;bottom=160;edge=1;multiline=1;num=1;readonly=1;z=24};
+ed_rRaw={cls="edit";text="0";left=304;top=104;right=424;bottom=128;edge=1;multiline=1;num=1;readonly=1;z=23};
+ed_rSignal={cls="edit";text="0";left=304;top=176;right=424;bottom=200;edge=1;multiline=1;num=1;readonly=1;z=25};
+ed_righttimes={cls="edit";text="0";left=304;top=208;right=424;bottom=232;edge=1;multiline=1;num=1;readonly=1;z=12};
+edit={cls="edit";text="加载成功";left=464;top=16;right=744;bottom=424;edge=1;multiline=1;z=7};
+groupbox={cls="groupbox";text="报文";left=8;top=16;right=456;bottom=72;edge=1;z=1};
+groupbox2={cls="groupbox";text="测试";left=8;top=72;right=456;bottom=328;edge=1;z=8};
+static={cls="static";text="左次数";left=24;top=208;right=80;bottom=232;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=10};
+static2={cls="static";text="右次数";left=240;top=208;right=296;bottom=232;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=11};
+static4={cls="static";text="左RAW";left=24;top=104;right=80;bottom=128;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=14};
+static5={cls="static";text="左基线";left=24;top=136;right=80;bottom=160;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=15};
+static6={cls="static";text="左信号";left=24;top=176;right=80;bottom=200;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=16};
+static7={cls="static";text="右RAW";left=240;top=104;right=296;bottom=128;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=20};
+static8={cls="static";text="右基线";left=240;top=136;right=296;bottom=160;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=21};
+static9={cls="static";text="右信号";left=240;top=176;right=296;bottom=200;font=LOGFONT(h=-14;name='微软雅黑');notify=1;transparent=1;z=22}
 )
 /*}}*/
 
 //winform.show();
-subscribe("消息",function(str){
-    AvailableHW = PLinHw.GetAvailableHW()
-    winform.edit.appendText('\r\n'++AvailableHW[1].name++str)
+subscribe("日志消息",function(str){
+    WriteLog(str)
 } )
 
 thread.create_suspended = true //创建线程以前可设置该值,指定线程创建后会暂停,否则直接运行
+left_press_flag = 0
+right_press_flag = 0
 
+var nowtime = time(); 
+
+
+//报文解析
 MsgProc = function(Msg){
 	if(Msg.ErrorFlags != 0){
 		//错误处理
 		return;
 	}
-	if(Msg.FrameId == 0x25)
-	{
-		
+	Msg.FrameId &= 0x3F
+	select(Msg.FrameId) {
+		case 0x25 {
+		}
+		case 0x01 {
+			//console.dumpJson(Msg)
+			if(Msg.Data[7] == 0)
+			{
+				left_press_flag = 0
+			}
+			elseif(Msg.Data[7] == 1){
+				if(left_press_flag == 0)
+				{
+					var left_times = tonumber(winform.ed_lefttimes.text)+1
+					winform.ed_lefttimes.text = left_times
+					left_press_flag = 1
+
+					WriteLog("左边按下")
+					Save_times()
+				}
+			}
+			var left_raw = Msg.Data[2]
+			left_raw <<= 8
+			left_raw += Msg.Data[1]
+			var left_base = Msg.Data[4]
+			left_base <<= 8 
+			left_base += Msg.Data[3]
+			var left_signal = Msg.Data[6]
+			left_signal <<= 8 
+			left_signal += Msg.Data[5]
+			winform.ed_lRaw.text = left_raw
+			winform.ed_lBase.text = left_base
+			winform.ed_lSignal.text = left_signal
+		}
+		case 0x02 {
+			//console.dumpJson(Msg)
+			if(Msg.Data[7] == 0)
+			{
+				right_press_flag = 0
+			}
+			elseif(Msg.Data[7] == 1){
+				if(right_press_flag == 0)
+				{
+					var right_times = tonumber(winform.ed_righttimes.text)+1
+					winform.ed_righttimes.text = right_times
+					right_press_flag = 1					
+					
+					WriteLog("右边按下")
+					Save_times()
+				}
+			}
+			var right_raw = Msg.Data[2]
+			right_raw <<= 8
+			right_raw += Msg.Data[1]
+			var right_base = Msg.Data[4]
+			right_base <<= 8 
+			right_base += Msg.Data[3]
+			var right_signal = Msg.Data[6]
+			right_signal <<= 8 
+			right_signal += Msg.Data[5]
+			winform.ed_rRaw.text = right_raw
+			winform.ed_rBase.text = right_base
+			winform.ed_rSignal.text = right_signal
+		}
+		case !=0 {
+		}
+		else {
+		}
 	}
+
+}
+//记录次数
+Save_times = function(){
+	//打开文件
+	//如果文件不存在则自动创建新文件
+	var ini=fsys.ini("\config.ini")
+
+	//读取小节对象
+	var sec = ini.getSection("次数")
+	//读写值
+	sec.左次数 = winform.ed_lefttimes.text; 
+	sec.右次数 = winform.ed_righttimes.text; 
+	sec.save() 
 }
 
+Read_times = function(){
+	//打开文件
+	//如果文件不存在则自动创建新文件
+	var ini=fsys.ini("\config.ini")
+	//读取小节对象
+	var sec = ini.getSection("次数")
+	var temp = ini.read("次数","左次数") 
+	if(temp == null)
+	{
+		sec.左次数 = 0
+		sec.右次数 = 0
+		sec.save() 
+	}
+	winform.ed_lefttimes.text = sec.左次数
+	winform.ed_righttimes.text = sec.右次数
+}
+
+WriteLog = function(str){
+	var logfile = io.open("\log.txt","a+");
+	var nowtime = time(); 
+	nowtime.format="%m.%d %H:%M:%S";
+	logfile.write('\r'++tostring(nowtime)++str)
+	logfile.close()
+	winform.edit.appendText('\r\n'++tostring(nowtime)++str)
+}
+
+
+
+Read_times()
 
 var listener = thread.command();
 listener.print = function( str ){
@@ -52,6 +178,8 @@ listener.Schedule = function(){
 	var ret,msgtemp
 	do{
 		ret,msgtemp = PLinHw.ReadMsg()
+		if(ret == 0)
+			MsgProc(msgtemp)
 	}while(ret == 0)
 	
 	if(TxTableNum == 0)return;
@@ -69,7 +197,7 @@ var thrdHandle = thread.create(
 	function(listener){
 	
 		import thread.command;
-		while(1){ //这里如果高级点可以用 thread.event来实现信号判断,参考本目录下的定时器范例
+		while(1){ 
 			listener.Schedule()
 			sleep(10)
 		}
@@ -80,7 +208,7 @@ var thrdHandle = thread.create(
 winform.btn_StartLIN.oncommand = function(id,event){
     //线程恢复运行
 	thread.resume(thrdHandle)
-	winform.edit.appendText('\r\n开始线程')
+	WriteLog("开始发送报文")
 	TxTable = {}
 	TxTableNum = 0
 	if(winform.cb_ID1.checked){
@@ -103,7 +231,7 @@ winform.btn_StartLIN.oncommand = function(id,event){
 winform.btn_StopLIN.oncommand = function(id,event){
     //线程暂停运行
 	thread.suspend(thrdHandle)
-	winform.edit.appendText('\r\n结束线程')
+	WriteLog("停止发送报文")
 	winform.cb_ID1.disabled = false
 	winform.cb_ID2.disabled = false
 	winform.cb_ID3.disabled = false
@@ -112,8 +240,10 @@ winform.btn_StopLIN.oncommand = function(id,event){
 winform.button.oncommand = function(id,event){
 	winform.ed_righttimes.text = 0
 	winform.ed_lefttimes.text = 0
+	Save_times()
 }
 
 winform.show();
+WriteLog("打开程序")
 win.loopMessage();
 return winform;
