@@ -22,40 +22,38 @@ tab={cls="tab";left=24;top=104;right=774;bottom=579;edge=1;z=7}
 )
 /*}}*/
 
-mainForm.show();
+
+mainForm.show();//显示主窗体
 mainForm.btnConnect.disabled = true
 mainForm.btnDisconnect.disabled = true
 PLinHw = PLin.PLINHW()
-if(PLinHw.LoadDll() == 0){
+//加载DLL
+if(PLinHw.LoadDll() == 0){//成功
 	mainForm.cbbSelDev.add("PCAN/PLIN")
 	mainForm.cbbSelDev.selIndex = 1
 }
-else {
+else {//失败
 	mainForm.cbbSelDev.add("加载驱动失败")
 	win.msgboxErr("dll加载失败，请安装PCAN驱动","错误")
 }
 
-
 try{
-	
+	//显示版本号
 	var version = fsys.version.getInfo(io._exepath).productVersion
 	mainForm.st_Version.text = 'v'++tostring(version)
-
 }
 
-
-
-
+//显示C62X测试界面
 mainForm.tab.loadForm("\界面\项目\C62X.aardio");
 
-
+//刷新按键
 mainForm.btnFlash.oncommand = function(id,event){
-    mainForm.cbbSelChannel.clear()
+    mainForm.cbbSelChannel.clear()//清楚下拉菜单
     if(mainForm.cbbSelDev.selText == "加载驱动失败"){
     	return ; 
     }
-	PLinHw.FlashHw()
-	AvailableHW = PLinHw.GetAvailableHW()
+	PLinHw.FlashHw()//刷新
+	AvailableHW = PLinHw.GetAvailableHW()//获取有效硬件
 	for(i=1;#AvailableHW;1){
 		mainForm.cbbSelChannel.add(AvailableHW[i].name)
 	}
@@ -72,14 +70,15 @@ mainForm.btnFlash.oncommand = function(id,event){
 	mainForm.cbbSelChannel.selIndex = 1
 }
 
+//连接按键
 mainForm.btnConnect.oncommand = function(id,event){
 	
 	var ret = PLinHw.Connect(mainForm.cbbSelChannel.selIndex,19200)
 	if(ret == 0)
 	{
-		var devname = PLinHw.GetConnectedName()
-		publish("日志消息",devname++"已连接")
-		mainForm.btnConnect.disabled = true
+		var devname = PLinHw.GetConnectedName()//获取名字
+		publish("日志消息",devname++"已连接")//消息发送到子界面
+		mainForm.btnConnect.disabled = true //按键禁止按下
 		mainForm.btnDisconnect.disabled = false
 	}
 	
@@ -88,16 +87,16 @@ mainForm.btnConnect.oncommand = function(id,event){
 mainForm.btnDisconnect.oncommand = function(id,event){
 	if(PLinHw.isConnected() == true)
 	{
-		PLinHw.Disconnect()
+		PLinHw.Disconnect()//断开连接
 		mainForm.btnConnect.disabled = false
 		mainForm.btnDisconnect.disabled = true
-		publish("日志消息","设备已断开")
+		publish("日志消息","设备已断开")//消息发送到子界面
 	}
 	
 }
 
 mainForm.onClose = function(hwnd,message,wParam,lParam){
-    PLinHw.isConnected()
+    PLinHw.isConnected()//测试发现无效，待解决
 }
 
 return win.loopMessage();

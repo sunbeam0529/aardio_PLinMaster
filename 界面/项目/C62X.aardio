@@ -34,7 +34,8 @@ static9={cls="static";text="右信号";left=240;top=176;right=296;bottom=200;fon
 )
 /*}}*/
 
-//winform.show();
+
+//从主界面接收的消息
 subscribe("日志消息",function(str){
     WriteLog(str)
 } )
@@ -43,21 +44,18 @@ thread.create_suspended = true //创建线程以前可设置该值,指定线程�
 left_press_flag = 0
 right_press_flag = 0
 
-var nowtime = time(); 
-
-
 //报文解析
 MsgProc = function(Msg){
 	if(Msg.ErrorFlags != 0){
 		//错误处理
 		return;
 	}
-	Msg.FrameId &= 0x3F
+	Msg.FrameId &= 0x3F//从PID取出ID
 	select(Msg.FrameId) {
 		case 0x25 {
 		}
 		case 0x01 {
-			//console.dumpJson(Msg)
+			//判断次数
 			if(Msg.Data[7] == 0)
 			{
 				left_press_flag = 0
@@ -65,14 +63,17 @@ MsgProc = function(Msg){
 			elseif(Msg.Data[7] == 1){
 				if(left_press_flag == 0)
 				{
-					var left_times = tonumber(winform.ed_lefttimes.text)+1
+					//0->1  按键按下
+					var left_times = tonumber(winform.ed_lefttimes.text)+1//次数+1
 					winform.ed_lefttimes.text = left_times
 					left_press_flag = 1
 
-					WriteLog("左边按下")
-					Save_times()
+					WriteLog("左边按下")//记录数据
+					Save_times()//保存次数
 				}
 			}
+			
+			//计算基线信号raw
 			var left_raw = Msg.Data[2]
 			left_raw <<= 8
 			left_raw += Msg.Data[1]
@@ -95,14 +96,16 @@ MsgProc = function(Msg){
 			elseif(Msg.Data[7] == 1){
 				if(right_press_flag == 0)
 				{
+					//0->1  按键按下
 					var right_times = tonumber(winform.ed_righttimes.text)+1
 					winform.ed_righttimes.text = right_times
 					right_press_flag = 1					
 					
-					WriteLog("右边按下")
-					Save_times()
+					WriteLog("右边按下")//记录数据
+					Save_times()//保存次数
 				}
 			}
+			//计算基线信号raw
 			var right_raw = Msg.Data[2]
 			right_raw <<= 8
 			right_raw += Msg.Data[1]
@@ -144,90 +147,89 @@ Read_times = function(){
 	//读取小节对象
 	var sec = ini.getSection("次数")
 	var temp = ini.read("次数","左次数") 
-	if(temp == null)
+	if(temp == null)//判断文件是否为空
 	{
-		sec.左次数 = 0
+		//文件为空
+		sec.左次数 = 0//初始化
 		sec.右次数 = 0
-		sec.save() 
+		sec.save() //保存
 	}
-	winform.ed_lefttimes.text = sec.左次数
+	winform.ed_lefttimes.text = sec.左次数//赋值为控件
 	winform.ed_righttimes.text = sec.右次数
 }
 
 WriteLog = function(str){
-	var logfile = io.open("\log.txt","a+");
-	var nowtime = time(); 
-	nowtime.format="%m.%d %H:%M:%S";
-	logfile.write('\r'++tostring(nowtime)++str)
-	logfile.close()
-	winform.edit.appendText('\r\n'++tostring(nowtime)++str)
+	var logfile = io.open("\log.txt","a+");//打开文件
+	var nowtime = time(); //创建时间对象实例
+	nowtime.format="%m.%d %H:%M:%S";//设置时间格式
+	logfile.write('\n'++tostring(nowtime)++str)//写入记录
+	logfile.close()//关闭文件
+	winform.edit.appendText('\r\n'++tostring(nowtime)++str)//显示记录
 }
 
-
-
-Read_times()
-
 var listener = thread.command();
+//提供线程使用
 listener.print = function( str ){
-    //winform.edit.print( str ) //将线程传过来的参数追加输出到文本框
+    //将线程传过来的参数追加输出到文本框
     winform.edit.appendText(str)
 } 
-tx_index=0
+tx_index=0//调度序号
+//调度函数
 listener.Schedule = function(){
 	
 	var ret,msgtemp
 	do{
-		ret,msgtemp = PLinHw.ReadMsg()
-		if(ret == 0)
-			MsgProc(msgtemp)
-	}while(ret == 0)
+		ret,msgtemp = PLinHw.ReadMsg()//读取数据
+		if(ret == 0)//返回值为0时读取成功，说明有报文读出来
+			MsgProc(msgtemp)//处理数据
+	}while(ret == 0)//直到读取完成
 	
-	if(TxTableNum == 0)return;
+	if(TxTableNum == 0)return;//发送列表为空
 	
-	tx_index += 1
+	tx_index += 1//调度序号+1
 	if(tx_index > TxTableNum)
 	{
 		tx_index=1
 	}
-	PLinHw.TransmitID(TxTable[tx_index])
+	PLinHw.TransmitID(TxTable[tx_index])//通过调度表发送报文
 }
 
 
-var thrdHandle = thread.create( 
-	function(listener){
-	
-		import thread.command;
+var thrdHandle = thread.create( //创建线程
+	function(listener){;
 		while(1){ 
-			listener.Schedule()
-			sleep(10)
+			listener.Schedule()//调用调度表
+			sleep(10)//延时10ms(每10ms调用一次)
 		}
 
 	},listener
 )
 
+//开始按键
 winform.btn_StartLIN.oncommand = function(id,event){
-    //线程恢复运行
-	thread.resume(thrdHandle)
 	WriteLog("开始发送报文")
-	TxTable = {}
+	TxTable = {}//调度表清空
 	TxTableNum = 0
 	if(winform.cb_ID1.checked){
 		TxTableNum += 1
-		TxTable[TxTableNum] = (0x25)
+		TxTable[TxTableNum] = (0x25)//添加0x25报文
 	}
 	if(winform.cb_ID2.checked){
 		TxTableNum += 1
-		TxTable[TxTableNum] = (0x01)
+		TxTable[TxTableNum] = (0x01)//添加0x25报文
 	}
 	if(winform.cb_ID3.checked){
 		TxTableNum += 1
-		TxTable[TxTableNum] = (0x02)
+		TxTable[TxTableNum] = (0x02)//添加0x25报文
 	}
-	winform.cb_ID1.disabled = true
+	winform.cb_ID1.disabled = true//开始后禁止改变选项
 	winform.cb_ID2.disabled = true
 	winform.cb_ID3.disabled = true
+	//线程恢复运行
+	thread.resume(thrdHandle)
 }
 
+//停止按键
 winform.btn_StopLIN.oncommand = function(id,event){
     //线程暂停运行
 	thread.suspend(thrdHandle)
@@ -237,12 +239,14 @@ winform.btn_StopLIN.oncommand = function(id,event){
 	winform.cb_ID3.disabled = false
 }
 
+//清空按键
 winform.button.oncommand = function(id,event){
 	winform.ed_righttimes.text = 0
 	winform.ed_lefttimes.text = 0
-	Save_times()
+	Save_times()//保存次数
 }
 
+Read_times()//开启时读取次数
 winform.show();
 WriteLog("打开程序")
 win.loopMessage();

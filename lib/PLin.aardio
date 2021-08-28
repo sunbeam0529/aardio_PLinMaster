@@ -1,8 +1,8 @@
 ﻿import win
 import raw
 
+//LIN接收报文结构体
 class TLINRcvMsg{
-    
     BYTE Type;                           // Frame type (see LIN Received Message Types)
     BYTE FrameId;                               // Frame ID (6 bit) + Parity (2 bit)
     BYTE Length;                                // Frame Length (1..8)
@@ -16,7 +16,7 @@ class TLINRcvMsg{
 }
 
 namespace PLin{
-    class AVAILABLE_HW{
+    class AVAILABLE_HW{//待完善
     	ctor(num){
     	
     	};
@@ -24,7 +24,7 @@ namespace PLin{
     	/*对象的所有成员必须用分号分隔*/
     }
     
-    class PLINMSG{
+    class PLINMSG{//待完善
     	ctor(  ){
     		//this.FrameId = PLin.CalculatePID(id)
     		//this.Dir = dir
@@ -41,7 +41,7 @@ namespace PLin{
     
     
 
-    
+    //计算PID
     CalculatePID = function(ID){
 		P0 = (ID & 0x01) ^ ((ID & 0x02) >> 1) ^ ((ID & 0x04) >> 2) ^ ((ID & 0x10) >> 4);
 		P1 = (((ID & 0x02) >> 1) ^ ((ID & 0x08) >> 3) ^ ((ID & 0x10) >> 4) ^ ((ID & 0x20) >> 5));
@@ -52,19 +52,19 @@ namespace PLin{
     }
     
     
-    
+    //PLIN驱动底层
     class PLINHW{
        
     	ctor( /*输入构造函数所需要的参数*/ ){
-    		
+    		//构造函数，新建类的实例的时候回调用
     	};
     	type=me;
     	/*对象的所有成员必须用分号分隔*/
-    	DllHandle = null;
-    	HWconnected = null;
-    	Client = null;
-    	//AvailableHW = null;
-    	//AvailableHW[1] = {int hLINHW;int devnum;int channel;string name}
+    	DllHandle = null;//DLL句柄（指针）
+    	HWconnected = null;//已连接硬件
+    	Client = null;//当前客户端
+    	
+    	//刷新硬件
     	FlashHw = function (){
         	if(DllHandle = null){
             	//DLL为空，返回
@@ -82,20 +82,21 @@ namespace PLin{
     		var PLinHwbuf={WORD buf[2]}
     		ret = DllHandle.LIN_GetAvailableHardware(PLinHwbuf,HWCount[1]*2,HWCount)
     		
-			AvailableHW = {}//有效硬件
+			AvailableHW = {}//清空有效硬件
 			for(i=1;HWCount[1];1){
 				AvailableHW[i] = {int hLINHW;int devnum;int channel;string name}
 				var HWtemp = PLinHwbuf.buf[i]
-				var HWType = ..raw.buffer(4)//{[1]=0}
-				var DevNum = ..raw.buffer(4)//{[1]=0}
-				var Channel = ..raw.buffer(4)//{[1]=0}
-				DllHandle.LIN_GetHardwareParam(HWtemp,13,HWType,4);
-				DllHandle.LIN_GetHardwareParam(HWtemp,2,DevNum,4);
-				DllHandle.LIN_GetHardwareParam(HWtemp,3,Channel,4);
+				var HWType = ..raw.buffer(4)
+				var DevNum = ..raw.buffer(4)
+				var Channel = ..raw.buffer(4)
+				DllHandle.LIN_GetHardwareParam(HWtemp,13,HWType,4);//硬件类型
+				DllHandle.LIN_GetHardwareParam(HWtemp,2,DevNum,4);//设备编号
+				DllHandle.LIN_GetHardwareParam(HWtemp,3,Channel,4);//通道编号
 				AvailableHW[i].hLINHW = HWtemp
 				AvailableHW[i].devnum = DevNum[1]
 				AvailableHW[i].channel = Channel[1]
 				
+				//设置设备通道名称
 				select(HWType[1]) {
 					case 1 {
 						AvailableHW[i].name = "PCAN Pro"++" - dev."++DevNum[1]++", chan."++Channel[1]
@@ -111,14 +112,15 @@ namespace PLin{
 					}
 				}
 				
-				//..win.msgbox(AvailableHW[i].name,"设备",0)
 			}
 			
     	}
+    	//获取所有有效硬件
     	GetAvailableHW = function(){
     		return AvailableHW
     	}
     	
+    	//加载DLL
     	LoadDll = function (){
     		DllHandle = ..raw.loadDll("PLinApi.dll")
     		if(DllHandle == null)return 1;
@@ -126,52 +128,48 @@ namespace PLin{
     		return 0; 
     	}
     	
+    	//连接
     	Connect = function(index,burdrate){
-    		import console;
     		import math;
     		if(#AvailableHW == 0 || index > #AvailableHW)
     		{
     			return 1;
     		}
     		var m_hClient = ..raw.buffer(1)
-    		//console.dumpJson(index)
+			//新建客户端
     		DllHandle.LIN_RegisterClient("PLIN",null,m_hClient);
-    		Client = m_hClient[1]
-    		HWtemp = AvailableHW[index].hLINHW
-    		//return  HWtemp; 
-    		LIN_ConnectClient := DllHandle.api("LIN_ConnectClient","INT(BYTE,WORD)")
+    		Client = m_hClient[1]//新建的客户端
+    		HWtemp = AvailableHW[index].hLINHW//当前选中的通道
+    		//连接新建的客户端和硬件
+    		LIN_ConnectClient := DllHandle.api("LIN_ConnectClient","INT(BYTE,WORD)")//声明API函数 := 就是“或=”
     		ret = LIN_ConnectClient(Client, HWtemp);
     		if(ret != 0)
     		{
-    			//return 2; 
+    			//错误处理，暂时没有 
     		}
     		HWconnected = HWtemp
+    		//初始化硬件，设置主机、波特率
     		DllHandle.LIN_InitializeHardware(Client, HWconnected, 2, burdrate);
-    		var filter = 0xFFFFFFFFFFFFFFFF;
-    		//DllHandle.LIN_SetClientFilter(Client,HWconnected,filter)
-    		
-    		var size = math.size64(0xFFFFFFFF,0xFFFFFFFF);
-    		
+    		//设置客户端滤波器，不设置会收不到报文	
+    		var size = math.size64(0xFFFFFFFF,0xFFFFFFFF);//设置64位的数
     		LIN_SetClientFilter := DllHandle.api("LIN_SetClientFilter","INT(BYTE,WORD,LONG64)")
     		LIN_SetClientFilter(Client,HWconnected,size)
-    		pfilter = ..raw.buffer(20)
-    		//pfilter = 0
-    		LIN_GetClientFilter  := DllHandle.api("LIN_GetClientFilter","INT(BYTE,WORD,PTR)")
-    		ret = LIN_GetClientFilter(Client,HWconnected,pfilter)
-    		//console.dumpJson(pfilter)
+
     		return 0; 
     	}
     	
+    	//断开
     	Disconnect = function(){
     		if(HWconnected != null && Client != null)
     		{
-    			DllHandle.LIN_DisconnectClient(Client, HWconnected);
-    			DllHandle.LIN_RemoveClient(Client);
+    			DllHandle.LIN_DisconnectClient(Client, HWconnected);//断开连接
+    			DllHandle.LIN_RemoveClient(Client);//删除客户端
     			HWconnected = null
     			Client = null
     		}
     	}
     	
+    	//判断是否连接
     	isConnected = function(){
     		if(HWconnected != null)
     		{
@@ -184,6 +182,7 @@ namespace PLin{
     		
     	}
     	
+    	//发送帧头
     	TransmitID = function(id){
     		if(HWconnected == null)
     		{
@@ -198,24 +197,21 @@ namespace PLin{
     		DllHandle.LIN_Write(Client,HWconnected,msgtemp)
     	}
     	
+    	//读取报文
     	ReadMsg = function(){
     		import console;
     		if(HWconnected == null)
     		{
     			return;
     		}
-    		LIN_Read := DllHandle.api("LIN_Read","INT(BYTE,struct& rcvmsg)")
-
+    		LIN_Read := DllHandle.api("LIN_Read","INT(BYTE,struct& rcvmsg)")//声明API
     		var msgread = ..TLINRcvMsg();
-    		var ret = LIN_Read(Client,msgread)
-    		/*
-    		if(ret == 0){
-    			console.dumpJson(msgread)
-    		}
-    		*/
+    		var ret = LIN_Read(Client,msgread)//读取数据
+    		
     		return ret,msgread; 
     	}
     	
+    	//获取已连接设备通道名称
     	GetConnectedName = function(){
     		return AvailableHW[HWconnected].name; 
     	}
