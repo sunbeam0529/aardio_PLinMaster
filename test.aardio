@@ -1,0 +1,13 @@
+import console;
+import USB2LIN;
+import fsys;
+
+usblinHw = USB2LIN.USBLINHW()
+
+dir = fsys.getCurDir()
+ret = usblinHw.LoadDll(dir)
+usblinHw.FlashHw()
+
+console.dumpJson(ret)
+
+console.pause()

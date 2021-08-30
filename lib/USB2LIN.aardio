@@ -1,0 +1,36 @@
+﻿
+
+
+namespace USB2LIN{
+	
+	class USBLINHW{
+		ctor( /*输入构造函数所需要的参数*/ ){
+			
+		};
+		type=me;
+		/*对象的所有成员必须用分号分隔*/
+		DllHandle = null;
+		LoadDll = function(){
+			DllHandle = ..raw.loadDll("\USB2XXX.dll")
+			if(DllHandle == null)return 1;
+			return 0;
+		}
+		
+		FlashHw = function(){
+			import console;
+			if(DllHandle = null){
+            	//DLL为空，返回
+        		return 1; 
+        	}
+        	var HwTemp = ..raw.buffer(20)
+        	USB_ScanDevice = DllHandle.api("USB_ScanDevice","int (PTR)")
+        	HwNum = USB_ScanDevice(HwTemp)
+        	
+        	console.dumpJson(HwTemp)
+        	console.dumpJson(HwNum)
+		}
+		
+		
+	}
+	
+}
