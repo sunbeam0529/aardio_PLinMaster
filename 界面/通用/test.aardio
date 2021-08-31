@@ -17,13 +17,13 @@ if(ret <= 0)
 }
 
 ret = usblinHw.OpenDevice(1)
-if(ret == 0)
+if(ret == 1)
 {
 	console.print("打开设备失败")
 }
 else {
 	console.print("打开设备成功")
-}
+
 
 arr1 = {1,2,3,4,5,6,7,8}
 arr2 = {11,12,13,14,15,16,17,18}
@@ -31,12 +31,14 @@ arr3 = {21,22,23,24,25,26,27,28}
 usblinHw.GetDeviceInfo()
 usblinHw.Output12V(1)
 usblinHw.WriteData(1,arr1)
-console.pause()
 usblinHw.GetVbatValue()
 usblinHw.WriteData(2,arr2)
-console.pause()
 usblinHw.Output12V(0)
 usblinHw.WriteData(3,arr3)
-console.pause()
 usblinHw.GetVbatValue()
+
+}
+
+usblinHw.CloseDevice()
+console.print("end----------------------")
 console.pause()

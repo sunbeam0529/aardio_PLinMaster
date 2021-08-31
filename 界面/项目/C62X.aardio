@@ -34,7 +34,6 @@ static9={cls="static";text="右信号";left=240;top=176;right=296;bottom=200;fon
 )
 /*}}*/
 
-
 //从主界面接收的消息
 subscribe("日志消息",function(str){
     WriteLog(str)
