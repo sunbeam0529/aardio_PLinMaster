@@ -22,7 +22,6 @@ tab={cls="tab";left=24;top=104;right=774;bottom=579;edge=1;z=7}
 )
 /*}}*/
 
-
 mainForm.show();//显示主窗体
 mainForm.btnConnect.disabled = true
 mainForm.btnDisconnect.disabled = true

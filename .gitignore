@@ -1,2 +1,6 @@
 .build
 dist
+/config.ini
+/libusb-1.0.dll
+/log.txt
+/USB2XXX.dll
