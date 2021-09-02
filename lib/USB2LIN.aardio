@@ -31,6 +31,7 @@ namespace USB2LIN{
 			import console;
 			if(DllHandle = null){
             	//DLL为空，返回
+            	arr_DevHandle = {}
         		return 0; 
         	}
         	var arr_temp = {int value[] = { length = 10/*可以使用变量*/ } }//类似动态数组
@@ -47,6 +48,11 @@ namespace USB2LIN{
         	return HwNum; 
 		}
 		
+		GetAvailableHW = function(){
+			return arr_DevHandle;
+		}
+		
+		
 		OpenDevice = function(index){
 			if(index > HwNum)
 			{
@@ -54,8 +60,8 @@ namespace USB2LIN{
 			}
 			USB_OpenDevice = DllHandle.api("USB_OpenDevice","int (int)")
 			var ret = USB_OpenDevice(arr_DevHandle[index])
-			console.print("............OpenDevice............")
-			console.print("ret = "++ret)
+			//console.print("............OpenDevice............")
+			//console.print("ret = "++ret)
 			
 			LIN_EX_Init = DllHandle.api("LIN_EX_Init","int (int,BYTE,INT,BYTE)")
 			ret = LIN_EX_Init(arr_DevHandle[index],0,19200,1)
@@ -77,25 +83,25 @@ namespace USB2LIN{
 				closeflag = 0
 			}
 			
-			console.print("............LIN_EX_Init............")
-			console.print("ret = "++ret)
-			console.pause()
+			//console.print("............LIN_EX_Init............")
+			//console.print("ret = "++ret)
+			//console.pause()
 			
 			if(ret == 0){
 				Hwconnected = arr_DevHandle[index]
-				console.print("Hwconnected = arr_DevHandle[index] = "++Hwconnected)
+				//console.print("Hwconnected = arr_DevHandle[index] = "++Hwconnected)
 				//console.dump(Hwconnected)
 			}
 			else 
 			{
-				console.print("....................Hwconnected = null ! ")
-				console.dump(ret)
+				//console.print("....................Hwconnected = null ! ")
+				//console.dump(ret)
 				Hwconnected = null
 			}
 			
 			if(closeflag == 1)
 			{
-				console.pause()
+				//console.pause()
 			}
 			
 			return ret; 
@@ -104,7 +110,7 @@ namespace USB2LIN{
 		GetDeviceInfo = function(){
 			if(Hwconnected == null)
 			{
-				console.print("硬件未连接")
+				//console.print("硬件未连接")
 				return 0; 
 			}
 			
@@ -115,28 +121,28 @@ namespace USB2LIN{
 			
 			//console.print(str)
 			//console.dumpJson(devinfo)
-			console.printf("Firmware Info:");
-			console.printf("Firmware Name:%s",devinfo.FirmwareName);
-			console.printf("Firmware Build Date:%s",devinfo.BuildDate);
-			console.printf("Firmware Version:v%d.%d.%d",(devinfo.FirmwareVersion>>24)&0xFF,(devinfo.FirmwareVersion>>16)&0xFF,devinfo.FirmwareVersion&0xFFFF);
-			console.printf("Hardware Version:v%d.%d.%d",(devinfo.HardwareVersion>>24)&0xFF,(devinfo.HardwareVersion>>16)&0xFF,devinfo.HardwareVersion&0xFFFF);
-			console.printf("Firmware Functions:%s",str);
-			console.printf("Firmware SerialNumber:%08X%08X%08X",devinfo.SerialNumber[1],devinfo.SerialNumber[2],devinfo.SerialNumber[3]);
+			//console.printf("Firmware Info:");
+			//console.printf("Firmware Name:%s",devinfo.FirmwareName);
+			//console.printf("Firmware Build Date:%s",devinfo.BuildDate);
+			//console.printf("Firmware Version:v%d.%d.%d",(devinfo.FirmwareVersion>>24)&0xFF,(devinfo.FirmwareVersion>>16)&0xFF,devinfo.FirmwareVersion&0xFFFF);
+			//console.printf("Hardware Version:v%d.%d.%d",(devinfo.HardwareVersion>>24)&0xFF,(devinfo.HardwareVersion>>16)&0xFF,devinfo.HardwareVersion&0xFFFF);
+			//console.printf("Firmware Functions:%s",str);
+			//console.printf("Firmware SerialNumber:%08X%08X%08X",devinfo.SerialNumber[1],devinfo.SerialNumber[2],devinfo.SerialNumber[3]);
 			
 			if(closeflag == 1)
 			{
-				console.print("ret = "++ret)
-				console.print("Hwconnected = "++Hwconnected)
-				console.print(str)
-				console.dumpJson(devinfo)
-				console.pause()
+				//console.print("ret = "++ret)
+				//console.print("Hwconnected = "++Hwconnected)
+				//console.print(str)
+				//console.dumpJson(devinfo)
+				//console.pause()
 			}
 		}
 		
 		Output12V = function(en){
 			if(Hwconnected == null)
 			{
-				console.print("硬件未连接")
+				//console.print("硬件未连接")
 				return 0; 
 			}
 			LIN_EX_CtrlPowerOut = DllHandle.api("LIN_EX_CtrlPowerOut","int (int,BYTE)")
@@ -146,7 +152,7 @@ namespace USB2LIN{
 		GetVbatValue = function(){
 			if(Hwconnected == null)
 			{
-				console.print("硬件未连接")
+				//console.print("硬件未连接")
 				return 0; 
 			}
 			LIN_EX_GetVbatValue = DllHandle.api("LIN_EX_GetVbatValue","int (int,PTR)")
@@ -157,8 +163,8 @@ namespace USB2LIN{
 			var vbat = temp[1];
 			vbat <<= 8;
 			vbat += temp[2]; 
-			console.dumpJson(temp)
-			console.dumpJson(vbat)//读出的电压不对
+			//console.dumpJson(temp)
+			//console.dumpJson(vbat)//读出的电压不对
 			
 			return vbat; 
 		}
@@ -166,7 +172,7 @@ namespace USB2LIN{
 		WriteID = function(id){
 			if(Hwconnected == null)
 			{
-				console.print("硬件未连接")
+				//console.print("硬件未连接")
 				return 0; 
 			}
 			LIN_EX_MasterWrite = DllHandle.api("LIN_EX_MasterWrite","int (INT,BYTE,BYTE,ptr,BYTE,BYTE)")
@@ -176,21 +182,30 @@ namespace USB2LIN{
 		WriteData = function(id,data){
 			if(Hwconnected == null)
 			{
-				console.print("硬件未连接")
+				//console.print("硬件未连接")
 				return 0; 
 			}
 			var txbuf = ..raw.buffer(8)
 			for(i=1;8;1){
 				txbuf[i] = data[i]
 			}
-			console.dumpJson(txbuf)
+			//console.dumpJson(txbuf)
 			LIN_EX_MasterWrite = DllHandle.api("LIN_EX_MasterWrite","int (INT,BYTE,BYTE,ptr,BYTE,BYTE)")
-			ret = LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,1)
-			console.print("tx = "++ret)
+			if(id == 0x3c)
+			{
+				ret = LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,0)
+			}
+			else {
+				ret = LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,1)
+			}
+			
+			return ret; 
+			
+			//console.print("tx = "++ret)
 		}
 		
 		CloseDevice = function(hwhandle = 0){
-			console.print("-----------------CloseDevice ---------")
+			//console.print("-----------------CloseDevice ---------")
 			if(hwhandle == 0)
 			{
 				hwhandle = arr_DevHandle[1]
@@ -201,8 +216,8 @@ namespace USB2LIN{
 			}
 			catch(e)
 			{
-				console.print("hwhandle = "++hwhandle)
-				console.pause()
+				//console.print("hwhandle = "++hwhandle)
+				//console.pause()
 			}
 			
 			

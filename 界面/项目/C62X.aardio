@@ -35,8 +35,8 @@ static9={cls="static";text="右信号";left=240;top=176;right=296;bottom=200;fon
 /*}}*/
 
 //从主界面接收的消息
-subscribe("日志消息",function(str){
-    WriteLog(str)
+subscribe("显示消息",function(str){
+    Display(str)
 } )
 
 thread.create_suspended = true //创建线程以前可设置该值,指定线程创建后会暂停,否则直接运行
@@ -67,7 +67,7 @@ MsgProc = function(Msg){
 					winform.ed_lefttimes.text = left_times
 					left_press_flag = 1
 
-					WriteLog("左边按下")//记录数据
+					C62X_WriteLog("左边按下")//记录数据
 					Save_times()//保存次数
 				}
 			}
@@ -87,7 +87,6 @@ MsgProc = function(Msg){
 			winform.ed_lSignal.text = left_signal
 		}
 		case 0x02 {
-			//console.dumpJson(Msg)
 			if(Msg.Data[7] == 0)
 			{
 				right_press_flag = 0
@@ -100,7 +99,7 @@ MsgProc = function(Msg){
 					winform.ed_righttimes.text = right_times
 					right_press_flag = 1					
 					
-					WriteLog("右边按下")//记录数据
+					C62X_WriteLog("右边按下")//记录数据
 					Save_times()//保存次数
 				}
 			}
@@ -118,9 +117,8 @@ MsgProc = function(Msg){
 			winform.ed_rBase.text = right_base
 			winform.ed_rSignal.text = right_signal
 		}
-		case !=0 {
-		}
 		else {
+			//其它，暂不处理
 		}
 	}
 
@@ -157,14 +155,6 @@ Read_times = function(){
 	winform.ed_righttimes.text = sec.右次数
 }
 
-WriteLog = function(str){
-	var logfile = io.open("\log.txt","a+");//打开文件
-	var nowtime = time(); //创建时间对象实例
-	nowtime.format="%m.%d %H:%M:%S";//设置时间格式
-	logfile.write('\n'++tostring(nowtime)++str)//写入记录
-	logfile.close()//关闭文件
-	winform.edit.appendText('\r\n'++tostring(nowtime)++str)//显示记录
-}
 
 var listener = thread.command();
 //提供线程使用
@@ -206,7 +196,8 @@ var thrdHandle = thread.create( //创建线程
 
 //开始按键
 winform.btn_StartLIN.oncommand = function(id,event){
-	WriteLog("开始发送报文")
+	C62X_WriteLog("开始发送报文")
+	//publish("子界面消息","开始发送报文")//消息发送到主界面
 	TxTable = {}//调度表清空
 	TxTableNum = 0
 	if(winform.cb_ID1.checked){
@@ -232,7 +223,7 @@ winform.btn_StartLIN.oncommand = function(id,event){
 winform.btn_StopLIN.oncommand = function(id,event){
     //线程暂停运行
 	thread.suspend(thrdHandle)
-	WriteLog("停止发送报文")
+	C62X_WriteLog("停止发送报文")
 	winform.cb_ID1.disabled = false
 	winform.cb_ID2.disabled = false
 	winform.cb_ID3.disabled = false
@@ -245,8 +236,21 @@ winform.button.oncommand = function(id,event){
 	Save_times()//保存次数
 }
 
+Display = function(str){
+	var nowtime = time(); //创建时间对象实例
+	nowtime.format="%m.%d %H:%M:%S";//设置时间格式
+	winform.edit.appendText('\r\n'++tostring(nowtime)++str)
+}
+
+C62X_WriteLog = function(str){
+	publish("子界面日志",str)//消息发送到主界面
+	Display(str)
+}
+
+
+
 Read_times()//开启时读取次数
 winform.show();
-WriteLog("打开程序")
+C62X_WriteLog("打开C62X界面")
 win.loopMessage();
 return winform;

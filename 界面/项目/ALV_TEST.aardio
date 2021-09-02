@@ -1,0 +1,110 @@
+import win.ui;
+import console;
+/*DSG{{*/
+var winform = win.form(text="ALV_TEST";right=749;bottom=449)
+winform.add(
+btn_Motor_lbtn={cls="button";text="左按键";left=40;top=40;right=112;bottom=72;z=2};
+btn_Motor_lsld={cls="button";text="左滑条";left=40;top=80;right=112;bottom=112;z=3};
+btn_Motor_rbtn={cls="button";text="右按键";left=120;top=40;right=192;bottom=72;z=4};
+btn_Motor_rsld={cls="button";text="右滑条";left=120;top=80;right=192;bottom=112;z=5};
+edit={cls="edit";text="加载成功";left=464;top=16;right=744;bottom=424;edge=1;multiline=1;z=6};
+groupbox={cls="groupbox";text="震动控制";left=24;top=16;right=208;bottom=128;edge=1;z=1}
+)
+/*}}*/
+
+
+/* -----------------------自定义函数---------------------- */
+Display = function(str){
+	var nowtime = time(); //创建时间对象实例
+	nowtime.format="%m.%d %H:%M:%S";//设置时间格式
+	winform.edit.appendText('\r\n'++tostring(nowtime)++str)
+}
+
+
+/* -----------------------控件事件---------------------- */
+winform.btn_Motor_lbtn.oncommand = function(id,event){
+	if(USB2LINHw == null)
+	{
+		Display("DLL未加载")
+		return;
+	}
+	var data = {0x20,0x04,0x2E,0xFA,0x01,0x01,0xff,0xff}
+	USB2LINHw.WriteData(0x3C,data)
+}
+winform.btn_Motor_lbtn.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x203/*_WM_LBUTTONDBLCLK*/ {//双击
+			
+		}
+		else {//无返回值则继续调用默认回调函数
+		}
+	}
+}
+
+
+winform.btn_Motor_lsld.oncommand = function(id,event){
+	if(USB2LINHw == null)
+	{
+		Display("DLL未加载")
+		return;
+	}
+	var data = {0x20,0x04,0x2E,0xFA,0x01,0x02,0xff,0xff}
+	USB2LINHw.WriteData(0x3C,data)
+}
+winform.btn_Motor_lsld.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x203/*_WM_LBUTTONDBLCLK*/ {//双击
+			
+		}
+		else {//无返回值则继续调用默认回调函数
+		}
+	}
+}
+
+
+winform.btn_Motor_rbtn.oncommand = function(id,event){
+	if(USB2LINHw == null)
+	{
+		Display("DLL未加载")
+		return;
+	}
+	var data = {0x21,0x04,0x2E,0xFA,0x01,0x01,0xff,0xff}
+	USB2LINHw.WriteData(0x3C,data)
+}
+winform.btn_Motor_rbtn.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x203/*_WM_LBUTTONDBLCLK*/ {//双击
+			
+		}
+		else {//无返回值则继续调用默认回调函数
+		}
+	}
+}
+
+
+winform.btn_Motor_rsld.oncommand = function(id,event){
+
+	if(USB2LINHw == null)
+	{
+		Display("DLL未加载")
+		return;
+	}
+	var data = {0x21,0x04,0x2E,0xFA,0x01,0x02,0xff,0xff}
+	USB2LINHw.WriteData(0x3C,data)
+}
+winform.btn_Motor_rsld.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x203/*_WM_LBUTTONDBLCLK*/ {//双击
+			
+		}
+		else {//无返回值则继续调用默认回调函数
+		}
+	}
+}
+
+
+/* --------------------------界面运行代码---------------------------- */
+
+winform.show();
+win.loopMessage();
+return winform;
