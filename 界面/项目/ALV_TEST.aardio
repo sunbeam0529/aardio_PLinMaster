@@ -8,10 +8,11 @@ btn_Motor_lsld={cls="button";text="左滑条";left=40;top=80;right=112;bottom=11
 btn_Motor_rbtn={cls="button";text="右按键";left=120;top=40;right=192;bottom=72;z=4};
 btn_Motor_rsld={cls="button";text="右滑条";left=120;top=80;right=192;bottom=112;z=5};
 edit={cls="edit";text="加载成功";left=464;top=16;right=744;bottom=424;edge=1;multiline=1;z=6};
-groupbox={cls="groupbox";text="震动控制";left=24;top=16;right=208;bottom=128;edge=1;z=1}
+groupbox={cls="groupbox";text="震动控制";left=24;top=16;right=208;bottom=128;edge=1;z=1};
+listview2={cls="listview";left=80;top=248;right=344;bottom=424;edge=1;z=8};
+plus={cls="plus";left=80;top=168;right=248;bottom=176;bgcolor=16777215;forecolor=65280;z=7}
 )
 /*}}*/
-
 
 /* -----------------------自定义函数---------------------- */
 Display = function(str){
@@ -104,7 +105,8 @@ winform.btn_Motor_rsld.wndproc = function(hwnd,message,wParam,lParam){
 
 
 /* --------------------------界面运行代码---------------------------- */
-
+winform.plus.setProgressRange(1,100)
+winform.plus.progressPos=50
 winform.show();
 win.loopMessage();
 return winform;

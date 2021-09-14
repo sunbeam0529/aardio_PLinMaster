@@ -1,44 +1,8 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="aardio Form";right=749;bottom=449;parent=...)
+winform.add()
+/*}}*/
 
-//用于测试USB2LIN，可删除
-
-import console;
-import USB2LIN;
-import fsys;
-
-usblinHw = USB2LIN.USBLINHW()
-
-dir = fsys.getCurDir()
-ret = usblinHw.LoadDll(dir)
-ret = usblinHw.FlashHw()
-
-if(ret <= 0)
-{
-	console.print("未找到设备")
-}
-
-ret = usblinHw.OpenDevice(1)
-if(ret == 1)
-{
-	console.print("打开设备失败")
-}
-else {
-	console.print("打开设备成功")
-
-
-arr1 = {1,2,3,4,5,6,7,8}
-arr2 = {11,12,13,14,15,16,17,18}
-arr3 = {21,22,23,24,25,26,27,28}
-usblinHw.GetDeviceInfo()
-usblinHw.Output12V(1)
-usblinHw.WriteData(1,arr1)
-usblinHw.GetVbatValue()
-usblinHw.WriteData(2,arr2)
-usblinHw.Output12V(0)
-usblinHw.WriteData(3,arr3)
-usblinHw.GetVbatValue()
-
-}
-
-usblinHw.CloseDevice()
-console.print("end----------------------")
-console.pause()
+winform.show()
+win.loopMessage();
