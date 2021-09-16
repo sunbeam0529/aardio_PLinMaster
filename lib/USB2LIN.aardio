@@ -204,6 +204,21 @@ namespace USB2LIN{
 			//console.print("tx = "++ret)
 		}
 		
+		ReadData = function(id){
+			if(Hwconnected == null)
+			{
+				return 0; 
+			}
+			var rxbuf = ..raw.buffer(8)
+			LIN_EX_MasterRead = DllHandle.api("LIN_EX_MasterRead","int (INT,BYTE,BYTE,ptr)")
+			var ret = LIN_EX_MasterRead(Hwconnected,0,id,rxbuf)
+			return ret,rxbuf; 
+		}
+		
+
+		
+		
+		
 		CloseDevice = function(hwhandle = 0){
 			//console.print("-----------------CloseDevice ---------")
 			if(hwhandle == 0)

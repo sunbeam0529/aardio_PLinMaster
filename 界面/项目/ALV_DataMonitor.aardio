@@ -1,74 +1,80 @@
 import win.ui;
+import thread.command;
 /*DSG{{*/
 var winform = win.form(text="数据监控";left=0;top=0;right=1000;bottom=600)
 winform.add(
-plus={cls="plus";text="1";left=128;top=80;right=232;bottom=104;bgcolor=16777215;border={color=-16777216;width=1};db=0.83;dl=0.13;dr=0.77;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=18};
-plus10={cls="plus";text="1";left=592;top=80;right=696;bottom=104;bgcolor=16777215;border={color=-16777216;width=1};db=0.83;dl=0.59;dr=0.3;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=77};
-plus11={cls="plus";text="2";left=592;top=104;right=696;bottom=128;bgcolor=16777215;border={color=-16777216;width=1};db=0.79;dl=0.59;dr=0.3;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=79};
-plus12={cls="plus";text="3";left=592;top=128;right=696;bottom=152;bgcolor=16777215;border={color=-16777216;width=1};db=0.75;dl=0.59;dr=0.3;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=80};
-plus13={cls="plus";text="4";left=592;top=152;right=696;bottom=176;bgcolor=16777215;border={color=-16777216;width=1};db=0.71;dl=0.59;dr=0.3;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=81};
-plus14={cls="plus";text="5";left=592;top=176;right=696;bottom=200;bgcolor=16777215;border={color=-16777216;width=1};db=0.67;dl=0.59;dr=0.3;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=82};
-plus15={cls="plus";text="6";left=592;top=200;right=696;bottom=224;bgcolor=16777215;border={color=-16777216;width=1};db=0.63;dl=0.59;dr=0.3;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=83};
-plus16={cls="plus";text="7";left=592;top=224;right=696;bottom=248;bgcolor=16777215;border={color=-16777216;width=1};db=0.59;dl=0.59;dr=0.3;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=84};
-plus17={cls="plus";text="8";left=592;top=248;right=696;bottom=272;bgcolor=16777215;border={color=-16777216;width=1};db=0.55;dl=0.59;dr=0.3;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=85};
-plus18={cls="plus";text="8";left=592;top=272;right=696;bottom=296;bgcolor=16777215;border={color=-16777216;width=1};db=0.51;dl=0.59;dr=0.3;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=115};
-plus2={cls="plus";text="2";left=128;top=104;right=232;bottom=128;bgcolor=16777215;border={color=-16777216;width=1};db=0.79;dl=0.13;dr=0.77;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=20};
-plus3={cls="plus";text="3";left=128;top=128;right=232;bottom=152;bgcolor=16777215;border={color=-16777216;width=1};db=0.75;dl=0.13;dr=0.77;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=21};
-plus4={cls="plus";text="4";left=128;top=152;right=232;bottom=176;bgcolor=16777215;border={color=-16777216;width=1};db=0.71;dl=0.13;dr=0.77;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=22};
-plus5={cls="plus";text="5";left=128;top=176;right=232;bottom=200;bgcolor=16777215;border={color=-16777216;width=1};db=0.67;dl=0.13;dr=0.77;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=23};
-plus6={cls="plus";text="6";left=128;top=200;right=232;bottom=224;bgcolor=16777215;border={color=-16777216;width=1};db=0.63;dl=0.13;dr=0.77;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=24};
-plus7={cls="plus";text="7";left=128;top=224;right=232;bottom=248;bgcolor=16777215;border={color=-16777216;width=1};db=0.59;dl=0.13;dr=0.77;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=25};
-plus8={cls="plus";text="8";left=128;top=248;right=232;bottom=272;bgcolor=16777215;border={color=-16777216;width=1};db=0.55;dl=0.13;dr=0.77;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=26};
-plus9={cls="plus";text="8";left=128;top=272;right=232;bottom=296;bgcolor=16777215;border={color=-16777216;width=1};db=0.51;dl=0.13;dr=0.77;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=56};
-stKeyBL1={cls="static";text="0";left=72;top=80;right=128;bottom=104;align="center";border=1;db=0.83;dl=0.07;dr=0.87;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=10};
+button={cls="button";text="返回";left=672;top=536;right=792;bottom=584;font=LOGFONT(h=-18;name='微软雅黑');z=119};
+button2={cls="button";text="开始";left=800;top=536;right=920;bottom=584;font=LOGFONT(h=-18;name='微软雅黑');z=120};
+button3={cls="button";text="Button";left=568;top=360;right=688;bottom=408;z=121};
+pgDIST={cls="plus";text="3";left=128;top=128;right=232;bottom=152;bgcolor=16777215;border={color=-16777216;width=1};db=0.75;dl=0.13;dr=0.77;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=21};
+pgFH={cls="plus";text="1";left=592;top=80;right=696;bottom=104;bgcolor=16777215;border={color=-16777216;width=1};db=0.83;dl=0.59;dr=0.3;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=77};
+pgLIM={cls="plus";text="4";left=128;top=152;right=232;bottom=176;bgcolor=16777215;border={color=-16777216;width=1};db=0.71;dl=0.13;dr=0.77;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=22};
+pgLYL={cls="plus";text="8";left=128;top=272;right=232;bottom=296;bgcolor=16777215;border={color=-16777216;width=1};db=0.51;dl=0.13;dr=0.77;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=56};
+pgOK={cls="plus";text="5";left=592;top=176;right=696;bottom=200;bgcolor=16777215;border={color=-16777216;width=1};db=0.67;dl=0.59;dr=0.3;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=82};
+pgRES={cls="plus";text="2";left=128;top=104;right=232;bottom=128;bgcolor=16777215;border={color=-16777216;width=1};db=0.79;dl=0.13;dr=0.77;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=20};
+pgRYL={cls="plus";text="8";left=592;top=272;right=696;bottom=296;bgcolor=16777215;border={color=-16777216;width=1};db=0.51;dl=0.59;dr=0.3;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=115};
+pgSDM={cls="plus";text="6";left=128;top=200;right=232;bottom=224;bgcolor=16777215;border={color=-16777216;width=1};db=0.63;dl=0.13;dr=0.77;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=24};
+pgSDP={cls="plus";text="8";left=128;top=248;right=232;bottom=272;bgcolor=16777215;border={color=-16777216;width=1};db=0.55;dl=0.13;dr=0.77;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=26};
+pgSDZ={cls="plus";text="7";left=128;top=224;right=232;bottom=248;bgcolor=16777215;border={color=-16777216;width=1};db=0.59;dl=0.13;dr=0.77;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=25};
+pgSET={cls="plus";text="5";left=128;top=176;right=232;bottom=200;bgcolor=16777215;border={color=-16777216;width=1};db=0.67;dl=0.13;dr=0.77;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=23};
+pgSYQ={cls="plus";text="3";left=592;top=128;right=696;bottom=152;bgcolor=16777215;border={color=-16777216;width=1};db=0.75;dl=0.59;dr=0.3;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=80};
+pgXH={cls="plus";text="1";left=128;top=80;right=232;bottom=104;bgcolor=16777215;border={color=-16777216;width=1};db=0.83;dl=0.13;dr=0.77;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=18};
+pgXYQ={cls="plus";text="4";left=592;top=152;right=696;bottom=176;bgcolor=16777215;border={color=-16777216;width=1};db=0.71;dl=0.59;dr=0.3;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=81};
+pgYLM={cls="plus";text="6";left=592;top=200;right=696;bottom=224;bgcolor=16777215;border={color=-16777216;width=1};db=0.63;dl=0.59;dr=0.3;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=83};
+pgYLP={cls="plus";text="8";left=592;top=248;right=696;bottom=272;bgcolor=16777215;border={color=-16777216;width=1};db=0.55;dl=0.59;dr=0.3;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=85};
+pgYLZ={cls="plus";text="7";left=592;top=224;right=696;bottom=248;bgcolor=16777215;border={color=-16777216;width=1};db=0.59;dl=0.59;dr=0.3;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=84};
+pgYY={cls="plus";text="2";left=592;top=104;right=696;bottom=128;bgcolor=16777215;border={color=-16777216;width=1};db=0.79;dl=0.59;dr=0.3;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');forecolor=65280;z=79};
+stKeylBL1={cls="static";text="0";left=72;top=80;right=128;bottom=104;align="center";border=1;db=0.83;dl=0.07;dr=0.87;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=10};
+stKeylBL2={cls="static";text="0";left=72;top=104;right=128;bottom=128;align="center";border=1;db=0.79;dl=0.07;dr=0.87;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=11};
+stKeylBL3={cls="static";text="0";left=72;top=128;right=128;bottom=152;align="center";border=1;db=0.75;dl=0.07;dr=0.87;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=12};
+stKeylBL4={cls="static";text="0";left=72;top=152;right=128;bottom=176;align="center";border=1;db=0.71;dl=0.07;dr=0.87;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=13};
+stKeylBL5={cls="static";text="0";left=72;top=176;right=128;bottom=200;align="center";border=1;db=0.67;dl=0.07;dr=0.87;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=14};
+stKeylBL6={cls="static";text="0";left=72;top=200;right=128;bottom=224;align="center";border=1;db=0.63;dl=0.07;dr=0.87;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=15};
+stKeylBL7={cls="static";text="0";left=72;top=224;right=128;bottom=248;align="center";border=1;db=0.59;dl=0.07;dr=0.87;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=16};
+stKeylBL8={cls="static";text="0";left=72;top=248;right=128;bottom=272;align="center";border=1;db=0.55;dl=0.07;dr=0.87;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=17};
+stKeylBL9={cls="static";text="0";left=72;top=272;right=128;bottom=296;align="center";border=1;db=0.51;dl=0.07;dr=0.87;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=55};
+stKeyrBL1={cls="static";text="0";left=536;top=80;right=592;bottom=104;align="center";border=1;db=0.83;dl=0.54;dr=0.41;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=69};
+stKeyrBL2={cls="static";text="0";left=536;top=104;right=592;bottom=128;align="center";border=1;db=0.79;dl=0.54;dr=0.41;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=70};
+stKeyrBL3={cls="static";text="0";left=536;top=128;right=592;bottom=152;align="center";border=1;db=0.75;dl=0.54;dr=0.41;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=71};
+stKeyrBL4={cls="static";text="0";left=536;top=152;right=592;bottom=176;align="center";border=1;db=0.71;dl=0.54;dr=0.41;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=72};
+stKeyrBL5={cls="static";text="0";left=536;top=176;right=592;bottom=200;align="center";border=1;db=0.67;dl=0.54;dr=0.41;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=73};
+stKeyrBL6={cls="static";text="0";left=536;top=200;right=592;bottom=224;align="center";border=1;db=0.63;dl=0.54;dr=0.41;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=74};
+stKeyrBL7={cls="static";text="0";left=536;top=224;right=592;bottom=248;align="center";border=1;db=0.59;dl=0.54;dr=0.41;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=75};
+stKeyrBL8={cls="static";text="0";left=536;top=248;right=592;bottom=272;align="center";border=1;db=0.55;dl=0.54;dr=0.41;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=76};
+stKeyrBL9={cls="static";text="0";left=536;top=272;right=592;bottom=296;align="center";border=1;db=0.51;dl=0.54;dr=0.41;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=114};
 static={cls="static";text="巡航";left=16;top=80;right=72;bottom=104;db=0.83;dl=0.02;dr=0.93;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=1};
-static10={cls="static";text="0";left=72;top=104;right=128;bottom=128;align="center";border=1;db=0.79;dl=0.07;dr=0.87;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=11};
-static11={cls="static";text="0";left=72;top=128;right=128;bottom=152;align="center";border=1;db=0.75;dl=0.07;dr=0.87;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=12};
-static12={cls="static";text="0";left=72;top=152;right=128;bottom=176;align="center";border=1;db=0.71;dl=0.07;dr=0.87;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=13};
-static13={cls="static";text="巡航";left=480;top=80;right=536;bottom=104;db=0.83;dl=0.48;dr=0.46;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=60};
-static14={cls="static";text="0";left=72;top=176;right=128;bottom=200;align="center";border=1;db=0.67;dl=0.07;dr=0.87;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=14};
-static15={cls="static";text="0";left=72;top=200;right=128;bottom=224;align="center";border=1;db=0.63;dl=0.07;dr=0.87;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=15};
-static16={cls="static";text="0";left=72;top=224;right=128;bottom=248;align="center";border=1;db=0.59;dl=0.07;dr=0.87;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=16};
-static17={cls="static";text="0";left=72;top=248;right=128;bottom=272;align="center";border=1;db=0.55;dl=0.07;dr=0.87;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=17};
+static13={cls="static";text="返回";left=480;top=80;right=536;bottom=104;db=0.83;dl=0.48;dr=0.46;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=60};
 static18={cls="static";text="信号";left=152;top=48;right=208;bottom=72;align="center";db=0.88;dl=0.15;dr=0.79;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=19};
-static19={cls="static";text="RES";left=480;top=104;right=536;bottom=128;db=0.79;dl=0.48;dr=0.46;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=61};
+static19={cls="static";text="语音";left=480;top=104;right=536;bottom=128;db=0.79;dl=0.48;dr=0.46;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=61};
 static2={cls="static";text="RES";left=16;top=104;right=72;bottom=128;db=0.79;dl=0.02;dr=0.93;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=2};
-static20={cls="static";text="DIST";left=480;top=128;right=536;bottom=152;db=0.75;dl=0.48;dr=0.46;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=62};
-static21={cls="static";text="LIM";left=480;top=152;right=536;bottom=176;db=0.71;dl=0.48;dr=0.46;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=63};
-static22={cls="static";text="SET";left=480;top=176;right=536;bottom=200;db=0.67;dl=0.48;dr=0.46;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=64};
-static23={cls="static";text="速度减";left=480;top=200;right=536;bottom=224;db=0.63;dl=0.48;dr=0.46;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=65};
-static24={cls="static";text="速度中";left=480;top=224;right=536;bottom=248;db=0.59;dl=0.48;dr=0.46;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=66};
-static25={cls="static";text="速度加";left=480;top=248;right=536;bottom=272;db=0.55;dl=0.48;dr=0.46;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=67};
+static20={cls="static";text="上一曲";left=480;top=128;right=536;bottom=152;db=0.75;dl=0.48;dr=0.46;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=62};
+static21={cls="static";text="下一曲";left=480;top=152;right=536;bottom=176;db=0.71;dl=0.48;dr=0.46;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=63};
+static22={cls="static";text="OK";left=480;top=176;right=536;bottom=200;db=0.67;dl=0.48;dr=0.46;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=64};
+static23={cls="static";text="音量减";left=480;top=200;right=536;bottom=224;db=0.63;dl=0.48;dr=0.46;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=65};
+static24={cls="static";text="音量中";left=480;top=224;right=536;bottom=248;db=0.59;dl=0.48;dr=0.46;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=66};
+static25={cls="static";text="音量加";left=480;top=248;right=536;bottom=272;db=0.55;dl=0.48;dr=0.46;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=67};
 static26={cls="static";text="基线";left=536;top=48;right=592;bottom=72;align="center";db=0.88;dl=0.54;dr=0.41;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=68};
-static27={cls="static";text="0";left=296;top=80;right=360;bottom=104;align="center";border=1;db=0.83;dl=0.3;dr=0.64;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=36};
-static28={cls="static";text="0";left=296;top=104;right=360;bottom=128;align="center";border=1;db=0.79;dl=0.3;dr=0.64;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=37};
-static29={cls="static";text="0";left=296;top=128;right=360;bottom=152;align="center";border=1;db=0.75;dl=0.3;dr=0.64;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=38};
+static27={cls="static";text="100";left=296;top=80;right=360;bottom=104;align="center";border=1;db=0.83;dl=0.3;dr=0.64;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=36};
+static28={cls="static";text="100";left=296;top=104;right=360;bottom=128;align="center";border=1;db=0.79;dl=0.3;dr=0.64;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=37};
+static29={cls="static";text="100";left=296;top=128;right=360;bottom=152;align="center";border=1;db=0.75;dl=0.3;dr=0.64;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=38};
 static3={cls="static";text="DIST";left=16;top=128;right=72;bottom=152;db=0.75;dl=0.02;dr=0.93;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=3};
-static30={cls="static";text="0";left=296;top=152;right=360;bottom=176;align="center";border=1;db=0.71;dl=0.3;dr=0.64;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=39};
-static31={cls="static";text="0";left=296;top=176;right=360;bottom=200;align="center";border=1;db=0.67;dl=0.3;dr=0.64;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=40};
-static32={cls="static";text="0";left=296;top=200;right=360;bottom=224;align="center";border=1;db=0.63;dl=0.3;dr=0.64;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=41};
-static33={cls="static";text="0";left=296;top=224;right=360;bottom=248;align="center";border=1;db=0.59;dl=0.3;dr=0.64;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=42};
-static34={cls="static";text="0";left=296;top=248;right=360;bottom=272;align="center";border=1;db=0.55;dl=0.3;dr=0.64;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=43};
+static30={cls="static";text="100";left=296;top=152;right=360;bottom=176;align="center";border=1;db=0.71;dl=0.3;dr=0.64;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=39};
+static31={cls="static";text="100";left=296;top=176;right=360;bottom=200;align="center";border=1;db=0.67;dl=0.3;dr=0.64;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=40};
+static32={cls="static";text="100";left=296;top=200;right=360;bottom=224;align="center";border=1;db=0.63;dl=0.3;dr=0.64;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=41};
+static33={cls="static";text="100";left=296;top=224;right=360;bottom=248;align="center";border=1;db=0.59;dl=0.3;dr=0.64;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=42};
+static34={cls="static";text="100";left=296;top=248;right=360;bottom=272;align="center";border=1;db=0.55;dl=0.3;dr=0.64;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=43};
 static35={cls="static";text="松手阈值";left=288;top=48;right=352;bottom=72;align="center";db=0.88;dl=0.29;dr=0.65;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=44};
-static36={cls="static";text="0";left=232;top=80;right=296;bottom=104;align="center";border=1;db=0.83;dl=0.23;dr=0.7;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=27};
-static37={cls="static";text="0";left=232;top=104;right=296;bottom=128;align="center";border=1;db=0.79;dl=0.23;dr=0.7;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=28};
-static38={cls="static";text="0";left=232;top=128;right=296;bottom=152;align="center";border=1;db=0.75;dl=0.23;dr=0.7;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=29};
-static39={cls="static";text="0";left=232;top=152;right=296;bottom=176;align="center";border=1;db=0.71;dl=0.23;dr=0.7;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=30};
+static36={cls="static";text="400";left=232;top=80;right=296;bottom=104;align="center";border=1;db=0.83;dl=0.23;dr=0.7;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=27};
+static37={cls="static";text="400";left=232;top=104;right=296;bottom=128;align="center";border=1;db=0.79;dl=0.23;dr=0.7;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=28};
+static38={cls="static";text="400";left=232;top=128;right=296;bottom=152;align="center";border=1;db=0.75;dl=0.23;dr=0.7;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=29};
+static39={cls="static";text="400";left=232;top=152;right=296;bottom=176;align="center";border=1;db=0.71;dl=0.23;dr=0.7;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=30};
 static4={cls="static";text="LIM";left=16;top=152;right=72;bottom=176;db=0.71;dl=0.02;dr=0.93;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=4};
-static40={cls="static";text="0";left=232;top=176;right=296;bottom=200;align="center";border=1;db=0.67;dl=0.23;dr=0.7;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=31};
-static41={cls="static";text="0";left=232;top=200;right=296;bottom=224;align="center";border=1;db=0.63;dl=0.23;dr=0.7;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=32};
-static42={cls="static";text="0";left=232;top=224;right=296;bottom=248;align="center";border=1;db=0.59;dl=0.23;dr=0.7;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=33};
-static43={cls="static";text="0";left=232;top=248;right=296;bottom=272;align="center";border=1;db=0.55;dl=0.23;dr=0.7;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=34};
+static40={cls="static";text="400";left=232;top=176;right=296;bottom=200;align="center";border=1;db=0.67;dl=0.23;dr=0.7;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=31};
+static41={cls="static";text="400";left=232;top=200;right=296;bottom=224;align="center";border=1;db=0.63;dl=0.23;dr=0.7;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=32};
+static42={cls="static";text="400";left=232;top=224;right=296;bottom=248;align="center";border=1;db=0.59;dl=0.23;dr=0.7;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=33};
+static43={cls="static";text="400";left=232;top=248;right=296;bottom=272;align="center";border=1;db=0.55;dl=0.23;dr=0.7;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=34};
 static44={cls="static";text="阈值";left=232;top=48;right=288;bottom=72;align="center";db=0.88;dl=0.23;dr=0.71;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=35};
-static45={cls="static";text="0";left=536;top=80;right=592;bottom=104;align="center";border=1;db=0.83;dl=0.54;dr=0.41;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=69};
-static46={cls="static";text="0";left=536;top=104;right=592;bottom=128;align="center";border=1;db=0.79;dl=0.54;dr=0.41;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=70};
-static47={cls="static";text="0";left=536;top=128;right=592;bottom=152;align="center";border=1;db=0.75;dl=0.54;dr=0.41;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=71};
-static48={cls="static";text="0";left=536;top=152;right=592;bottom=176;align="center";border=1;db=0.71;dl=0.54;dr=0.41;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=72};
-static49={cls="static";text="0";left=536;top=176;right=592;bottom=200;align="center";border=1;db=0.67;dl=0.54;dr=0.41;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=73};
 static5={cls="static";text="SET";left=16;top=176;right=72;bottom=200;db=0.67;dl=0.02;dr=0.93;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=5};
-static50={cls="static";text="0";left=536;top=200;right=592;bottom=224;align="center";border=1;db=0.63;dl=0.54;dr=0.41;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=74};
-static51={cls="static";text="0";left=536;top=224;right=592;bottom=248;align="center";border=1;db=0.59;dl=0.54;dr=0.41;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=75};
-static52={cls="static";text="0";left=536;top=248;right=592;bottom=272;align="center";border=1;db=0.55;dl=0.54;dr=0.41;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=76};
 static53={cls="static";text="信号";left=616;top=48;right=672;bottom=72;align="center";db=0.88;dl=0.62;dr=0.33;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=78};
 static54={cls="static";text="0";left=360;top=80;right=424;bottom=104;align="center";border=1;db=0.83;dl=0.36;dr=0.58;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=45};
 static55={cls="static";text="0";left=360;top=104;right=424;bottom=128;align="center";border=1;db=0.79;dl=0.36;dr=0.58;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=46};
@@ -81,29 +87,28 @@ static60={cls="static";text="0";left=360;top=224;right=424;bottom=248;align="cen
 static61={cls="static";text="0";left=360;top=248;right=424;bottom=272;align="center";border=1;db=0.55;dl=0.36;dr=0.58;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=52};
 static62={cls="static";text="触发次数";left=360;top=48;right=424;bottom=72;align="center";db=0.88;dl=0.36;dr=0.58;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=53};
 static63={cls="static";text="左压力";left=16;top=272;right=72;bottom=296;db=0.51;dl=0.02;dr=0.93;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');notify=1;transparent=1;z=54};
-static64={cls="static";text="0";left=72;top=272;right=128;bottom=296;align="center";border=1;db=0.51;dl=0.07;dr=0.87;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=55};
-static65={cls="static";text="0";left=232;top=272;right=296;bottom=296;align="center";border=1;db=0.51;dl=0.23;dr=0.7;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=57};
-static66={cls="static";text="0";left=296;top=272;right=360;bottom=296;align="center";border=1;db=0.51;dl=0.3;dr=0.64;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=58};
+static65={cls="static";text="300";left=232;top=272;right=296;bottom=296;align="center";border=1;db=0.51;dl=0.23;dr=0.7;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=57};
+static66={cls="static";text="100";left=296;top=272;right=360;bottom=296;align="center";border=1;db=0.51;dl=0.3;dr=0.64;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=58};
 static67={cls="static";text="0";left=360;top=272;right=424;bottom=296;align="center";border=1;db=0.51;dl=0.36;dr=0.58;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=59};
-static68={cls="static";text="0";left=696;top=80;right=760;bottom=104;align="center";border=1;db=0.83;dl=0.7;dr=0.24;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=86};
-static69={cls="static";text="0";left=696;top=104;right=760;bottom=128;align="center";border=1;db=0.79;dl=0.7;dr=0.24;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=87};
+static68={cls="static";text="400";left=696;top=80;right=760;bottom=104;align="center";border=1;db=0.83;dl=0.7;dr=0.24;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=86};
+static69={cls="static";text="400";left=696;top=104;right=760;bottom=128;align="center";border=1;db=0.79;dl=0.7;dr=0.24;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=87};
 static7={cls="static";text="速度中";left=16;top=224;right=72;bottom=248;db=0.59;dl=0.02;dr=0.93;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=7};
-static70={cls="static";text="0";left=696;top=128;right=760;bottom=152;align="center";border=1;db=0.75;dl=0.7;dr=0.24;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=88};
-static71={cls="static";text="0";left=696;top=152;right=760;bottom=176;align="center";border=1;db=0.71;dl=0.7;dr=0.24;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=89};
-static72={cls="static";text="0";left=696;top=176;right=760;bottom=200;align="center";border=1;db=0.67;dl=0.7;dr=0.24;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=90};
-static73={cls="static";text="0";left=696;top=200;right=760;bottom=224;align="center";border=1;db=0.63;dl=0.7;dr=0.24;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=91};
-static74={cls="static";text="0";left=696;top=224;right=760;bottom=248;align="center";border=1;db=0.59;dl=0.7;dr=0.24;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=92};
-static75={cls="static";text="0";left=696;top=248;right=760;bottom=272;align="center";border=1;db=0.55;dl=0.7;dr=0.24;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=93};
+static70={cls="static";text="400";left=696;top=128;right=760;bottom=152;align="center";border=1;db=0.75;dl=0.7;dr=0.24;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=88};
+static71={cls="static";text="400";left=696;top=152;right=760;bottom=176;align="center";border=1;db=0.71;dl=0.7;dr=0.24;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=89};
+static72={cls="static";text="400";left=696;top=176;right=760;bottom=200;align="center";border=1;db=0.67;dl=0.7;dr=0.24;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=90};
+static73={cls="static";text="400";left=696;top=200;right=760;bottom=224;align="center";border=1;db=0.63;dl=0.7;dr=0.24;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=91};
+static74={cls="static";text="400";left=696;top=224;right=760;bottom=248;align="center";border=1;db=0.59;dl=0.7;dr=0.24;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=92};
+static75={cls="static";text="400";left=696;top=248;right=760;bottom=272;align="center";border=1;db=0.55;dl=0.7;dr=0.24;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=93};
 static76={cls="static";text="阈值";left=696;top=48;right=752;bottom=72;align="center";db=0.88;dl=0.7;dr=0.25;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=94};
-static77={cls="static";text="0";left=760;top=80;right=824;bottom=104;align="center";border=1;db=0.83;dl=0.76;dr=0.18;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=95};
-static78={cls="static";text="0";left=760;top=104;right=824;bottom=128;align="center";border=1;db=0.79;dl=0.76;dr=0.18;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=96};
-static79={cls="static";text="0";left=760;top=128;right=824;bottom=152;align="center";border=1;db=0.75;dl=0.76;dr=0.18;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=97};
+static77={cls="static";text="100";left=760;top=80;right=824;bottom=104;align="center";border=1;db=0.83;dl=0.76;dr=0.18;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=95};
+static78={cls="static";text="100";left=760;top=104;right=824;bottom=128;align="center";border=1;db=0.79;dl=0.76;dr=0.18;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=96};
+static79={cls="static";text="100";left=760;top=128;right=824;bottom=152;align="center";border=1;db=0.75;dl=0.76;dr=0.18;dt=0.21;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=97};
 static8={cls="static";text="速度加";left=16;top=248;right=72;bottom=272;db=0.55;dl=0.02;dr=0.93;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=8};
-static80={cls="static";text="0";left=760;top=152;right=824;bottom=176;align="center";border=1;db=0.71;dl=0.76;dr=0.18;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=98};
-static81={cls="static";text="0";left=760;top=176;right=824;bottom=200;align="center";border=1;db=0.67;dl=0.76;dr=0.18;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=99};
-static82={cls="static";text="0";left=760;top=200;right=824;bottom=224;align="center";border=1;db=0.63;dl=0.76;dr=0.18;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=100};
-static83={cls="static";text="0";left=760;top=224;right=824;bottom=248;align="center";border=1;db=0.59;dl=0.76;dr=0.18;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=101};
-static84={cls="static";text="0";left=760;top=248;right=824;bottom=272;align="center";border=1;db=0.55;dl=0.76;dr=0.18;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=102};
+static80={cls="static";text="100";left=760;top=152;right=824;bottom=176;align="center";border=1;db=0.71;dl=0.76;dr=0.18;dt=0.25;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=98};
+static81={cls="static";text="100";left=760;top=176;right=824;bottom=200;align="center";border=1;db=0.67;dl=0.76;dr=0.18;dt=0.29;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=99};
+static82={cls="static";text="100";left=760;top=200;right=824;bottom=224;align="center";border=1;db=0.63;dl=0.76;dr=0.18;dt=0.33;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=100};
+static83={cls="static";text="100";left=760;top=224;right=824;bottom=248;align="center";border=1;db=0.59;dl=0.76;dr=0.18;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=101};
+static84={cls="static";text="100";left=760;top=248;right=824;bottom=272;align="center";border=1;db=0.55;dl=0.76;dr=0.18;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=102};
 static85={cls="static";text="松手阈值";left=752;top=48;right=816;bottom=72;align="center";db=0.88;dl=0.75;dr=0.18;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=103};
 static86={cls="static";text="0";left=824;top=80;right=888;bottom=104;align="center";border=1;db=0.83;dl=0.82;dr=0.11;dt=0.13;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=104};
 static87={cls="static";text="0";left=824;top=104;right=888;bottom=128;align="center";border=1;db=0.79;dl=0.82;dr=0.11;dt=0.17;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=105};
@@ -115,14 +120,231 @@ static91={cls="static";text="0";left=824;top=200;right=888;bottom=224;align="cen
 static92={cls="static";text="0";left=824;top=224;right=888;bottom=248;align="center";border=1;db=0.59;dl=0.82;dr=0.11;dt=0.37;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=110};
 static93={cls="static";text="0";left=824;top=248;right=888;bottom=272;align="center";border=1;db=0.55;dl=0.82;dr=0.11;dt=0.41;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=111};
 static94={cls="static";text="触发次数";left=824;top=48;right=888;bottom=72;align="center";db=0.88;dl=0.82;dr=0.11;dt=0.08;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=112};
-static95={cls="static";text="左压力";left=480;top=272;right=536;bottom=296;db=0.51;dl=0.48;dr=0.46;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');notify=1;transparent=1;z=113};
-static96={cls="static";text="0";left=536;top=272;right=592;bottom=296;align="center";border=1;db=0.51;dl=0.54;dr=0.41;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=114};
-static97={cls="static";text="0";left=696;top=272;right=760;bottom=296;align="center";border=1;db=0.51;dl=0.7;dr=0.24;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=116};
-static98={cls="static";text="0";left=760;top=272;right=824;bottom=296;align="center";border=1;db=0.51;dl=0.76;dr=0.18;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=117};
+static95={cls="static";text="右压力";left=480;top=272;right=536;bottom=296;db=0.51;dl=0.48;dr=0.46;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');notify=1;transparent=1;z=113};
+static97={cls="static";text="300";left=696;top=272;right=760;bottom=296;align="center";border=1;db=0.51;dl=0.7;dr=0.24;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=116};
+static98={cls="static";text="100";left=760;top=272;right=824;bottom=296;align="center";border=1;db=0.51;dl=0.76;dr=0.18;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=117};
 static99={cls="static";text="0";left=824;top=272;right=888;bottom=296;align="center";border=1;db=0.51;dl=0.82;dr=0.11;dt=0.45;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=118}
 )
 /*}}*/
 
+/* -----------------------自定义函数---------------------- */
+MsgProc = function(id,data){
+	select(id) {
+		case 0x10 {
+			winform.pgXH.text = data[7]*16
+			winform.pgDIST.text = data[8]*16
+			winform.pgLIM.text = data[5]*16
+			winform.pgRES.text = data[6]*16
+			winform.pgSET.text = data[4]*16
+			winform.pgSDM.text = data[3]*16
+			winform.pgSDP.text = data[1]*16
+			winform.pgSDZ.text = data[2]*16
+			winform.pgXH.progressPos   = data[7]
+			winform.pgDIST.progressPos = data[8]
+			winform.pgLIM.progressPos  = data[5]
+			winform.pgRES.progressPos  = data[6]
+			winform.pgSET.progressPos  = data[4]
+			winform.pgSDM.progressPos  = data[3]
+			winform.pgSDP.progressPos  = data[1]
+			winform.pgSDZ.progressPos  = data[2]
+		}
+		case 0x11 {
+			winform.pgFH.text 	= data[8]*16
+			winform.pgYY.text 	= data[7]*16
+			winform.pgSYQ.text 	= data[6]*16
+			winform.pgXYQ.text 	= data[5]*16
+			winform.pgOK.text 	= data[4]*16
+			winform.pgYLM.text 	= data[3]*16
+			winform.pgYLP.text 	= data[2]*16
+			winform.pgYLZ.text 	= data[1]*16
+			winform.pgFH.progressPos 	= data[8]
+			winform.pgYY.progressPos 	= data[7]
+			winform.pgSYQ.progressPos 	= data[6]
+			winform.pgXYQ.progressPos 	= data[5]
+			winform.pgOK.progressPos 	= data[4]
+			winform.pgYLM.progressPos 	= data[3]
+			winform.pgYLP.progressPos 	= data[2]
+			winform.pgYLZ.progressPos 	= data[1]
+		}
+		case 0x19 {
+			var pressval = data[5]
+			pressval *= 256
+			pressval += data[4]
+			winform.pgLYL.text = pressval
+			winform.pgLYL.progressPos = pressval
+		}
+		case 0x1A {
+			var pressval = data[5]
+			pressval *= 256
+			pressval += data[4]
+			winform.pgRYL.text = pressval
+			winform.pgRYL.progressPos = pressval
+		}
+		else {
+		}
+	}
+}
+ReadDID = function(nad,did){
+	var data = {0x21,0x03,0x22,0xF1,0x94,0xff,0xff,0xff}
+	data[1] = nad
+	data[4] = (did>>8)&0xff
+	data[5] = did&0xff
+	USB2LINHw.WriteData(0x3C,data)
+	sleep(9)
+	var len,rxbuf = USB2LINHw.ReadData(0x3D)
+	if(len == 8)
+	{
+		if(rxbuf[1] == nad && rxbuf[3] == 0x62)
+		{
+			var readdate = rxbuf[7]
+			readdate <<= 8
+			readdate += rxbuf[6]
+			return readdate; 
+		}
+		else {
+			return 0; 
+		}
+		
+	}
+	else {
+		return 0; 
+	}
+	
+}
+/* -----------------------控件事件---------------------- */
+
+winform.button.oncommand = function(id,event){
+	publish("ALV数据监控","返回")//消息发送到主界面
+	winform.show(false)
+}
+winform.wndproc = function(hwnd,message,wparam,lparam){
+    select(message) {   //判断消息类型
+        case 0x10/*_WM_CLOSE*/  //窗口关闭消息
+        {
+            publish("ALV数据监控","关闭")//消息发送到主界面 
+        }
+    }
+}
+winform.button2.oncommand = function(id,event){
+	if(winform.button2.text == "开始")
+	{
+		if(USB2LINHw == null)
+		{
+			return ; 
+		}
+		thread.resume(thrdHandle)
+		winform.button2.text = "停止"
+	}
+	else {
+		thread.suspend(thrdHandle)
+		winform.button2.text = "开始"
+	}
+	
+}
+winform.button3.oncommand = function(id,event){
+	winform.stKeylBL1.text = ReadDID(0x21,0xF010)
+	winform.stKeylBL2.text = ReadDID(0x21,0xF011)
+	winform.stKeylBL3.text = ReadDID(0x21,0xF012)
+	winform.stKeylBL4.text = ReadDID(0x21,0xF013)
+	winform.stKeylBL5.text = ReadDID(0x21,0xF014)
+	winform.stKeylBL6.text = ReadDID(0x21,0xF015)
+	winform.stKeylBL7.text = ReadDID(0x21,0xF016)
+	winform.stKeylBL8.text = ReadDID(0x21,0xF017)
+}
+
+/*--------------程序运行----------------*/
+
+thread.create_suspended = true //创建线程以前可设置该值,指定线程创建后会暂停,否则直接运行
+var listener = thread.command()
+console.dump(listener)
+var tx_index=0//调度序号
+//调度函数
+listener.Schedule = function(){
+	//import console;
+	if(USB2LINHw == null)
+	{
+		thrdHandle.stop(1)
+	}
+	select(tx_index) {
+		case 0 {
+			var len,buf = USB2LINHw.ReadData(0x19)
+			if(len == 8)
+			{
+				MsgProc(0x19,buf)
+			}
+		}
+		case 1 {
+			var len,buf = USB2LINHw.ReadData(0x1A)
+			if(len == 8)
+			{
+				MsgProc(0x1A,buf)
+			}
+		}
+		case 2 {
+			var len,buf = USB2LINHw.ReadData(0x10)
+			if(len == 8)
+			{
+				MsgProc(0x10,buf)
+			}
+		}
+		case 3 {
+			var len,buf = USB2LINHw.ReadData(0x11)
+			if(len == 8)
+			{
+				MsgProc(0x11,buf)
+			}
+		}
+		else {
+		}
+	}
+	tx_index += 1//调度序号+1
+	if(tx_index > 3)
+	{
+		tx_index=0
+	}
+}
+
+
+/*------------------------------*/
+
+
+//左
+winform.pgXH.setProgressRange(0,100)
+winform.pgDIST.setProgressRange(0,100)
+winform.pgLIM.setProgressRange(0,100)
+winform.pgRES.setProgressRange(0,100)
+winform.pgSET.setProgressRange(0,100)
+winform.pgSDM.setProgressRange(0,100)
+winform.pgSDP.setProgressRange(0,100)
+winform.pgSDZ.setProgressRange(0,100)
+//右
+winform.pgFH.setProgressRange(0,100) 
+winform.pgYY.setProgressRange(0,100) 
+winform.pgSYQ.setProgressRange(0,100)
+winform.pgXYQ.setProgressRange(0,100)
+winform.pgOK.setProgressRange(0,100) 
+winform.pgYLM.setProgressRange(0,100)
+winform.pgYLP.setProgressRange(0,100)
+winform.pgYLZ.setProgressRange(0,100)
+//压力
+
+
+
+winform.pgRYL.setProgressRange(0,2048)
+winform.pgLYL.setProgressRange(0,2048)
+
 winform.show();
+
+thrdHandle = thread.create( //创建线程
+	function(listener){
+		
+		while(1){ 
+			listener.Schedule()//调用调度表
+		}
+
+	},listener
+)
+console.dumpJson(thrdHandle)
+
 win.loopMessage();
 return winform;

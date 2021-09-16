@@ -27,7 +27,7 @@ mainForm.btnDisconnect.disabled = true
 
 
 //显示C62X测试界面
-mainForm.tab.loadForm("\界面\项目\C62X.aardio");
+//mainForm.tab.loadForm("\界面\项目\C62X.aardio");
 //显示ALV测试界面
 mainForm.tab.loadForm("\界面\项目\ALV_TEST.aardio");
 
@@ -51,7 +51,7 @@ if(USB2LINHw.LoadDll() == 0)
 else {
     win.msgboxErr("dll加载失败，请安装USB2LIN驱动","错误")
 }
-
+mainForm.cbbSelDev.selIndex = 2//默认使用USB2LIN
 
 try{
     //显示版本号
