@@ -104,12 +104,13 @@ winform.btn_Motor_rsld.wndproc = function(hwnd,message,wParam,lParam){
 winform.button.oncommand = function(id,event){
 	if(USB2LINHw == null)
 	{
-		Display("DLL未加载")
+		Display(" DLL未加载")
 		return;
 	}
 	if(frmChild == null)
 	{
 		frmChild = winform.loadForm("\界面\项目\ALV_DataMonitor.aardio");
+		Display(" 开始数据监控")
 	}
 	
 	frmChild.show();
@@ -120,10 +121,10 @@ winform.button.oncommand = function(id,event){
 subscribe("ALV数据监控",function(str){
 	select(str) {
 		case "返回" {
-			winform.show()
+			//winform.show()
 		}
-		case "关闭" {
-			winform.show()
+		case "关闭数据监控" {
+			//winform.show()
 			Display(str)
 			frmChild = null
 		}
