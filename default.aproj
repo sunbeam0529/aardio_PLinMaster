@@ -12,6 +12,7 @@
 			<file name="C62X.aardio" path="界面\项目\C62X.aardio" comment="界面\项目\C62X.aardio"/>
 			<file name="ALV_TEST.aardio" path="界面\项目\ALV_TEST.aardio" comment="界面\项目\ALV_TEST.aardio"/>
 			<file name="ALV_DataMonitor.aardio" path="界面\项目\ALV_DataMonitor.aardio" comment="界面\项目\ALV_DataMonitor.aardio"/>
+			<file name="ALV_BOOT.aardio" path="界面\项目\ALV_BOOT.aardio" comment="界面\项目\ALV_BOOT.aardio"/>
 		</folder>
 	</folder>
 </project>
