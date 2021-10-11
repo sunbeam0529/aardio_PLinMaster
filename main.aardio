@@ -6,12 +6,13 @@ import PLin;
 import console;
 import fsys.version;
 import USB2LIN;
+import LINDev;
 /*DSG{{*/
 mainForm = win.form(text="PLin上位机";right=799;bottom=599;border="dialog frame";max=false)
 mainForm.add(
 btnConnect={cls="button";text="连接";left=608;top=48;right=692;bottom=79;z=6};
 btnDisconnect={cls="button";text="断开";left=696;top=48;right=780;bottom=79;z=8};
-btnFlash={cls="button";text="刷新";left=252;top=48;right=337;bottom=78;z=2};
+btnFlash={cls="button";text="刷新";left=256;top=48;right=341;bottom=78;z=2};
 cbbSelChannel={cls="combobox";left=368;top=48;right=590;bottom=74;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=3};
 cbbSelDev={cls="combobox";left=80;top=48;right=242;bottom=74;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
 groupbox={cls="groupbox";text="硬件信息";left=16;top=14;right=790;bottom=92;edge=1;z=1};
@@ -29,29 +30,22 @@ mainForm.btnDisconnect.disabled = true
 //显示C62X测试界面
 //mainForm.tab.loadForm("\界面\项目\C62X.aardio");
 //显示ALV测试界面
-mainForm.tab.loadForm("\界面\项目\ALV_TEST.aardio");
+//mainForm.tab.loadForm("\界面\项目\ALV_TEST.aardio");
+//显示灯带界面
+mainForm.tab.loadForm("\界面\项目\LightBar.aardio");
 
 PLinHw = PLin.PLINHW()
 USB2LINHw = USB2LIN.USBLINHW()
-
+LINDevMng = LINDev.DEVMNG()
 //加载DLL
-if(PLinHw.LoadDll() == 0){//成功
-    mainForm.cbbSelDev.add("PCAN/PLIN")
-    mainForm.cbbSelDev.selIndex = 1
+LINDevMng.LoadDll()
+var alldev = LINDevMng.GetSuppotredDev()
+
+for(i=1;#alldev;1){
+	mainForm.cbbSelDev.add(alldev[i])
 }
-else {//失败
-    //mainForm.cbbSelDev.add("加载驱动失败")
-    win.msgboxErr("dll加载失败，请安装PCAN驱动","错误")
-}
-if(USB2LINHw.LoadDll() == 0)
-{
-    mainForm.cbbSelDev.add("USB2LIN")
-    mainForm.cbbSelDev.selIndex = 1
-}
-else {
-    win.msgboxErr("dll加载失败，请安装USB2LIN驱动","错误")
-}
-mainForm.cbbSelDev.selIndex = 2//默认使用USB2LIN
+
+mainForm.cbbSelDev.selIndex = 1//默认使用USB2LIN
 
 try{
     //显示版本号
@@ -62,107 +56,48 @@ try{
 
 //刷新按键
 mainForm.btnFlash.oncommand = function(id,event){
-    mainForm.cbbSelChannel.clear()//清楚下拉菜单
-    if(mainForm.cbbSelDev.selText == "PCAN/PLIN"){
-        PLinHw.FlashHw()//刷新
-        var AvailableHW = PLinHw.GetAvailableHW()//获取有效硬件
-        for(i=1;#AvailableHW;1){
-            mainForm.cbbSelChannel.add(AvailableHW[i].name)
-        }
-        if(#AvailableHW == 0){
-            mainForm.cbbSelChannel.add("未找到硬件")
-            mainForm.btnConnect.disabled = true
-            mainForm.btnDisconnect.disabled = true
-        }
-        else {
-            mainForm.btnConnect.disabled = false
-            mainForm.btnDisconnect.disabled = false
-        }
-            
-        mainForm.cbbSelChannel.selIndex = 1
-    }
-    elseif(mainForm.cbbSelDev.selText == "USB2LIN"){
-        USB2LINHw.FlashHw()//刷新
-        var AvailableHW = USB2LINHw.GetAvailableHW()//获取有效硬件
-        for(i=1;#AvailableHW;1){
-            mainForm.cbbSelChannel.add(tostring(AvailableHW[i]))
-        }
-        if(#AvailableHW == 0){
-            mainForm.cbbSelChannel.add("未找到硬件")
-            mainForm.btnConnect.disabled = true
-            mainForm.btnDisconnect.disabled = true
-        }
-        else {
-            mainForm.btnConnect.disabled = false
-            mainForm.btnDisconnect.disabled = false
-        }
-        mainForm.cbbSelChannel.selIndex = 1
+    mainForm.cbbSelChannel.clear()//清除下拉菜单
+    AvailableHW = LINDevMng.FlashHw(mainForm.cbbSelDev.selText)
+    if(#AvailableHW == 0){
+    	mainForm.cbbSelChannel.add("未找到硬件")
+        mainForm.btnConnect.disabled = true
+        mainForm.btnDisconnect.disabled = true
     }
     else {
-        return ; 
+    	for(i=1;#AvailableHW;1){
+            mainForm.cbbSelChannel.add(AvailableHW[i].name)
+        }
+        mainForm.btnConnect.disabled = false
+        mainForm.btnDisconnect.disabled = false
     }
+    mainForm.cbbSelChannel.selIndex = 1 
     
 }
 
 //连接按键
 mainForm.btnConnect.oncommand = function(id,event){
-    if(mainForm.cbbSelDev.selText == "PCAN/PLIN")
+
+    var ret = LINDevMng.Connect(mainForm.cbbSelChannel.selIndex)
+    if(ret == 0)
     {
-        var ret = PLinHw.Connect(mainForm.cbbSelChannel.selIndex,19200)
-        if(ret == 0)
-        {
-            var devname = PLinHw.GetConnectedName()//获取名字
-            MainDisplay(devname++"已连接")
-            mainForm.btnConnect.disabled = true //按键禁止按下
-            mainForm.btnDisconnect.disabled = false
-            mainForm.cbbSelDev.disabled = true
-            mainForm.cbbSelChannel.disabled = true
-            mainForm.btnFlash.disabled = true
-        }
+        MainDisplay(mainForm.cbbSelDev.selText++"已连接")
+        mainForm.btnConnect.disabled = true //按键禁止按下
+        mainForm.btnDisconnect.disabled = false
+        mainForm.cbbSelDev.disabled = true
+        mainForm.cbbSelChannel.disabled = true
+        mainForm.btnFlash.disabled = true
     }
-    elseif(mainForm.cbbSelDev.selText == "USB2LIN")
-    {
-        ret = USB2LINHw.OpenDevice(1)
-        if(ret == 0)
-        {
-            MainDisplay("设备"++mainForm.cbbSelChannel.selText++"已连接")
-            mainForm.btnConnect.disabled = true //按键禁止按下
-            mainForm.btnDisconnect.disabled = false
-            mainForm.cbbSelDev.disabled = true
-            mainForm.cbbSelChannel.disabled = true
-            mainForm.btnFlash.disabled = true
-        }
-        else {
-            MainDisplay("打开设备失败")
-        }
-    }
-    else {
-        ;//暂不处理
-    }
-    
+
 }
 //断开连接按键
 mainForm.btnDisconnect.oncommand = function(id,event){
-	if(mainForm.cbbSelDev.selText == "PCAN/PLIN")
-	{
-		if(PLinHw.isConnected() == true)
-    	{
-        	PLinHw.Disconnect()//断开连接
-        	mainForm.btnConnect.disabled = false
-        	mainForm.btnDisconnect.disabled = true
-        	//publish("日志消息","设备已断开")//消息发送到子界面
-        	MainDisplay("设备已断开")
-			mainForm.cbbSelDev.disabled = false
-        	mainForm.cbbSelChannel.disabled = false
-        	mainForm.btnFlash.disabled = false
-    	}
-	}
-	elseif(mainForm.cbbSelDev.selText == "USB2LIN"){
-		USB2LINHw.CloseDevice(tonumber(mainForm.cbbSelChannel.selText))
-		MainDisplay("设备已断开")
+	if(LINDevMng.isConnected() == true){
+		LINDevMng.Disconnect()
 		mainForm.btnConnect.disabled = false
         mainForm.btnDisconnect.disabled = true
-        mainForm.cbbSelDev.disabled = false
+        //publish("日志消息","设备已断开")//消息发送到子界面
+        MainDisplay("设备已断开")
+		mainForm.cbbSelDev.disabled = false
         mainForm.cbbSelChannel.disabled = false
         mainForm.btnFlash.disabled = false
 	}

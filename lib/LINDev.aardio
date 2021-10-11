@@ -1,23 +1,111 @@
-﻿import 
-
+﻿
 namespace LINDev{
 	class DEVMNG{
 		ctor( /*输入构造函数所需要的参数*/ ){
+			import PLin;
+			import USB2LIN;
+			PLinHw = PLin.PLINHW()			//Peak System PLIN
+			USB2LINHw = USB2LIN.USBLINHW()	//Tossmoss USB2LIN
 			
+			SupportDev = {};//支持的设备
+			Connected = false;
 		};
 		type=me;
 		/*对象的所有成员必须用分号分隔*/
-		//加载DLL
-    	LoadDll = function (){
-    		DllHandle = ..raw.loadDll("PLinApi.dll")
-    		if(DllHandle == null)return 1;
-    		
-    		return 0; 
-    	}
 		/*成员函数*/
+		//加载DLL
 		LoadDll = function(){
+			var DevCount = 1;//局部变量 DevCount 设备计数
+			//加载PLIN驱动
+			if(PLinHw.LoadDll() == 0){
+				//加载成功
+				SupportDev[DevCount] = "PCAN/PLIN"
+				DevCount += 1
+			}
+			else {
+				publish("显示消息","PCAN/PLIN DLL加载失败")
+			}
+			//加载USB2LIN驱动
+			if(USB2LINHw.LoadDll() == 0){
+				//加载成功
+				SupportDev[DevCount] = "USB2LIN"
+				DevCount += 1
+			}
+			else {
+				publish("显示消息","USB2LIN DLL加载失败")
+			}
 			
 		}
+		//获取已加载成功的设备
+		GetSuppotredDev = function(){
+			return SupportDev; 
+		}
+		//刷新硬件，获取LIN通道
+		FlashHw = function(dev){
+			SelectedDev = ""
+			if(dev == "PCAN/PLIN"){
+				PLinHw.FlashHw()
+				SelectedDev = dev
+				return PLinHw.GetAvailableHW()
+			}
+			elseif(dev == "USB2LIN"){
+				USB2LINHw.FlashHw()
+				SelectedDev = dev
+				return USB2LINHw.GetAvailableHW()
+			}
+			
+		}
+		//连接硬件
+		Connect = function(chn){
+			var ret = 0xff
+			if(SelectedDev == "PCAN/PLIN"){
+				ret = PLinHw.Connect(chn,19200)
+			}
+			elseif(SelectedDev == "USB2LIN"){
+				ret = USB2LINHw.OpenDevice(1)//todo:任意设备
+			}
+			if(ret == 0){
+				ConnectedDev = SelectedDev
+				Connected = true
+			}
+			return ret;
+		}
+		
+		isConnected = function(){
+			return Connected
+		}
+		
+		Disconnect = function(){
+			if(ConnectedDev == "PCAN/PLIN"){
+				PLinHw.Disconnect()//断开连接
+			}
+			elseif(ConnectedDev == "USB2LIN"){
+				USB2LINHw.CloseDevice(1)//todo:任意设备
+			}
+			
+		}
+		
+		TransmitID = function(id){
+			if(ConnectedDev == "PCAN/PLIN"){
+				PLinHw.TransmitID(id)//发送ID
+			}
+			elseif(ConnectedDev == "USB2LIN"){
+				//USB2LIN待完善
+			}
+		}
+		
+		TransmitData = function(id,data){
+			if(ConnectedDev == "PCAN/PLIN"){
+				PLinHw.TransmitData(id,data)//发送数据
+				..publish("显示消息","发送数据")//消息发送到子界面
+			}
+			elseif(ConnectedDev == "USB2LIN"){
+				//USB2LIN待完善
+			}
+		}
+		
+		
+		
 		
 	}
 		

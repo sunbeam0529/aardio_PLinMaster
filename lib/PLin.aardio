@@ -59,10 +59,12 @@ namespace PLin{
     	
     	//刷新硬件
     	FlashHw = function (){
+    	    //..publish("调试信息","进入FlashHw函数")
         	if(DllHandle = null){
             	//DLL为空，返回
         		return 1; 
         	}
+        	//..publish("调试信息","开始读取硬件数量")
         	//读取硬件数量
         	var HWCount = ..raw.buffer(1)
     		var ret = DllHandle.LIN_GetAvailableHardware(0,0,HWCount)
@@ -215,9 +217,9 @@ namespace PLin{
     		{
     			return;
     		}
-    		LIN_Read := DllHandle.api("LIN_Read","INT(BYTE,struct& rcvmsg)")//声明API
+    		//LIN_Read := DllHandle.api("LIN_Read","INT(BYTE,struct& rcvmsg)")//声明API
     		var msgread = ..PLin.TLINRcvMsg()//..TLINRcvMsg();
-    		var ret = LIN_Read(Client,msgread)//读取数据
+    		var ret = DllHandle.LIN_Read(Client,msgread)//读取数据
     		
     		return ret,msgread; 
     	}

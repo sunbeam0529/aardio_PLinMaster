@@ -1,8 +1,23 @@
-import win.ui;
-/*DSG{{*/
-var winform = win.form(text="aardio Form";right=749;bottom=449;parent=...)
-winform.add()
-/*}}*/
+import LINDev;
+import console;
 
-winform.show()
-win.loopMessage();
+//从子界面接收的消息
+subscribe("调试信息",function(str){
+    console.print(str)
+} )
+
+lindev = LINDev.DEVMNG()
+
+lindev.LoadDll()
+
+ret = lindev.GetSuppotredDev()
+
+for(i=1;#ret;1){
+	console.print(ret[i])
+
+}
+AvailableHW = lindev.FlashHw("PCAN/PLIN")
+for(i=1;#AvailableHW;1){
+    console.print(AvailableHW[i].name)
+}
+console.pause()
