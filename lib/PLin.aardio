@@ -1,21 +1,22 @@
 ﻿import win
 import raw
 import UserLib
-//LIN接收报文结构体
-class TLINRcvMsg{
-    BYTE Type;                           // Frame type (see LIN Received Message Types)
-    BYTE FrameId;                               // Frame ID (6 bit) + Parity (2 bit)
-    BYTE Length;                                // Frame Length (1..8)
-    BYTE Direction;                    // Frame Direction (see LIN Message Direction Types)
-    BYTE ChecksumType;              // Frame Checksum type (see LIN Message Checksum Types)
-    BYTE Data[8];                               // Data bytes (0..7)
-    BYTE Checksum;                              // Frame Checksum
-    INT  ErrorFlags;                   // Frame error flags (see Error flags for LIN Rcv Msgs)
-    LONG64 TimeStamp;                 // Timestamp in microseconds
-    WORD hHw;
-}
+
 
 namespace PLin{
+	//LIN接收报文结构体
+	class TLINRcvMsg{
+    	BYTE Type;                           // Frame type (see LIN Received Message Types)
+    	BYTE FrameId;                               // Frame ID (6 bit) + Parity (2 bit)
+    	BYTE Length;                                // Frame Length (1..8)
+    	BYTE Direction;                    // Frame Direction (see LIN Message Direction Types)
+    	BYTE ChecksumType;              // Frame Checksum type (see LIN Message Checksum Types)
+    	BYTE Data[8];                               // Data bytes (0..7)
+    	BYTE Checksum;                              // Frame Checksum
+    	INT  ErrorFlags;                   // Frame error flags (see Error flags for LIN Rcv Msgs)
+    	LONG64 TimeStamp;                 // Timestamp in microseconds
+    	WORD hHw;
+	}
     class AVAILABLE_HW{//待完善
     	ctor(num){
     	
@@ -183,9 +184,27 @@ namespace PLin{
     		var msgtemp = ..raw.buffer(13)
     		msgtemp[1] = id
     		DllHandle.LIN_GetPID(msgtemp)
-    		msgtemp[2] = 8
-    		msgtemp[3] = 3
-    		msgtemp[4] = 2
+    		msgtemp[2] = 8 //长度
+    		msgtemp[3] = 3 //方向 0-disable 1-Publish 2-Subscriber 3-dirSubscriberAutoLength
+    		msgtemp[4] = 2 //校验 0-Custom 1-Classic 2-Enhanced 3-Auto
+    		DllHandle.LIN_Write(Client,HWconnected,msgtemp)
+    	}
+    	
+    	TransmitData = function(id,data){
+    		if(HWconnected == null)
+    		{
+    			return;
+    		}
+    		var msgtemp = ..raw.buffer(13)
+    		msgtemp[1] = id
+    		DllHandle.LIN_GetPID(msgtemp)//计算PID
+    		msgtemp[2] = 8 //长度
+    		msgtemp[3] = 1 //方向 0-disable 1-Publish 2-Subscriber 3-dirSubscriberAutoLength
+    		msgtemp[4] = 2 //校验 0-Custom 1-Classic 2-Enhanced 3-Auto
+    		for(i=1;8;1){
+    			msgtemp[i+4] = data[i]
+    		}
+    		DllHandle.LIN_CalculateChecksum(msgtemp)//计算checksum
     		DllHandle.LIN_Write(Client,HWconnected,msgtemp)
     	}
     	
@@ -197,7 +216,7 @@ namespace PLin{
     			return;
     		}
     		LIN_Read := DllHandle.api("LIN_Read","INT(BYTE,struct& rcvmsg)")//声明API
-    		var msgread = ..TLINRcvMsg();
+    		var msgread = ..PLin.TLINRcvMsg()//..TLINRcvMsg();
     		var ret = LIN_Read(Client,msgread)//读取数据
     		
     		return ret,msgread; 
