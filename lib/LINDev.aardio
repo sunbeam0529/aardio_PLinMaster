@@ -1,0 +1,24 @@
+﻿import 
+
+namespace LINDev{
+	class DEVMNG{
+		ctor( /*输入构造函数所需要的参数*/ ){
+			
+		};
+		type=me;
+		/*对象的所有成员必须用分号分隔*/
+		//加载DLL
+    	LoadDll = function (){
+    		DllHandle = ..raw.loadDll("PLinApi.dll")
+    		if(DllHandle == null)return 1;
+    		
+    		return 0; 
+    	}
+		/*成员函数*/
+		LoadDll = function(){
+			
+		}
+		
+	}
+		
+}

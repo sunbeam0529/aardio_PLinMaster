@@ -13,6 +13,7 @@
 			<file name="ALV_TEST.aardio" path="界面\项目\ALV_TEST.aardio" comment="界面\项目\ALV_TEST.aardio"/>
 			<file name="ALV_DataMonitor.aardio" path="界面\项目\ALV_DataMonitor.aardio" comment="界面\项目\ALV_DataMonitor.aardio"/>
 			<file name="ALV_BOOT.aardio" path="界面\项目\ALV_BOOT.aardio" comment="界面\项目\ALV_BOOT.aardio"/>
+			<file name="LightBar.aardio" path="界面\项目\LightBar.aardio" comment="界面\项目\LightBar.aardio"/>
 		</folder>
 	</folder>
 </project>
