@@ -23,16 +23,17 @@ namespace LINDev{
 				DevCount += 1
 			}
 			else {
-				publish("显示消息","PCAN/PLIN DLL加载失败")
+				..publish("显示消息","PCAN/PLIN DLL加载失败")
 			}
 			//加载USB2LIN驱动
+			
 			if(USB2LINHw.LoadDll() == 0){
 				//加载成功
 				SupportDev[DevCount] = "USB2LIN"
 				DevCount += 1
 			}
 			else {
-				publish("显示消息","USB2LIN DLL加载失败")
+				..publish("显示消息","USB2LIN DLL加载失败")
 			}
 			
 		}
@@ -97,13 +98,37 @@ namespace LINDev{
 		TransmitData = function(id,data){
 			if(ConnectedDev == "PCAN/PLIN"){
 				PLinHw.TransmitData(id,data)//发送数据
-				..publish("显示消息","发送数据")//消息发送到子界面
 			}
 			elseif(ConnectedDev == "USB2LIN"){
 				//USB2LIN待完善
 			}
 		}
 		
+		ReadID = function(id){
+			if(ConnectedDev == "PCAN/PLIN"){
+				var ret,msgtemp
+				//清空数据
+				do{
+					ret,msgtemp = PLinHw.ReadMsg()//读取数据
+				}while(ret == 0)//直到读取完成
+				
+				PLinHw.TransmitID(id)//发送ID
+				sleep(15)//等待10ms
+				do{
+					ret,msgtemp = PLinHw.ReadMsg()//读取数据
+					if(ret == 0){//读到数据
+						if((msgtemp.FrameId&0x3f) == id){
+							//正确ID,返回数据
+							return msgtemp.Data; 
+						}
+					}
+				}while(ret == 0)//直到读取完成
+				return null; 
+			}
+			elseif(ConnectedDev == "USB2LIN"){
+				//USB2LIN待完善
+			}
+		}
 		
 		
 		

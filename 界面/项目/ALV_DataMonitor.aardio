@@ -285,16 +285,16 @@ ReadDID = function(nad,did){
 	data[1] = nad
 	data[4] = (did>>8)&0xff
 	data[5] = did&0xff
-	USB2LINHw.WriteData(0x3C,data)
+	LINDevMng.WriteData(0x3C,data)
 	sleep(9)
-	var len,rxbuf = USB2LINHw.ReadData(0x3D)
+	var rxbuf = LINDevMng.ReadID(0x3D)
 	str = " 0x3C:"
 	for(i=1;#rxbuf;1){
 		str = str++' '++tostring(rxbuf[i],16)
 	}
 	
 	ALVWriteLog(str)
-	if(len == 8)
+	if(rxbuf != null)
 	{
 		if(rxbuf[1] == nad && rxbuf[3] == 0x62)
 		{
@@ -387,35 +387,35 @@ var didcount = 0;
 listener.Schedule = function(){
 	//import console;
 	timecount += 1
-	if(USB2LINHw == null)
+	if(LINDevMng == null)
 	{
 		thrdHandle.stop(1)
 	}
 	select(tx_index) {
 		case 0 {
-			var len,buf = USB2LINHw.ReadData(0x19)
-			if(len == 8)
+			var buf = LINDevMng.ReadID(0x19)
+			if(buf != null)
 			{
 				MsgProc(0x19,buf)
 			}
 		}
 		case 1 {
-			var len,buf = USB2LINHw.ReadData(0x1A)
-			if(len == 8)
+			var buf = LINDevMng.ReadID(0x1A)
+			if(buf != null)
 			{
 				MsgProc(0x1A,buf)
 			}
 		}
 		case 2 {
-			var len,buf = USB2LINHw.ReadData(0x10)
-			if(len == 8)
+			var buf = LINDevMng.ReadID(0x10)
+			if(buf != null)
 			{
 				MsgProc(0x10,buf)
 			}
 		}
 		case 3 {
-			var len,buf = USB2LINHw.ReadData(0x11)
-			if(len == 8)
+			var buf = LINDevMng.ReadID(0x11)
+			if(buf != null)
 			{
 				MsgProc(0x11,buf)
 			}

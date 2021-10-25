@@ -1,23 +1,39 @@
 import win.ui;
 /*DSG{{*/
-var winform_general = win.form(text="通用测试界面";right=799;bottom=599;border="dialog frame";mode="popup")
+var winform_general = win.form(text="通用";right=749;bottom=449;border="dialog frame")
 winform_general.add(
-btnReturn={cls="button";text="返回";left=458;top=38;right=590;bottom=65;z=4};
-edit={cls="edit";text="Edit";left=43;top=37;right=349;bottom=65;edge=1;readonly=1;z=3};
-groupbox={cls="groupbox";text="硬件信息";left=35;top=18;right=767;bottom=71;edge=1;z=1};
-tab={cls="tab";left=37;top=76;right=761;bottom=563;edge=1;z=2}
+btnReadID={cls="button";text="读取ID";left=128;top=32;right=200;bottom=64;z=1};
+edReadID={cls="edit";text="Edit";left=48;top=32;right=128;bottom=64;edge=1;z=2};
+edit={cls="edit";text="Edit";left=504;top=16;right=744;bottom=432;edge=1;multiline=1;z=4};
+static={cls="static";text="0x";left=32;top=48;right=64;bottom=72;transparent=1;z=3}
 )
 /*}}*/
 
-winform_general.show();
-subscribe("硬件信息",function(nowHW){
-    winform_general.edit.text = nowHW.name	
-} )
-
-winform_general.btnReturn.oncommand = function(id,event){
-	//winform_general.show(false)
-	winform_general.endModal()
+import console;
+winform_general.btnReadID.oncommand = function(id,event){
+	var data = LINDevMng.ReadID(0x19)
+	if(data == null){
+		//读到空白数据
+		Display("0x19无响应")
+	}
+	else {
+		str = "0x19:"
+		
+		for(i=1;#data;1){
+			str += " "
+			str += tostring(data[i],16)
+		
+		}
+		Display(str)
+	}
+	
 }
+
+Display = function(str){
+	winform_general.edit.print(str)
+	
+}
+
 
 win.loopMessage();
 return winform_general;
