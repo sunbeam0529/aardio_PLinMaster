@@ -130,6 +130,56 @@ namespace LINDev{
 			}
 		}
 		
+		ReadDID = function(nad,did){
+			import UserLib;
+			if(ConnectedDev == "PCAN/PLIN"){
+				var data = {nad,0x03,0x22,did>>8,did&0xff,0xff,0xff,0xff}; 
+				PLinHw.TransmitData(0x3C,data)//发送数据
+				sleep(10);
+				data = this.ReadID(0x3D)
+				if(data[1] == nad)
+				{
+					var alldata={}; 
+					var count = 1; 
+					if(data[2] == 0x10){//多帧
+					
+						//首帧
+						var len = data[3]; 
+						for(i=4;#data;1){
+							alldata[count] = data[i]
+							count += 1
+						}
+						
+						//续帧
+						while(len > 6){
+							len -= 5
+							data = this.ReadID(0x3D)
+							for(i=3;#data;1){
+								alldata[count] = data[i]
+								count += 1
+							}
+							
+						}
+						
+					}
+					else {//单帧
+						for(i=3;#data;1){
+							alldata[count] = data[i]
+							count += 1
+						}
+					}
+					return alldata; 
+					
+				}
+				return null; 
+			}
+			elseif(ConnectedDev == "USB2LIN"){
+				//USB2LIN待完善
+			}
+		}
+		
+		
+		
 		
 		
 	}

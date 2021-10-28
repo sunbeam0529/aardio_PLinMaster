@@ -9,4 +9,25 @@ namespace UserLib{
 
 		return ID;
     }
+    
+    DebugShowMsg = function(id,data){
+        import console;
+
+        var str = tostring(id,16) + ":"
+        for(i=1;#data;1){
+			str += tostring(data[i],16)
+			str += " "
+        }
+        console.print(str)
+    }
+    
+    Ascii2str = function(arr){
+        var str = ""
+    	for(i=1;#arr;1){
+    	    str+=..string.pack(arr[i])
+    	}
+    	return str; 
+    }
+    
+    
 }

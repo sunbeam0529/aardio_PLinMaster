@@ -2,15 +2,29 @@ import win.ui;
 /*DSG{{*/
 var winform_general = win.form(text="通用";right=749;bottom=449;border="dialog frame")
 winform_general.add(
-btnReadID={cls="button";text="读取ID";left=128;top=32;right=200;bottom=64;z=1};
-edReadID={cls="edit";text="Edit";left=48;top=32;right=128;bottom=64;edge=1;z=2};
+btnReadID={cls="button";text="读取ID";left=128;top=32;right=200;bottom=56;z=1};
+btn_diag_1001={cls="button";text="$10 01";left=32;top=312;right=96;bottom=336;z=5};
+btn_diag_1002={cls="button";text="$10 02";left=32;top=336;right=96;bottom=360;z=6};
+btn_diag_1003={cls="button";text="$10 03";left=32;top=360;right=96;bottom=384;z=7};
+btn_diag_1101={cls="button";text="$11 01";left=104;top=312;right=168;bottom=336;z=8};
+btn_diag_22={cls="button";text="$22";left=176;top=360;right=240;bottom=384;z=12};
+btn_diag_2701={cls="button";text="$27 01";left=104;top=336;right=168;bottom=360;z=9};
+btn_diag_2703={cls="button";text="$27 03";left=104;top=360;right=168;bottom=384;z=10};
+edReadID={cls="edit";left=48;top=32;right=128;bottom=56;edge=1;num=1;z=2};
 edit={cls="edit";text="Edit";left=504;top=16;right=744;bottom=432;edge=1;multiline=1;z=4};
-static={cls="static";text="0x";left=32;top=48;right=64;bottom=72;transparent=1;z=3}
+edit2={cls="edit";text="Edit";left=176;top=336;right=240;bottom=360;edge=1;z=11};
+static={cls="static";text="0x";left=32;top=40;right=64;bottom=64;transparent=1;z=3};
+static2={cls="static";text="DID";left=176;top=312;right=240;bottom=336;align="center";transparent=1;z=13}
 )
 /*}}*/
 
 import console;
+import UserLib;
+
 winform_general.btnReadID.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return ; 
+	}
 	var data = LINDevMng.ReadID(0x19)
 	if(data == null){
 		//读到空白数据
@@ -33,7 +47,15 @@ Display = function(str){
 	winform_general.edit.print(str)
 	
 }
+//winform_general.edReadID.limit
 
+winform_general.btn_diag_22.oncommand = function(id,event){
+	data = LINDevMng.ReadDID(0x20,0xf192);
+	
+	console.print(UserLib.Ascii2str(table.slice(data,4,)))
+	
+}
 
+winform_general.show();
 win.loopMessage();
 return winform_general;

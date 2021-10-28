@@ -203,6 +203,9 @@ namespace PLin{
     		msgtemp[2] = 8 //长度
     		msgtemp[3] = 1 //方向 0-disable 1-Publish 2-Subscriber 3-dirSubscriberAutoLength
     		msgtemp[4] = 2 //校验 0-Custom 1-Classic 2-Enhanced 3-Auto
+    		if(id == 0x3C){
+    			msgtemp[4] = 1 //校验 0-Custom 1-Classic 2-Enhanced 3-Auto
+    		}
     		for(i=1;8;1){
     			msgtemp[i+4] = data[i]
     		}
