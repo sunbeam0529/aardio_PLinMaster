@@ -2,7 +2,7 @@ import win.ui;
 /*DSG{{*/
 var winform_general = win.form(text="通用";right=749;bottom=449;border="dialog frame")
 winform_general.add(
-btnReadID={cls="button";text="读取ID";left=128;top=32;right=200;bottom=56;z=1};
+btnReadID={cls="button";text="读取ID";left=128;top=88;right=200;bottom=112;z=1};
 btn_diag_1001={cls="button";text="$10 01";left=32;top=312;right=96;bottom=336;z=5};
 btn_diag_1002={cls="button";text="$10 02";left=32;top=336;right=96;bottom=360;z=6};
 btn_diag_1003={cls="button";text="$10 03";left=32;top=360;right=96;bottom=384;z=7};
@@ -10,11 +10,15 @@ btn_diag_1101={cls="button";text="$11 01";left=104;top=312;right=168;bottom=336;
 btn_diag_22={cls="button";text="$22";left=176;top=360;right=240;bottom=384;z=12};
 btn_diag_2701={cls="button";text="$27 01";left=104;top=336;right=168;bottom=360;z=9};
 btn_diag_2703={cls="button";text="$27 03";left=104;top=360;right=168;bottom=384;z=10};
-edReadID={cls="edit";left=48;top=32;right=128;bottom=56;edge=1;num=1;z=2};
-edit={cls="edit";text="Edit";left=504;top=16;right=744;bottom=432;edge=1;multiline=1;z=4};
-edit2={cls="edit";text="Edit";left=176;top=336;right=240;bottom=360;edge=1;z=11};
-static={cls="static";text="0x";left=32;top=40;right=64;bottom=64;transparent=1;z=3};
-static2={cls="static";text="DID";left=176;top=312;right=240;bottom=336;align="center";transparent=1;z=13}
+button={cls="button";text="测试";left=288;top=160;right=400;bottom=200;z=17};
+edDID={cls="edit";text="Edit";left=176;top=336;right=240;bottom=360;edge=1;z=11};
+edNad={cls="edit";left=104;top=24;right=152;bottom=48;edge=1;z=14};
+edReadID={cls="edit";left=48;top=88;right=128;bottom=112;edge=1;num=1;z=2};
+edit={cls="edit";left=472;top=16;right=744;bottom=432;edge=1;multiline=1;style=1539;z=4};
+static={cls="static";text="0x";left=32;top=88;right=64;bottom=112;transparent=1;z=3};
+static2={cls="static";text="DID";left=176;top=312;right=240;bottom=336;align="center";transparent=1;z=13};
+static3={cls="static";text="0x";left=80;top=24;right=112;bottom=48;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=15};
+static4={cls="static";text="NAD";left=24;top=24;right=64;bottom=48;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=16}
 )
 /*}}*/
 
@@ -45,15 +49,41 @@ winform_general.btnReadID.oncommand = function(id,event){
 
 Display = function(str){
 	winform_general.edit.print(str)
-	
 }
+DisplayTable = function(head,tab){
+	var str = "msg "
+	if(type(head) == type(str)){
+		str = head
+	}
+	//console.print(tab)
+	for(i=1;#tab;1){
+		
+		str += tostring(tab[i],16)
+		str += " "
+	}
+	Display(str)
+}
+
 //winform_general.edReadID.limit
 
 winform_general.btn_diag_22.oncommand = function(id,event){
-	data = LINDevMng.ReadDID(0x20,0xf192);
+	var nad = tonumber(winform_general.edNad.text);
+	var did = tonumber(winform_general.edDID.text); 
+	data = LINDevMng.ReadDID(nad,did);
+	Display("nad=%d,did=%d",)
+	DisplayTable("ReadDID:",data);
+	//console.print(UserLib.Ascii2str(table.slice(data,4,)))
 	
-	console.print(UserLib.Ascii2str(table.slice(data,4,)))
+}
+
+winform_general.btn_diag_1001.oncommand = function(id,event){
 	
+}
+
+winform_general.button.oncommand = function(id,event){
+	data = {0x21,0x03,0x22,0xf1,0x94,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+	DisplayTable("ReadDID:",data)
 }
 
 winform_general.show();
