@@ -35,6 +35,7 @@ mainForm.btnDisconnect.disabled = true
 //mainForm.tab.loadForm("\界面\项目\LightBar.aardio");
 //通用测试界面
 mainForm.tab.loadForm("\界面\通用\general.aardio");
+mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
 
 PLinHw = PLin.PLINHW()
 USB2LINHw = USB2LIN.USBLINHW()

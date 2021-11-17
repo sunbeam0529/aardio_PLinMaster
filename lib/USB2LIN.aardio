@@ -30,7 +30,7 @@ namespace USB2LIN{
 				import win;
 				DllHandle = null;
 				//win.msgboxErr("加载USB2LIN的DLL失败，请检查USB2XXX.dll和libusb-1.0.dll文件","错误",);
-				win.msgboxTimeout("加载USB2LIN的DLL失败，请检查USB2XXX.dll和libusb-1.0.dll文件","错误",1000,);
+				//win.msgboxTimeout("加载USB2LIN的DLL失败，请检查USB2XXX.dll和libusb-1.0.dll文件","错误",1000,);
 			}
 			//DllHandle = ..raw.loadDll("\USB2XXX.dll")
 			if(DllHandle == null)return 1;

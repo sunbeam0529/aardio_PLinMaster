@@ -7,6 +7,8 @@
 		<folder name="通用" path="界面\通用" comment="界面\通用" local="false" embed="false" ignored="false">
 			<file name="general.aardio" path="界面\通用\general.aardio" comment="界面\通用\general.aardio"/>
 			<file name="test.aardio" path="界面\通用\test.aardio" comment="界面\通用\test.aardio"/>
+			<file name="bootloader.aardio" path="界面\通用\bootloader.aardio" comment="界面\通用\bootloader.aardio"/>
+			<file name="boot设置.aardio" path="界面\通用\boot设置.aardio" comment="界面\通用\boot设置.aardio"/>
 		</folder>
 		<folder name="项目" path="界面\项目" comment="界面\项目" local="false" embed="false" ignored="false">
 			<file name="C62X.aardio" path="界面\项目\C62X.aardio" comment="界面\项目\C62X.aardio"/>

@@ -1,0 +1,190 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="Bootloader";right=759;bottom=469)
+winform.add(
+button={cls="button";text="APP模式";left=24;top=40;right=96;bottom=72;z=2};
+button11={cls="button";text="打开";left=424;top=408;right=496;bottom=440;z=13};
+button2={cls="button";text="BOOT模式";left=104;top=40;right=176;bottom=72;z=3};
+button3={cls="button";text="扩展模式";left=184;top=40;right=256;bottom=72;z=4};
+button4={cls="button";text="解锁";left=24;top=80;right=96;bottom=112;z=6};
+button5={cls="button";text="复位";left=104;top=80;right=176;bottom=112;z=7};
+button6={cls="button";text="软件版本号";left=24;top=120;right=96;bottom=152;z=8};
+button7={cls="button";text="boot版本号";left=104;top=120;right=176;bottom=152;z=9};
+button8={cls="button";text="当前会话";left=184;top=80;right=256;bottom=112;z=10};
+button9={cls="button";text="一键刷写";left=16;top=184;right=264;bottom=216;z=11};
+edit={cls="edit";left=504;top=16;right=752;bottom=448;edge=1;multiline=1;z=5};
+editPath={cls="edit";left=16;top=408;right=408;bottom=440;edge=1;multiline=1;z=12};
+groupbox={cls="groupbox";text="诊断功能";left=16;top=16;right=264;bottom=168;edge=1;z=1}
+)
+/*}}*/
+
+import fsys.dlg;
+import console;
+winform.button11.oncommand = function(id,event){
+	var path = fsys.dlg.open('S19文件|*.sx;*.s19;*.srec|所有文件|*.*||',,,winform);
+	if(io.exist( path )){
+		winform.editPath.text = path;
+		var readbuf = string.load(path);
+		
+		readbuf = string.split(readbuf,'\r\n');
+		//console.dumpJson(readbuf);
+		var block = null;
+		FlashData = {};
+		for(i=1;#readbuf;1){
+			if(#readbuf[i] == 0){
+				continue;
+			}
+			var str = readbuf[i];
+			var data = "";
+			var addr = 0;
+			var len = 0;
+			select(string.slice(str,1,2)) {
+				case "S0"{
+					//S0为文件信息
+					var fileinfobuf = string.slice(str,9,-3);//取出文件信息
+					var fileinfo = "file info:"+string.unhex(fileinfobuf,"")//解码
+					fileinfo = string.replace(fileinfo,"\z"," ");//替换空字符
+					Display(fileinfo)//显示
+					continue;
+				}
+				case "S1"{
+					len = tonumber(string.slice(str,3,4),16)
+					addr = tonumber(string.slice(str,5,8),16)
+					data = string.slice(str,9,-3)
+				}
+				case "S2"{
+					len = tonumber(string.slice(str,3,4),16)
+					addr = tonumber(string.slice(str,5,10),16)
+					data = string.slice(str,11,-3)
+	
+				}
+				case "S3"{
+					len = tonumber(string.slice(str,3,4),16)
+					addr = tonumber(string.slice(str,5,12),16)
+					data = string.slice(str,13,-3)
+				}
+				else {
+					continue;
+				}
+			}
+			if(block == null){
+				//空表，第一次进入
+				block = {};
+				block["address"] = addr;
+				block["data"] = {};
+			}
+			else {
+				//非空表
+				if(addr == (block["address"]+#block["data"])){
+					//连续,无动作
+				}
+				else {
+					//不连续，新建一个块
+					FlashData[#FlashData+1]={"address" = block["address"];"data" = block["data"];}
+					block["address"] = addr;
+					block["data"] = {};
+				}
+				
+			}
+			
+			data = string.unhex(data,"")
+			for(i=1;#data;1){
+				var bytedata = string.unpack(data,i)
+				table.push(block["data"],bytedata)
+			}
+			
+			
+		}
+		
+		if(block != null){
+			table.push(FlashData,block)
+		}
+		
+			
+		for(i=1;#FlashData;1){
+			var addr = FlashData[i]["address"]
+			var len = #FlashData[i]["data"]
+			
+			winform.edit.printf("block %d:addr=%x,len=%x",i,addr,len )
+		}
+	}
+}
+
+Display = function(str){
+	winform.edit.print(str);
+}
+DisplayTable = function(head,tab){
+	var str = "msg "
+	if(type(head) == type(str)){
+		str = head
+	}
+	//console.print(tab)
+	for(i=1;#tab;1){
+		
+		str += tostring(tab[i],16)
+		str += " "
+	}
+	Display(str)
+}
+
+winform.button.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var nad = 0x21;
+	var data = {nad,0x02,0x10,0x01,0xff,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+}
+
+winform.button2.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var nad = 0x21;
+	var data = {nad,0x02,0x10,0x02,0xff,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+}
+
+winform.button3.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var nad = 0x21;
+	var data = {nad,0x02,0x10,0x03,0xff,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+}
+
+winform.button4.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var nad = 0x21;
+	var data = {nad,0x02,0x27,0x01,0xff,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+	if(data[1] == 0x67 && data[2] == 0x01){
+		//正确
+	}
+	else {
+		//错误，返回
+		return;
+	}
+	//计算key
+	var seed = data[3]<<8;
+	seed += data[4];
+	var key = ~seed + 0x2019;
+	data = {nad,0x04,0x27,0x02,key>>8,key&0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+	Display("seed = "+tostring(seed,16)+" key="+tostring(key,16));
+	if(data[1] == 0x67 && data[2] == 0x02){
+		//正确
+		Display("解锁成功");
+	}
+	else {
+		//错误
+		Display("解锁失败");
+	}
+}
+
+winform.show();
+win.loopMessage();
+return winform;
