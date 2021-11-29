@@ -184,6 +184,41 @@ namespace LINDev{
 			}
 		}
 		
+		Transmit3CBlock = function(nad,blockno,data,len){
+			
+			if(ConnectedDev == "PCAN/PLIN"){
+				var txdata = {nad,10,len+2,0x36,blockno,data[1],data[2],data[3]}; 
+				var txnum = 4;
+				var txno = 0x21;
+				this.TransmitData(0x3C,txdata);
+				sleep(10);
+				while(txnum <= len){
+					txdata = {nad,txno,0x00,0x00,0x00,0x00,0x00,0x00};
+					for(i=3;8;1){
+						txdata[i] = data[txnum];
+						txnum += 1;
+						if(txnum > len){
+							break;
+						}
+					}
+					this.TransmitData(0x3C,txdata);
+					sleep(10);
+					txno += 1;
+					if(txno > 0x2e){
+						txno = 0x20;
+					}
+				}
+				
+				
+				
+				
+			}
+			elseif(ConnectedDev == "USB2LIN"){
+				//USB2LIN待完善
+			}
+		}
+		
+		
 		
 		
 		

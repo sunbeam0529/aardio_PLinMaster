@@ -3,6 +3,7 @@ import win.ui;
 var winform = win.form(text="Bootloader";right=759;bottom=469)
 winform.add(
 button={cls="button";text="APP模式";left=24;top=40;right=96;bottom=72;z=2};
+button10={cls="button";text="块发送测试";left=360;top=160;right=440;bottom=200;z=14};
 button11={cls="button";text="打开";left=424;top=408;right=496;bottom=440;z=13};
 button2={cls="button";text="BOOT模式";left=104;top=40;right=176;bottom=72;z=3};
 button3={cls="button";text="扩展模式";left=184;top=40;right=256;bottom=72;z=4};
@@ -108,6 +109,8 @@ winform.button11.oncommand = function(id,event){
 			winform.edit.printf("block %d:addr=%x,len=%x",i,addr,len )
 		}
 	}
+	
+	blocknum = 1;
 }
 
 Display = function(str){
@@ -182,6 +185,23 @@ winform.button4.oncommand = function(id,event){
 	else {
 		//错误
 		Display("解锁失败");
+	}
+}
+
+winform.button10.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	if(FlashData){
+		//FlashData[1].
+		//Display("address="+tostring(FlashData[2]["address"],16)+" len="+tostring(#FlashData[2]["data"],16))
+		tempdata={};
+		for(i=1;64;1){
+			tempdata[i] = FlashData[2]["data"][i+64*(blocknum-1)];
+		}
+		LINDevMng.Transmit3CBlock(0x20,blocknum,tempdata,64);
+		Display("blocknum = "+tostring(blocknum));
+		blocknum+=1;
 	}
 }
 

@@ -87,9 +87,17 @@ winform_general.btn_diag_1001.oncommand = function(id,event){
 }
 
 winform_general.button.oncommand = function(id,event){
-	data = {0x21,0x03,0x22,0xf1,0x94,0xff,0xff,0xff};
-	data = LINDevMng.Transmit3C(data)
-	DisplayTable("ReadDID:",data)
+	data = {0x20,0x03,0x22,0xf0,0x60,0xff,0xff,0xff};
+	
+	for(i=1;8;1){
+		var ret = LINDevMng.Transmit3C(data)
+		//DisplayTable("ReadDID:",ret)
+		var baseline = (ret[4]<<8) + ret[5];
+		Display(string.format("key %d:baseline=%d",i,baseline))
+		data[5] += 1;
+	}
+	
+	
 }
 
 winform_general.show();
