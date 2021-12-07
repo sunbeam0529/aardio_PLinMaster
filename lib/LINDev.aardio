@@ -96,15 +96,19 @@ namespace LINDev{
 		}
 		
 		Transmit3C = function(data){
+			import win;
 			if(ConnectedDev == "PCAN/PLIN"){
 				this.TransmitID(0x01)
 				sleep(10)
 				if(#data <= 8){
 					this.TransmitData(0x3C,data)
-					sleep(10)
+					win.delay(10);//sleep(10);
 					data = this.ReadID(0x3D)
 					var alldata={}; 
-					var count = 1; 
+					var count = 1;
+					if(data == null){
+						return null;
+					}
 					if(data[2] == 0x10){//多帧
 						//首帧
 						var len = data[3]; 
@@ -148,6 +152,7 @@ namespace LINDev{
 		}
 		
 		ReadID = function(id){
+			import win;
 			if(ConnectedDev == "PCAN/PLIN"){
 				var ret,msgtemp
 				//清空数据
@@ -156,7 +161,7 @@ namespace LINDev{
 				}while(ret == 0)//直到读取完成
 				
 				PLinHw.TransmitID(id)//发送ID
-				sleep(15)//等待10ms
+				win.delay(15);//等待10ms
 				do{
 					ret,msgtemp = PLinHw.ReadMsg()//读取数据
 					if(ret == 0){//读到数据
@@ -175,6 +180,7 @@ namespace LINDev{
 		
 		ReadDID = function(nad,did){
 			import UserLib;
+			import win;
 			if(ConnectedDev == "PCAN/PLIN"){
 				var data = {nad,0x03,0x22,did>>8,did&0xff,0xff,0xff,0xff}; 
 				return this.Transmit3C(data);
@@ -185,15 +191,15 @@ namespace LINDev{
 		}
 		
 		Transmit3CBlock = function(nad,blockno,data,len){
-			
+			import win;
 			if(ConnectedDev == "PCAN/PLIN"){
-				var txdata = {nad,10,len+2,0x36,blockno,data[1],data[2],data[3]}; 
+				var txdata = {nad,0x10,len+2,0x36,blockno,data[1],data[2],data[3]}; 
 				var txnum = 4;
 				var txno = 0x21;
 				this.TransmitData(0x3C,txdata);
-				sleep(10);
+				win.delay(10);//sleep(10);
 				while(txnum <= len){
-					txdata = {nad,txno,0x00,0x00,0x00,0x00,0x00,0x00};
+					txdata = {nad,txno,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 					for(i=3;8;1){
 						txdata[i] = data[txnum];
 						txnum += 1;
@@ -202,7 +208,7 @@ namespace LINDev{
 						}
 					}
 					this.TransmitData(0x3C,txdata);
-					sleep(10);
+					win.delay(10);//sleep(10);
 					txno += 1;
 					if(txno > 0x2e){
 						txno = 0x20;

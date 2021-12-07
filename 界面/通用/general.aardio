@@ -76,7 +76,7 @@ winform_general.btn_diag_22.oncommand = function(id,event){
 		did = 0xF190;
 	}
 	data = LINDevMng.ReadDID(nad,did);
-	Display("nad=%d,did=%d",)
+	Display(string.format("nad=0x%x,did=0x%x",nad,did))
 	DisplayTable("ReadDID:",data);
 	//console.print(UserLib.Ascii2str(table.slice(data,4,)))
 	
@@ -98,6 +98,16 @@ winform_general.button.oncommand = function(id,event){
 	}
 	
 	
+}
+
+winform_general.btn_diag_1002.oncommand = function(id,event){
+	data = {0x20,0x02,0x10,0x02,0xff,0xff,0xff,0xff};
+	LINDevMng.TransmitData(0X3C,data);
+}
+
+winform_general.btn_diag_1101.oncommand = function(id,event){
+	data = {0x20,0x02,0x11,0x03,0xff,0xff,0xff,0xff};
+	LINDevMng.TransmitData(0X3C,data);
 }
 
 winform_general.show();

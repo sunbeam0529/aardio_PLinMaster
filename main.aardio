@@ -18,11 +18,10 @@ cbbSelDev={cls="combobox";left=80;top=48;right=242;bottom=74;edge=1;font=LOGFONT
 groupbox={cls="groupbox";text="硬件信息";left=16;top=14;right=790;bottom=92;edge=1;z=1};
 st_Version={cls="static";text="Version";left=688;top=584;right=744;bottom=600;transparent=1;z=9};
 static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=5};
-tab={cls="tab";left=24;top=104;right=774;bottom=579;edge=1;z=7}
+tab={cls="tab";left=16;top=96;right=768;bottom=560;edge=1;z=7}
 )
 /*}}*/
 
-mainForm.show();//显示主窗体
 mainForm.btnConnect.disabled = true
 mainForm.btnDisconnect.disabled = true
 
@@ -30,12 +29,14 @@ mainForm.btnDisconnect.disabled = true
 //显示C62X测试界面
 //mainForm.tab.loadForm("\界面\项目\C62X.aardio");
 //显示ALV测试界面
-mainForm.tab.loadForm("\界面\项目\ALV_TEST.aardio");
+//mainForm.tab.loadForm("\界面\项目\ALV_TEST.aardio");
 //显示灯带界面
 //mainForm.tab.loadForm("\界面\项目\LightBar.aardio");
 //通用测试界面
-mainForm.tab.loadForm("\界面\通用\general.aardio");
-//mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
+//mainForm.tab.loadForm("\界面\通用\general.aardio");
+mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
+//mainForm.tab.loadForm("\界面\项目\ALV_77B.aardio");
+
 
 PLinHw = PLin.PLINHW()
 USB2LINHw = USB2LIN.USBLINHW()
@@ -135,5 +136,5 @@ subscribe("子界面日志",function(str){
     MainWriteLog(str)
 } )
 
-
+mainForm.show();//显示主窗体
 return win.loopMessage();

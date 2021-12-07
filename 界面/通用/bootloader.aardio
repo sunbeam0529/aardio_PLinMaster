@@ -1,26 +1,33 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="Bootloader";right=759;bottom=469)
+var winform = win.form(text="Bootloader";right=749;bottom=449)
 winform.add(
-button={cls="button";text="APP模式";left=24;top=40;right=96;bottom=72;z=2};
-button10={cls="button";text="块发送测试";left=360;top=160;right=440;bottom=200;z=14};
-button11={cls="button";text="打开";left=424;top=408;right=496;bottom=440;z=13};
-button2={cls="button";text="BOOT模式";left=104;top=40;right=176;bottom=72;z=3};
-button3={cls="button";text="扩展模式";left=184;top=40;right=256;bottom=72;z=4};
-button4={cls="button";text="解锁";left=24;top=80;right=96;bottom=112;z=6};
-button5={cls="button";text="复位";left=104;top=80;right=176;bottom=112;z=7};
-button6={cls="button";text="软件版本号";left=24;top=120;right=96;bottom=152;z=8};
-button7={cls="button";text="boot版本号";left=104;top=120;right=176;bottom=152;z=9};
-button8={cls="button";text="当前会话";left=184;top=80;right=256;bottom=112;z=10};
-button9={cls="button";text="一键刷写";left=16;top=184;right=264;bottom=216;z=11};
-edit={cls="edit";left=504;top=16;right=752;bottom=448;edge=1;multiline=1;z=5};
-editPath={cls="edit";left=16;top=408;right=408;bottom=440;edge=1;multiline=1;z=12};
-groupbox={cls="groupbox";text="诊断功能";left=16;top=16;right=264;bottom=168;edge=1;z=1}
+button={cls="button";text="APP模式";left=32;top=88;right=104;bottom=120;z=3};
+button10={cls="button";text="块发送测试";left=288;top=168;right=368;bottom=200;z=14};
+button11={cls="button";text="打开";left=424;top=16;right=496;bottom=48;z=13};
+button12={cls="button";text="自定义测试3D";left=376;top=168;right=456;bottom=200;z=15};
+button13={cls="button";text="校验";left=192;top=168;right=264;bottom=200;z=16};
+button2={cls="button";text="BOOT模式";left=112;top=88;right=184;bottom=120;z=4};
+button3={cls="button";text="扩展模式";left=192;top=88;right=264;bottom=120;z=5};
+button4={cls="button";text="解锁";left=32;top=168;right=104;bottom=200;z=7};
+button5={cls="button";text="复位";left=112;top=128;right=184;bottom=160;z=8};
+button6={cls="button";text="软件版本号";left=32;top=128;right=104;bottom=160;z=9};
+button8={cls="button";text="当前会话";left=192;top=128;right=264;bottom=160;z=10};
+button9={cls="button";text="刷写";left=112;top=168;right=184;bottom=200;z=11};
+edit={cls="edit";left=504;top=16;right=752;bottom=448;edge=1;multiline=1;z=6};
+editPath={cls="edit";left=16;top=16;right=408;bottom=48;edge=1;multiline=1;z=12};
+groupbox={cls="groupbox";text="诊断功能";left=24;top=64;right=272;bottom=216;edge=1;z=2};
+groupbox2={cls="groupbox";text="线路板选择";left=288;top=64;right=456;bottom=144;edge=1;z=1};
+progress2={cls="progress";left=32;top=352;right=480;bottom=378;db=1;edge=1;max=100;min=0;z=19};
+radiobutton={cls="radiobutton";text="左板";left=304;top=88;right=352;bottom=112;checked=1;group=1;z=17};
+radiobutton2={cls="radiobutton";text="右板";left=304;top=112;right=352;bottom=136;z=18}
 )
 /*}}*/
 
 import fsys.dlg;
 import console;
+import UserLib;
+var nad = 0x20;
 winform.button11.oncommand = function(id,event){
 	var path = fsys.dlg.open('S19文件|*.sx;*.s19;*.srec|所有文件|*.*||',,,winform);
 	if(io.exist( path )){
@@ -98,7 +105,9 @@ winform.button11.oncommand = function(id,event){
 		}
 		
 		if(block != null){
+			table.push(block["data"],0x55,0xaa,0xaa,0x55);
 			table.push(FlashData,block)
+			//console.dumpTable(block["data"]);
 		}
 		
 			
@@ -113,10 +122,29 @@ winform.button11.oncommand = function(id,event){
 	blocknum = 1;
 }
 
+AppVerify = function(){
+	import UserLib;
+	if(FlashData == null){
+		Display("请打开正确的烧录文件")
+		return;
+	}
+	var crc = UserLib.CRC_calc(FlashData[1]["data"],#FlashData[1]["data"]);
+	var data = {nad,0x04,0x34,0x03,crc>>8,crc&0xff,0xff,0xff};
+	LINDevMng.TransmitData(0x3c,data);
+	Display("crc="+tostring(crc,16));
+	data = LINDevMng.ReadID(0x3D);
+	if(data != null){
+		if(data[3]){
+			;
+		}
+	}
+}
+
+
 Display = function(str){
 	winform.edit.print(str);
 }
-DisplayTable = function(head,tab){
+DisplayTable = function(tab,head){
 	var str = "msg "
 	if(type(head) == type(str)){
 		str = head
@@ -134,7 +162,6 @@ winform.button.oncommand = function(id,event){
 	if(LINDevMng == null){
 		return;
 	}
-	var nad = 0x21;
 	var data = {nad,0x02,0x10,0x01,0xff,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
 }
@@ -143,7 +170,6 @@ winform.button2.oncommand = function(id,event){
 	if(LINDevMng == null){
 		return;
 	}
-	var nad = 0x21;
 	var data = {nad,0x02,0x10,0x02,0xff,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
 }
@@ -152,7 +178,6 @@ winform.button3.oncommand = function(id,event){
 	if(LINDevMng == null){
 		return;
 	}
-	var nad = 0x21;
 	var data = {nad,0x02,0x10,0x03,0xff,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
 }
@@ -161,7 +186,6 @@ winform.button4.oncommand = function(id,event){
 	if(LINDevMng == null){
 		return;
 	}
-	var nad = 0x21;
 	var data = {nad,0x02,0x27,0x01,0xff,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
 	if(data[1] == 0x67 && data[2] == 0x01){
@@ -193,18 +217,129 @@ winform.button10.oncommand = function(id,event){
 		return;
 	}
 	if(FlashData){
-		//FlashData[1].
-		//Display("address="+tostring(FlashData[2]["address"],16)+" len="+tostring(#FlashData[2]["data"],16))
-		tempdata={};
-		for(i=1;64;1){
-			tempdata[i] = FlashData[2]["data"][i+64*(blocknum-1)];
+		
+	}
+}
+
+winform.button12.oncommand = function(id,event){
+	var data = {0x01,0x02,0x10,0x02,0xff,0xff,0xff,0xff,
+				0x01,0x02,0x10,0x02,0xff,0xff,0xff,0xb0,
+				0xb0,0x02,0x10,0x02,0xff,0xff,0xff,0xff,};
+	//LINDevMng.Transmit3CBlock(0x20,1,data,24);
+	LINDevMng.ReadID(0x3D);
+}
+
+winform.button13.oncommand = function(id,event){
+	AppVerify();
+}
+
+winform.button9.oncommand = function(id,event){
+	var alldata = 0;
+	var senddata = 0;
+
+	for(i=1;#FlashData;1){
+		alldata += #FlashData[i]["data"];
+	}
+
+	winform.progress.max = alldata/64;
+	for(i=1;#FlashData;1){
+		var address = FlashData[i]["address"];
+		var datalen = #FlashData[i]["data"];
+		var data = {nad,0x10,0x08,0x34,0x01,address>>16,address>>8,address&0xff};
+		LINDevMng.TransmitData(0x3c,data);
+		sleep(10);
+		data = {nad,0x21,datalen>>16,datalen>>8,datalen&0xff,0xff,0xff,0xff};
+		LINDevMng.TransmitData(0x3c,data);
+		sleep(500);
+		LINDevMng.ReadID(0x3D);
+		//winform.progress.pos = 300;
+		var blockcount = 1;
+		var blockdata = {}; 
+		for(j=1;#FlashData[i]["data"];1){
+			table.push(blockdata,FlashData[i]["data"][j]);
+			if(#blockdata >= 64){
+				LINDevMng.Transmit3CBlock(nad,blockcount,blockdata,64);	
+				senddata += 64;
+				table.shift(blockdata,64);
+				blockcount += 1;
+				winform.progress.pos = senddata/64;
+				sleep(10);
+				data = LINDevMng.ReadID(0x3D);
+				if(data != null){
+					if(data[3]!=0x76){
+						//失败
+						Display("失败");
+						return ; 
+					}
+				}
+
+				
+			}
 		}
-		LINDevMng.Transmit3CBlock(0x20,blocknum,tempdata,64);
-		Display("blocknum = "+tostring(blocknum));
-		blocknum+=1;
+		if(#blockdata > 0){
+			LINDevMng.Transmit3CBlock(nad,blockcount,blockdata,#blockdata);	
+		}
+		 
+	}
+	winform.progress.pos = winform.progress.max;
+}
+
+winform.radiobutton.oncommand = function(id,event){
+	nad = 0x20;
+}
+
+winform.radiobutton2.oncommand = function(id,event){
+	nad = 0x21;
+}
+
+winform.button8.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var data = {nad,0x03,0x22,0xF1,0x86,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+	if(data == null){
+		Display("无响应")
+	}
+	elseif(data[1] = 0x62 && data[2] = 0xF1 && data[3] = 0x86){
+		Display("当前会话: " + tostring(data[4]))
+	}
+	else {
+		Display("错误")
+		DisplayTable(data,"0x3D:");
+	}
+	
+	
+}
+
+winform.button5.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var data = {nad,0x02,0x11,0x03,0xff,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+}
+
+winform.button6.oncommand = function(id,event){
+	if(LINDevMng == null){
+		return;
+	}
+	var data = {nad,0x03,0x22,0xF1,0x94,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+	if(data == null){
+		Display("无响应")
+	}
+	elseif(data[1] = 0x62 && data[2] = 0xF1 && data[3] = 0x94){
+		
+		Display("软件版本: " + UserLib.Ascii2str(table.slice(data,4,9)));
+	}
+	else {
+		Display("错误")
+		DisplayTable(data,"0x3D:");
 	}
 }
 
 winform.show();
+//winform.group();
 win.loopMessage();
 return winform;

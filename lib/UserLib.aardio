@@ -29,5 +29,25 @@ namespace UserLib{
     	return str; 
     }
     
+    CRC_calc = function(pucCommandData, ucCommandLen){
+    	var usCRC = 0xFFFF;
+    	var i,j;
+    	for(i=1; ucCommandLen; 1){
+        	usCRC ^= pucCommandData[i]<<8;
+        	for(j=1; 8; 1){
+            	if (usCRC & 0x8000)
+            	{
+                	usCRC <<= 1;
+                	usCRC ^= 0xA001;
+            	}
+            	else
+            	{
+                	usCRC <<= 1;
+            	}
+        	}
+    	}
+    	
+    	return usCRC;
+	}
     
 }
