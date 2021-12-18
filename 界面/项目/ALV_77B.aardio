@@ -1,0 +1,310 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="ALV-77B";right=749;bottom=449)
+winform.add(
+button={cls="button";text="右流水";left=343;top=63;right=399;bottom=95;z=73};
+button10={cls="button";text="渐变";left=214;top=63;right=270;bottom=95;z=6};
+button11={cls="button";text="左流水";left=279;top=63;right=335;bottom=95;z=7};
+button13={cls="button";text="白色";left=22;top=103;right=78;bottom=135;z=8};
+button14={cls="button";text="绿色";left=86;top=103;right=142;bottom=135;z=9};
+button15={cls="button";text="红色";left=150;top=103;right=206;bottom=135;z=10};
+button16={cls="button";text="蓝色";left=214;top=103;right=270;bottom=135;z=11};
+button17={cls="button";text="黄色";left=278;top=103;right=334;bottom=135;z=12};
+button18={cls="button";text="冰蓝";left=342;top=103;right=398;bottom=135;z=13};
+button20={cls="button";text="OFF";left=22;top=143;right=78;bottom=175;z=14};
+button21={cls="button";text="亮度1";left=86;top=143;right=142;bottom=175;z=15};
+button22={cls="button";text="亮度2";left=150;top=143;right=206;bottom=175;z=16};
+button23={cls="button";text="亮度3";left=214;top=143;right=270;bottom=175;z=17};
+button24={cls="button";text="亮度4";left=278;top=143;right=334;bottom=175;z=18};
+button25={cls="button";text="亮度5";left=342;top=143;right=398;bottom=175;z=19};
+button26={cls="button";text="亮度6";left=406;top=143;right=462;bottom=175;z=20};
+button27={cls="button";text="周期1";left=22;top=183;right=78;bottom=215;z=21};
+button28={cls="button";text="周期2";left=86;top=183;right=142;bottom=213;z=22};
+button29={cls="button";text="周期3";left=150;top=183;right=206;bottom=215;z=23};
+button30={cls="button";text="周期4";left=214;top=183;right=270;bottom=215;z=24};
+button31={cls="button";text="周期5";left=278;top=183;right=334;bottom=215;z=25};
+button32={cls="button";text="周期6";left=342;top=183;right=398;bottom=215;z=26};
+button33={cls="button";text="周期7";left=406;top=183;right=462;bottom=215;z=27};
+button7={cls="button";text="常亮";left=22;top=63;right=78;bottom=95;z=3};
+button8={cls="button";text="闪烁";left=86;top=63;right=142;bottom=95;z=4};
+button9={cls="button";text="呼吸";left=150;top=63;right=206;bottom=95;z=5};
+checkbox={cls="checkbox";text="English";left=683;top=6;right=744;bottom=23;checked=1;z=74};
+groupbox2={cls="groupbox";text="氛围灯";left=5;top=24;right=477;bottom=249;edge=1;z=2};
+groupbox4={cls="groupbox";text="按键数据";left=485;top=25;right=733;bottom=249;edge=1;z=72};
+groupbox5={cls="groupbox";text="压力数据";left=13;top=272;right=285;bottom=368;edge=1;z=1};
+static={cls="static";text="左压力1";left=21;top=288;right=77;bottom=312;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=28};
+static10={cls="static";text="0";left=85;top=336;right=141;bottom=360;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=36};
+static11={cls="static";text="0";left=221;top=288;right=277;bottom=312;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=37};
+static12={cls="static";text="0";left=221;top=312;right=277;bottom=336;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=38};
+static13={cls="static";text="0";left=221;top=336;right=277;bottom=360;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=39};
+static14={cls="static";text="按键1";left=493;top=49;right=549;bottom=73;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=40};
+static15={cls="static";text="按键2";left=493;top=73;right=549;bottom=97;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=41};
+static16={cls="static";text="按键3";left=493;top=97;right=549;bottom=121;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=42};
+static17={cls="static";text="按键4";left=493;top=121;right=549;bottom=145;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=43};
+static18={cls="static";text="按键5";left=493;top=145;right=549;bottom=169;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=44};
+static19={cls="static";text="按键6";left=493;top=169;right=549;bottom=193;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=45};
+static2={cls="static";text="左压力2";left=21;top=312;right=77;bottom=336;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=29};
+static20={cls="static";text="按键7";left=493;top=193;right=549;bottom=217;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=46};
+static21={cls="static";text="按键8";left=493;top=217;right=549;bottom=241;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=47};
+static22={cls="static";text="0";left=533;top=49;right=589;bottom=73;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=48};
+static23={cls="static";text="0";left=533;top=73;right=589;bottom=97;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=49};
+static24={cls="static";text="0";left=533;top=97;right=589;bottom=121;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=50};
+static25={cls="static";text="0";left=533;top=121;right=589;bottom=145;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=51};
+static26={cls="static";text="0";left=533;top=145;right=589;bottom=169;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=52};
+static27={cls="static";text="0";left=533;top=169;right=589;bottom=193;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=53};
+static28={cls="static";text="0";left=533;top=193;right=589;bottom=217;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=54};
+static29={cls="static";text="0";left=533;top=217;right=589;bottom=241;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=55};
+static3={cls="static";text="左压力3";left=21;top=336;right=77;bottom=360;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=30};
+static30={cls="static";text="按键1";left=629;top=49;right=685;bottom=73;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=56};
+static31={cls="static";text="按键2";left=629;top=73;right=685;bottom=97;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=57};
+static32={cls="static";text="按键3";left=629;top=97;right=685;bottom=121;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=58};
+static33={cls="static";text="按键4";left=629;top=121;right=685;bottom=145;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=59};
+static34={cls="static";text="按键5";left=629;top=145;right=685;bottom=169;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=60};
+static35={cls="static";text="按键6";left=629;top=169;right=685;bottom=193;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=61};
+static36={cls="static";text="按键7";left=629;top=193;right=685;bottom=217;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=62};
+static37={cls="static";text="按键8";left=629;top=217;right=685;bottom=241;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=63};
+static38={cls="static";text="0";left=669;top=49;right=725;bottom=73;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=64};
+static39={cls="static";text="0";left=669;top=73;right=725;bottom=97;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=65};
+static4={cls="static";text="右压力1";left=157;top=288;right=213;bottom=312;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=31};
+static40={cls="static";text="0";left=669;top=97;right=725;bottom=121;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=66};
+static41={cls="static";text="0";left=669;top=121;right=725;bottom=145;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=67};
+static42={cls="static";text="0";left=669;top=145;right=725;bottom=169;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=68};
+static43={cls="static";text="0";left=669;top=169;right=725;bottom=193;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=69};
+static44={cls="static";text="0";left=669;top=193;right=725;bottom=217;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=70};
+static45={cls="static";text="0";left=669;top=217;right=725;bottom=241;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=71};
+static5={cls="static";text="右压力2";left=157;top=313;right=213;bottom=337;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=32};
+static6={cls="static";text="右压力3";left=157;top=336;right=213;bottom=360;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=33};
+static7={cls="static";text="V0.1_20211217";left=588;top=423;right=740;bottom=447;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=75};
+static8={cls="static";text="0";left=85;top=288;right=141;bottom=312;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=34};
+static9={cls="static";text="0";left=85;top=312;right=141;bottom=336;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=35}
+)
+/*}}*/
+
+lbMode = 0;
+lbBright = 0;
+lbFreq = 0;
+lbColor = 0;
+
+TxMsg = function(){
+	data = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	if(LINDevMng != null){
+		data[6] = lbMode;
+		data[7] = (lbFreq<<4) | (lbBright&0x0f);
+		data[8] = lbColor;
+		LINDevMng.TransmitData(0x0A,data);
+	}
+}
+
+winform.button20.oncommand = function(id,event){
+	lbBright = 1;
+	TxMsg();
+}
+
+winform.button21.oncommand = function(id,event){
+	lbBright = 2;
+	TxMsg();
+}
+
+winform.button22.oncommand = function(id,event){
+	lbBright = 3;
+	TxMsg();
+}
+
+winform.button23.oncommand = function(id,event){
+	lbBright = 4;
+	TxMsg();
+}
+
+winform.button24.oncommand = function(id,event){
+	lbBright = 5;
+	TxMsg();
+}
+
+winform.button25.oncommand = function(id,event){
+	lbBright = 6;
+	TxMsg();
+}
+
+winform.button26.oncommand = function(id,event){
+	lbBright = 7;
+	TxMsg();
+}
+
+winform.button13.oncommand = function(id,event){
+	lbColor = 1;
+	TxMsg();
+}
+
+winform.button14.oncommand = function(id,event){
+	lbColor = 2;
+	TxMsg();
+}
+
+winform.button15.oncommand = function(id,event){
+	lbColor = 3;
+	TxMsg();
+}
+
+winform.button16.oncommand = function(id,event){
+	lbColor = 4;
+	TxMsg();
+}
+
+winform.button17.oncommand = function(id,event){
+	lbColor = 5;
+	TxMsg();
+}
+
+winform.button18.oncommand = function(id,event){
+	lbColor = 6;
+	TxMsg();
+}
+
+
+winform.button7.oncommand = function(id,event){
+	lbMode = 0;
+	TxMsg();
+}
+
+winform.button8.oncommand = function(id,event){
+	lbMode = 1;
+	TxMsg();
+}
+
+winform.button9.oncommand = function(id,event){
+	lbMode = 2;
+	TxMsg();
+}
+
+winform.button10.oncommand = function(id,event){
+	lbMode = 3;
+	TxMsg();
+}
+
+winform.button11.oncommand = function(id,event){
+	lbMode = 4;
+	TxMsg();
+}
+
+winform.button.oncommand = function(id,event){
+	lbMode = 5;
+	TxMsg();
+}
+
+winform.button27.oncommand = function(id,event){
+	lbFreq = 1;
+	TxMsg();
+}
+
+winform.button28.oncommand = function(id,event){
+	lbFreq = 2;
+	TxMsg();
+}
+
+winform.button29.oncommand = function(id,event){
+	lbFreq = 3;
+	TxMsg();
+}
+
+winform.button30.oncommand = function(id,event){
+	lbFreq = 4;
+	TxMsg();
+}
+
+winform.button31.oncommand = function(id,event){
+	lbFreq = 5;
+	TxMsg();
+}
+
+winform.button32.oncommand = function(id,event){
+	lbFreq = 6;
+	TxMsg();
+}
+
+winform.button33.oncommand = function(id,event){
+	lbFreq = 7;
+	TxMsg();
+}
+
+
+
+var SetConfig = function(conf){
+	import fsys.ini;
+	import console;
+	if(conf == "English"){
+		//打开文件
+		//如果文件不存在则自动创建新文件
+		var ini=fsys.ini("\config.ini")
+		//读取小节对象
+		var sec = ini.getSection("English")
+		var count = 0;
+		for(k,v in sec){
+			count += 1;
+		}
+		if(count == 0)//判断文件是否为空
+		{
+			//文件为空
+			for(name,ctrl in winform.eachControl() ){
+    			if(ctrl.text != "0"){
+    				sec[ctrl.id] = ctrl.text
+    			}
+			}
+			sec.save();
+		}
+		else {
+			for(k,v in sec){
+				winform.getCtrlById(tonumber(k)).text = v;
+			}
+			
+			
+		}
+		
+	}
+	else {
+		//打开文件
+		//如果文件不存在则自动创建新文件
+		var ini=fsys.ini("\config.ini")
+		//读取小节对象
+		var sec = ini.getSection("中文")
+		var count = 0;
+		for(k,v in sec){
+			count += 1;
+		}
+		if(count == 0)//判断文件是否为空
+		{
+			//文件为空
+			for(name,ctrl in winform.eachControl() ){
+    			if(ctrl.text != "0"){
+    				sec[ctrl.id] = ctrl.text
+    			}
+			}
+			sec.save();
+		}
+		else {
+			for(k,v in sec){
+				winform.getCtrlById(tonumber(k)).text = v;
+			}
+			
+			
+		}
+	}
+	
+}
+winform.checkbox.oncommand = function(id,event){
+	if(winform.checkbox.checked == true){
+		SetConfig("English");
+	}
+	else {
+		SetConfig("中文");
+	}
+	
+}
+
+
+SetConfig("English");
+
+
+
+winform.show();
+win.loopMessage();
+return winform;

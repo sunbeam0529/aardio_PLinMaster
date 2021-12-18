@@ -3,10 +3,9 @@ import win.ui;
 var winform = win.form(text="Bootloader";right=749;bottom=449)
 winform.add(
 button={cls="button";text="APP模式";left=32;top=88;right=104;bottom=120;z=3};
-button10={cls="button";text="块发送测试";left=288;top=168;right=368;bottom=200;z=14};
-button11={cls="button";text="打开";left=424;top=16;right=496;bottom=48;z=13};
-button12={cls="button";text="自定义测试3D";left=376;top=168;right=456;bottom=200;z=15};
-button13={cls="button";text="校验";left=192;top=168;right=264;bottom=200;z=16};
+button11={cls="button";text="打开";left=408;top=16;right=480;bottom=48;z=13};
+button12={cls="button";text="自定义测试3D";left=376;top=168;right=456;bottom=200;z=14};
+button13={cls="button";text="校验";left=192;top=168;right=264;bottom=200;z=15};
 button2={cls="button";text="BOOT模式";left=112;top=88;right=184;bottom=120;z=4};
 button3={cls="button";text="扩展模式";left=192;top=88;right=264;bottom=120;z=5};
 button4={cls="button";text="解锁";left=32;top=168;right=104;bottom=200;z=7};
@@ -14,13 +13,14 @@ button5={cls="button";text="复位";left=112;top=128;right=184;bottom=160;z=8};
 button6={cls="button";text="软件版本号";left=32;top=128;right=104;bottom=160;z=9};
 button8={cls="button";text="当前会话";left=192;top=128;right=264;bottom=160;z=10};
 button9={cls="button";text="刷写";left=112;top=168;right=184;bottom=200;z=11};
-edit={cls="edit";left=504;top=16;right=752;bottom=448;edge=1;multiline=1;z=6};
+edit={cls="edit";left=488;top=8;right=744;bottom=424;edge=1;multiline=1;readonly=1;vscroll=1;z=6};
 editPath={cls="edit";left=16;top=16;right=408;bottom=48;edge=1;multiline=1;z=12};
 groupbox={cls="groupbox";text="诊断功能";left=24;top=64;right=272;bottom=216;edge=1;z=2};
 groupbox2={cls="groupbox";text="线路板选择";left=288;top=64;right=456;bottom=144;edge=1;z=1};
-progress2={cls="progress";left=32;top=352;right=480;bottom=378;db=1;edge=1;max=100;min=0;z=19};
-radiobutton={cls="radiobutton";text="左板";left=304;top=88;right=352;bottom=112;checked=1;group=1;z=17};
-radiobutton2={cls="radiobutton";text="右板";left=304;top=112;right=352;bottom=136;z=18}
+progress={cls="progress";left=24;top=224;right=472;bottom=250;db=1;edge=1;max=100;min=0;z=18};
+radiobutton={cls="radiobutton";text="左板";left=304;top=88;right=352;bottom=112;checked=1;group=1;z=16};
+radiobutton2={cls="radiobutton";text="右板";left=304;top=112;right=352;bottom=136;z=17};
+static={cls="static";text="V0.1_20211208";left=8;top=424;right=128;bottom=448;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=19}
 )
 /*}}*/
 
@@ -212,14 +212,6 @@ winform.button4.oncommand = function(id,event){
 	}
 }
 
-winform.button10.oncommand = function(id,event){
-	if(LINDevMng == null){
-		return;
-	}
-	if(FlashData){
-		
-	}
-}
 
 winform.button12.oncommand = function(id,event){
 	var data = {0x01,0x02,0x10,0x02,0xff,0xff,0xff,0xff,

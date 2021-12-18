@@ -307,22 +307,28 @@ var timecount = 0;
 var didcount = 0;
 //调度函数
 listener.Schedule = function(){
-	var data = {0x20,0x03,0x22,0xf0,0x60,0xff,0xff,0xff};
-			
+	var data = {0x20,0x03,0x22,0xf0,0x60,0xff,0xff,0xff};	
 	for(i=1;8;1){
-		//console.print("发送报文");
 		var ret = LINDevMng.Transmit3C(data);
 		if(#ret > 7){
 			var baseline = (ret[4]<<8) + ret[5];
 			var signal = (ret[6]<<8) + ret[7];
 			thrdTable.lKeyData[i] = {"baseline"=baseline;"signal"=signal};
-			
 		}
-		
 		data[5] += 1;
 		//sleep(1000);
 	}
-	
+	data = {0x21,0x03,0x22,0xf0,0x60,0xff,0xff,0xff};	
+	for(i=1;8;1){
+		var ret = LINDevMng.Transmit3C(data);
+		if(#ret > 7){
+			var baseline = (ret[4]<<8) + ret[5];
+			var signal = (ret[6]<<8) + ret[7];
+			thrdTable.rKeyData[i] = {"baseline"=baseline;"signal"=signal};
+		}
+		data[5] += 1;
+		//sleep(1000);
+	}
 }
 listener.Display = function(){
 	//console.dump(thrdTable);
@@ -350,6 +356,33 @@ listener.Display = function(){
 	winform.stKeylBL6.text = thrdTable.lKeyData[3]["baseline"]
 	winform.stKeylBL7.text = thrdTable.lKeyData[2]["baseline"]
 	winform.stKeylBL8.text = thrdTable.lKeyData[1]["baseline"]
+	
+	winform.pgSYQ.text = thrdTable.rKeyData[6]["signal"]//7
+	winform.pgXYQ.text = thrdTable.rKeyData[5]["signal"]//8
+	winform.pgYY.text  = thrdTable.rKeyData[7]["signal"]//5
+	winform.pgOK.text  = thrdTable.rKeyData[4]["signal"]//6
+	winform.pgFH.text  = thrdTable.rKeyData[8]["signal"]//7
+	winform.pgYLP.text = thrdTable.rKeyData[3]["signal"]//3
+	winform.pgYLM.text = thrdTable.rKeyData[1]["signal"]//1
+	winform.pgYLZ.text = thrdTable.rKeyData[2]["signal"]//2
+	
+	winform.pgSYQ.progressPos = thrdTable.rKeyData[6]["signal"]
+	winform.pgXYQ.progressPos = thrdTable.rKeyData[5]["signal"]
+	winform.pgYY.progressPos  = thrdTable.rKeyData[7]["signal"]
+	winform.pgOK.progressPos  = thrdTable.rKeyData[4]["signal"]
+	winform.pgFH.progressPos  = thrdTable.rKeyData[8]["signal"]
+	winform.pgYLP.progressPos = thrdTable.rKeyData[3]["signal"]
+	winform.pgYLM.progressPos = thrdTable.rKeyData[1]["signal"]
+	winform.pgYLZ.progressPos = thrdTable.rKeyData[2]["signal"]
+	
+	winform.stKeyrBL1.text = thrdTable.rKeyData[8]["baseline"]
+	winform.stKeyrBL2.text = thrdTable.rKeyData[7]["baseline"]
+	winform.stKeyrBL3.text = thrdTable.rKeyData[6]["baseline"]
+	winform.stKeyrBL4.text = thrdTable.rKeyData[5]["baseline"]
+	winform.stKeyrBL5.text = thrdTable.rKeyData[4]["baseline"]
+	winform.stKeyrBL6.text = thrdTable.rKeyData[1]["baseline"]
+	winform.stKeyrBL7.text = thrdTable.rKeyData[2]["baseline"]
+	winform.stKeyrBL8.text = thrdTable.rKeyData[3]["baseline"]
 }
 
 
@@ -387,8 +420,8 @@ thrdTable.lKeyData = {};
 thrdTable.rKeyData = {};
 
 for(i=1;8;1){
-	thrdTable.lKeyData[i]={"baseline"=1;"signal"=1};
-	thrdTable.rKeyData[i]={"baseline"=1;"signal"=2};
+	thrdTable.lKeyData[i]={"baseline"=0;"signal"=0};
+	thrdTable.rKeyData[i]={"baseline"=0;"signal"=0};
 }
 
 thrdHandle = thread.create( //创建线程
@@ -396,7 +429,7 @@ thrdHandle = thread.create( //创建线程
 		import thread.command;
 		while(1){ 
 			thread.command.Schedule()
-			sleep(100);
+			//sleep(100);
 		}
 
 	},listener.hwnd
@@ -405,10 +438,12 @@ thrdHandle = thread.create( //创建线程
 thrdHandle1 = thread.create(
 	function(hwnd){
 		import thread.command;
+		import win;
 		while(true){
 			thread.command.Display();
 			
-			sleep(500);
+			//sleep(100);
+			win.delay(200);
 		}
 		
 		

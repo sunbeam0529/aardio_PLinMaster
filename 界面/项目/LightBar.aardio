@@ -1,27 +1,27 @@
 import win.ui;
-import console;
 /*DSG{{*/
-var winform = win.form(text="灯带";right=749;bottom=449)
+var winform = win.form(text="aardio form";right=759;bottom=469)
 winform.add(
-button={cls="button";text="发送";left=72;top=40;right=168;bottom=80;z=1};
-button2={cls="button";text="选取颜色";left=152;top=312;right=272;bottom=368;z=2}
+button={cls="button";text="Button";left=200;top=175;right=270;bottom=213;tabstop=1;z=2};
+button2={cls="button";text="Button";left=288;top=176;right=352;bottom=214;tabstop=1;z=3};
+button3={cls="button";text="Button";left=378;top=179;right=448;bottom=217;z=4};
+button4={cls="button";text="Button";left=477;top=183;right=547;bottom=221;z=5};
+groupbox={cls="groupbox";text="Groupbox";left=130;top=111;right=657;bottom=292;cp=1;edge=1;z=1}
 )
 /*}}*/
 
-winform.button.oncommand = function(id,event){
-	msg = {0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00};
-	LINDevMng.TransmitData(0x10,msg);
-}
-c = 0
-winform.button2.oncommand = function(id,event){
-	import win.dlg
-    var colorDlg = win.dlg.color(winform,c)
-    c = colorDlg.choose(c)
-    if(c == null)c=0;
-    console.printf(type(c))
-    console.printf("0x%x", c)
+winform.button.onnotify = function(id,code,ptr){
+	
 }
 
+
+
+winform.button.oncommand = function(id,event){
+	winform.button2.onnotify(winform.button2.id,2/*_BN_HILITE*/);
+
+}
+
+
+winform.group();
 winform.show();
 win.loopMessage();
-return winform;

@@ -10,15 +10,15 @@ import LINDev;
 /*DSG{{*/
 mainForm = win.form(text="PLin上位机";right=799;bottom=599;border="dialog frame";max=false)
 mainForm.add(
-btnConnect={cls="button";text="连接";left=608;top=48;right=692;bottom=79;z=6};
-btnDisconnect={cls="button";text="断开";left=696;top=48;right=780;bottom=79;z=8};
-btnFlash={cls="button";text="刷新";left=256;top=48;right=341;bottom=78;z=2};
+btnConnect={cls="button";text="Connect";left=608;top=48;right=692;bottom=79;z=6};
+btnDisconnect={cls="button";text="Disconnect";left=696;top=48;right=780;bottom=79;z=8};
+btnFlash={cls="button";text="Fresh";left=256;top=45;right=341;bottom=75;z=2};
 cbbSelChannel={cls="combobox";left=368;top=48;right=590;bottom=74;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=3};
-cbbSelDev={cls="combobox";left=80;top=48;right=242;bottom=74;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
-groupbox={cls="groupbox";text="硬件信息";left=16;top=14;right=790;bottom=92;edge=1;z=1};
-st_Version={cls="static";text="Version";left=688;top=584;right=744;bottom=600;transparent=1;z=9};
-static={cls="static";text="设备";left=25;top=48;right=70;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=5};
-tab={cls="tab";left=16;top=96;right=768;bottom=560;edge=1;z=7}
+cbbSelDev={cls="combobox";left=87;top=45;right=249;bottom=71;edge=1;font=LOGFONT(h=-16);items={};mode="dropdownlist";z=4};
+groupbox={cls="groupbox";text="Hardware";left=16;top=14;right=790;bottom=92;edge=1;z=1};
+st_Version={cls="static";text="Version";left=720;top=584;right=776;bottom=600;transparent=1;z=9};
+static={cls="static";text="Device";left=25;top=48;right=91;bottom=73;font=LOGFONT(h=-18);notify=1;transparent=1;z=5};
+tab={cls="tab";left=16;top=96;right=784;bottom=546;edge=1;z=7}
 )
 /*}}*/
 
@@ -34,8 +34,8 @@ mainForm.btnDisconnect.disabled = true
 //mainForm.tab.loadForm("\界面\项目\LightBar.aardio");
 //通用测试界面
 //mainForm.tab.loadForm("\界面\通用\general.aardio");
-mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
-//mainForm.tab.loadForm("\界面\项目\ALV_77B.aardio");
+//mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
+mainForm.tab.loadForm("\界面\项目\ALV_77B.aardio");
 
 
 PLinHw = PLin.PLINHW()

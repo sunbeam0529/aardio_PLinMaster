@@ -98,8 +98,8 @@ namespace LINDev{
 		Transmit3C = function(data){
 			import win;
 			if(ConnectedDev == "PCAN/PLIN"){
-				this.TransmitID(0x01)
-				sleep(10)
+				//this.TransmitID(0x01)
+				//sleep(10)
 				if(#data <= 8){
 					this.TransmitData(0x3C,data)
 					win.delay(10);//sleep(10);
