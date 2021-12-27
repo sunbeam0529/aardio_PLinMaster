@@ -11,6 +11,7 @@ button15={cls="button";text="红色";left=150;top=103;right=206;bottom=135;z=10}
 button16={cls="button";text="蓝色";left=214;top=103;right=270;bottom=135;z=11};
 button17={cls="button";text="黄色";left=278;top=103;right=334;bottom=135;z=12};
 button18={cls="button";text="冰蓝";left=342;top=103;right=398;bottom=135;z=13};
+button2={cls="button";text="流水";left=408;top=64;right=464;bottom=96;z=76};
 button20={cls="button";text="OFF";left=22;top=143;right=78;bottom=175;z=14};
 button21={cls="button";text="亮度1";left=86;top=143;right=142;bottom=175;z=15};
 button22={cls="button";text="亮度2";left=150;top=143;right=206;bottom=175;z=16};
@@ -188,6 +189,11 @@ winform.button11.oncommand = function(id,event){
 
 winform.button.oncommand = function(id,event){
 	lbMode = 5;
+	TxMsg();
+}
+
+winform.button2.oncommand = function(id,event){
+	lbMode = 6;
 	TxMsg();
 }
 

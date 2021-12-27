@@ -94,6 +94,13 @@ namespace LINDev{
 				//USB2LIN待完善
 			}
 		}
+		Listen = function(){
+			if(ConnectedDev == "PCAN/PLIN"){
+				var ret,msgtemp = PLinHw.ReadMsg();
+				return ret,msgtemp;
+			}
+		}
+		
 		
 		Transmit3C = function(data){
 			import win;

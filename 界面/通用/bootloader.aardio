@@ -11,16 +11,17 @@ button3={cls="button";text="扩展模式";left=192;top=88;right=264;bottom=120;z
 button4={cls="button";text="解锁";left=32;top=168;right=104;bottom=200;z=7};
 button5={cls="button";text="复位";left=112;top=128;right=184;bottom=160;z=8};
 button6={cls="button";text="软件版本号";left=32;top=128;right=104;bottom=160;z=9};
+button7={cls="button";text="Button";left=283;top=296;right=406;bottom=338;z=20};
 button8={cls="button";text="当前会话";left=192;top=128;right=264;bottom=160;z=10};
 button9={cls="button";text="刷写";left=112;top=168;right=184;bottom=200;z=11};
 edit={cls="edit";left=488;top=8;right=744;bottom=424;edge=1;multiline=1;readonly=1;vscroll=1;z=6};
 editPath={cls="edit";left=16;top=16;right=408;bottom=48;edge=1;multiline=1;z=12};
 groupbox={cls="groupbox";text="诊断功能";left=24;top=64;right=272;bottom=216;edge=1;z=2};
 groupbox2={cls="groupbox";text="线路板选择";left=288;top=64;right=456;bottom=144;edge=1;z=1};
-progress={cls="progress";left=24;top=224;right=472;bottom=250;db=1;edge=1;max=100;min=0;z=18};
+progress={cls="progress";left=24;top=229;right=472;bottom=255;db=1;edge=1;max=100;min=0;z=18};
 radiobutton={cls="radiobutton";text="左板";left=304;top=88;right=352;bottom=112;checked=1;group=1;z=16};
 radiobutton2={cls="radiobutton";text="右板";left=304;top=112;right=352;bottom=136;z=17};
-static={cls="static";text="V0.1_20211208";left=8;top=424;right=128;bottom=448;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=19}
+static={cls="static";text="V0.2_20211224";left=8;top=424;right=128;bottom=448;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=19}
 )
 /*}}*/
 
@@ -87,10 +88,22 @@ winform.button11.oncommand = function(id,event){
 					//连续,无动作
 				}
 				else {
-					//不连续，新建一个块
-					FlashData[#FlashData+1]={"address" = block["address"];"data" = block["data"];}
-					block["address"] = addr;
-					block["data"] = {};
+					//不连续,判断是否填充
+					if((addr & 0xfff800) == ((block["address"]+#block["data"])&0xfff800)){
+						//同一个块,填充FF
+						for(i=1;addr - (block["address"]+#block["data"]);1){
+							table.push(block["data"],0xff);
+						}
+						
+					}
+					else {
+						//不同块，新建块
+						FlashData[#FlashData+1]={"address" = block["address"];"data" = block["data"];}
+						block["address"] = addr;
+						block["data"] = {};
+					}
+					
+					
 				}
 				
 			}
@@ -105,6 +118,9 @@ winform.button11.oncommand = function(id,event){
 		}
 		
 		if(block != null){
+			while((#block["data"]%64) != 60){
+				table.push(block["data"],0xff);
+			}	
 			table.push(block["data"],0x55,0xaa,0xaa,0x55);
 			table.push(FlashData,block)
 			//console.dumpTable(block["data"]);
@@ -329,6 +345,13 @@ winform.button6.oncommand = function(id,event){
 		Display("错误")
 		DisplayTable(data,"0x3D:");
 	}
+}
+
+winform.button7.oncommand = function(id,event){
+	var blockdata = {0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55};
+	LINDevMng.Transmit3CBlock(nad,0x25,blockdata,#blockdata);	
+	//var data = {nad,0x}
+	//LINDevMng.TransmitData(0x3C,data)
 }
 
 winform.show();

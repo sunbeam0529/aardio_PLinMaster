@@ -34,9 +34,9 @@ mainForm.btnDisconnect.disabled = true
 //mainForm.tab.loadForm("\界面\项目\LightBar.aardio");
 //通用测试界面
 //mainForm.tab.loadForm("\界面\通用\general.aardio");
-//mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
+mainForm.tab.loadForm("\界面\通用\bootloader.aardio");
 mainForm.tab.loadForm("\界面\项目\ALV_77B.aardio");
-
+//mainForm.tab.loadForm("\界面\项目\presstest.aardio");
 
 PLinHw = PLin.PLINHW()
 USB2LINHw = USB2LIN.USBLINHW()

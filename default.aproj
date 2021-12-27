@@ -17,6 +17,7 @@
 			<file name="ALV_BOOT.aardio" path="界面\项目\ALV_BOOT.aardio" comment="界面\项目\ALV_BOOT.aardio"/>
 			<file name="LightBar.aardio" path="界面\项目\LightBar.aardio" comment="界面\项目\LightBar.aardio"/>
 			<file name="ALV_77B.aardio" path="界面\项目\ALV_77B.aardio" comment="界面\项目\ALV_77B.aardio"/>
+			<file name="presstest.aardio" path="界面\项目\presstest.aardio" comment="界面\项目\presstest.aardio"/>
 		</folder>
 	</folder>
 </project>

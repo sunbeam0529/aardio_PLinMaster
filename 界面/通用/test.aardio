@@ -1,23 +1,25 @@
-import LINDev;
-import console;
+import xcgui;
+import win;
+var mainForm=xcgui.window();
+//var mainForm=win.form(text="PLin上位机";right=799;bottom=599;border="dialog frame";max=false);
+//xcgui.window
+/*
+var btnExample=xcgui.ctrl.button(mainForm.hwnd,100,100,100,40,"Hello World")
+var btnClose=xcgui.ctrl.button(mainForm.hwnd,7,4,22,23,"X")
+var labExample=xcgui.ctrl.static(mainForm.hwnd,45,10,100,30,"XCGUI Library For aardio Language")
 
-//从子界面接收的消息
-subscribe("调试信息",function(str){
-    console.print(str)
-} )
+btnClose.setOnClick(function(){
+        mainForm.close()
+})
 
-lindev = LINDev.DEVMNG()
+//设置按钮响应消息
 
-lindev.LoadDll()
+btnExample.setOnClick(function(){
+        mainForm.msgbox("Hello World")
+})
 
-ret = lindev.GetSuppotredDev()
-
-for(i=1;#ret;1){
-	console.print(ret[i])
-
-}
-AvailableHW = lindev.FlashHw("PCAN/PLIN")
-for(i=1;#AvailableHW;1){
-    console.print(AvailableHW[i].name)
-}
-console.pause()
+mainForm.enableDragWindow=true; //允许窗体拖拽
+mainForm.setMainWindow()                //设置为主窗口,窗口关闭自动结束程序(待改进)
+*/
+mainForm.show()
+xcgui.loopMessage()

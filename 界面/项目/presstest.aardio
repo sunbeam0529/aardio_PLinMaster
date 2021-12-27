@@ -1,0 +1,157 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="aardio form";right=759;bottom=469)
+winform.add(
+button={cls="button";text="开始";left=310;top=398;right=453;bottom=438;z=1};
+button2={cls="button";text="停止";left=483;top=402;right=616;bottom=445;z=2};
+button3={cls="button";text="清零";left=576;top=307;right=697;bottom=343;z=23};
+button4={cls="button";text="暂停";left=570;top=124;right=694;bottom=226;z=24};
+max1={cls="edit";text="0";left=216;top=87;right=319;bottom=111;autohscroll=false;autovscroll=false;edge=1;num=1;z=3};
+max2={cls="edit";text="0";left=214;top=124;right=317;bottom=148;autohscroll=false;autovscroll=false;edge=1;num=1;z=7};
+max3={cls="edit";text="0";left=215;top=165;right=318;bottom=189;autohscroll=false;autovscroll=false;edge=1;num=1;z=8};
+max4={cls="edit";text="0";left=215;top=215;right=318;bottom=239;autohscroll=false;autovscroll=false;edge=1;num=1;z=9};
+max5={cls="edit";text="0";left=211;top=262;right=314;bottom=286;autohscroll=false;autovscroll=false;edge=1;num=1;z=10};
+max6={cls="edit";text="0";left=215;top=306;right=318;bottom=330;autohscroll=false;autovscroll=false;edge=1;num=1;z=11};
+min1={cls="edit";text="0";left=363;top=85;right=466;bottom=109;autohscroll=false;autovscroll=false;edge=1;num=1;z=6};
+min2={cls="edit";text="0";left=360;top=125;right=463;bottom=149;autohscroll=false;autovscroll=false;edge=1;num=1;z=12};
+min3={cls="edit";text="0";left=356;top=168;right=459;bottom=192;autohscroll=false;autovscroll=false;edge=1;num=1;z=13};
+min4={cls="edit";text="0";left=356;top=212;right=459;bottom=236;autohscroll=false;autovscroll=false;edge=1;num=1;z=14};
+min5={cls="edit";text="0";left=363;top=265;right=466;bottom=288;autohscroll=false;autovscroll=false;edge=1;num=1;z=15};
+min6={cls="edit";text="0";left=362;top=309;right=465;bottom=333;autohscroll=false;autovscroll=false;edge=1;num=1;z=16};
+static={cls="static";text="最大值";left=240;top=51;right=301;bottom=75;transparent=1;z=4};
+static2={cls="static";text="最小值";left=395;top=48;right=456;bottom=72;transparent=1;z=5};
+static3={cls="static";text="1";left=157;top=87;right=202;bottom=108;align="center";font=LOGFONT(h=-18);transparent=1;z=17};
+static4={cls="static";text="2";left=157;top=123;right=202;bottom=144;align="center";font=LOGFONT(h=-18);transparent=1;z=18};
+static5={cls="static";text="3";left=160;top=167;right=205;bottom=188;align="center";font=LOGFONT(h=-18);transparent=1;z=19};
+static6={cls="static";text="4";left=165;top=217;right=210;bottom=238;align="center";font=LOGFONT(h=-18);transparent=1;z=20};
+static7={cls="static";text="5";left=157;top=258;right=202;bottom=279;align="center";font=LOGFONT(h=-18);transparent=1;z=21};
+static8={cls="static";text="6";left=153;top=313;right=198;bottom=331;align="center";font=LOGFONT(h=-18);transparent=1;z=22}
+)
+/*}}*/
+
+import thread.command;
+import console;
+maxdata = {0,0,0,0,0,0,0};
+mindata = {0,0,0,0,0,0,0};
+var press = {0,0,0,0,0,0,0};
+var raw = {0,0,0,0,0,0,0};
+thread.create_suspended = true //创建线程以前可设置该值,指定线程创建后会暂停,否则直接运行
+var listener = thread.command();
+listener.read = function(){
+    if(LINDevMng == null)
+	{
+		return;
+	}
+	do{
+		var ret,msgtemp = LINDevMng.Listen();
+		if(ret == 0 && msgtemp != null){
+			//读到数据
+			select(msgtemp.FrameId & 0x3F) {
+				case 0x19 {
+					//console.dumpJson(msgtemp);
+					raw[1] = (msgtemp.Data[3]) + ((msgtemp.Data[4]&0x0f)<<8);
+					raw[2]= ((msgtemp.Data[4]&0xf0)>>4) + (msgtemp.Data[5]<<4);
+					raw[3] = (msgtemp.Data[6]) + ((msgtemp.Data[7]&0x0f)<<8);
+				}
+				case 0x1A {
+					
+					//console.dumpJson(msgtemp);
+					raw[4] = (msgtemp.Data[3]) + ((msgtemp.Data[4]&0x0f)<<8);
+					raw[5]= ((msgtemp.Data[4]&0xf0)>>4) + (msgtemp.Data[5]<<4);
+					raw[6] = (msgtemp.Data[6]) + ((msgtemp.Data[7]&0x0f)<<8);
+				}
+				else {
+				}
+			}
+		}
+	}while(ret == 0)
+	
+} 
+listener.proc = function(){
+	for(i=1;6;1){
+		if(raw[i] > 0x7FF){
+			press[i] = (raw[i]&0xFFF)-0x1000;
+		}
+		else {
+			press[i] = raw[i]
+		}
+		if(press[i] > maxdata[i])maxdata[i] = press[i];
+		if(press[i] < mindata[i])mindata[i] = press[i];
+	}
+	
+}
+listener.display = function(){
+	//console.print(press[1]);
+	if(stopstate == 0){
+		winform.max1.text = maxdata[1];
+		winform.max2.text = maxdata[2];
+		winform.max3.text = maxdata[3];
+		winform.max4.text = maxdata[4];
+		winform.max5.text = maxdata[5];
+		winform.max6.text = maxdata[6];
+		
+		winform.min1.text = mindata[1];
+		winform.min2.text = mindata[2];
+		winform.min3.text = mindata[3];
+		winform.min4.text = mindata[4];
+		winform.min5.text = mindata[5];
+		winform.min6.text = mindata[6];
+	}
+	
+}
+//创建工作线程,线程内错误信息默认输出到控制台
+var thrdHandle = thread.create(
+    function(hwnd){ 
+    
+        //必须在线程函数内部导入需要的库
+        import thread.command;
+        
+        while(1){
+        	thread.command.read();
+        	thread.command.proc();
+			//win.delay(10);
+        }       
+    },listener.hwnd
+)
+var thrdHandle1 = thread.create(
+    function(hwnd){ 
+    
+        //必须在线程函数内部导入需要的库
+        import thread.command;
+        
+        while(1){
+            win.delay(200);
+			thread.command.display();
+        }       
+    },listener.hwnd
+)
+
+
+
+winform.button3.oncommand = function(id,event){
+	maxdata = {0,0,0,0,0,0,0};
+	mindata = {0,0,0,0,0,0,0};
+	for(name,ctrl in winform.eachControl("edit") ){
+		ctrl.text = 0;
+	}
+	stopstate = 0;
+}
+
+winform.button.oncommand = function(id,event){
+	thread.resume(thrdHandle);
+	thread.resume(thrdHandle1);
+	stopstate = 0;
+}
+
+winform.button2.oncommand = function(id,event){
+	thread.suspend(thrdHandle);
+	thread.suspend(thrdHandle1);
+}
+stopstate = 0;
+winform.button4.oncommand = function(id,event){
+	stopstate = 1;
+}
+
+winform.show();
+win.loopMessage();
+return winform;
