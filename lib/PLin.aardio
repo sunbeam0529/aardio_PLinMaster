@@ -232,6 +232,10 @@ namespace PLin{
     		return AvailableHW[HWconnected].name; 
     	}
     	
+    	WakeUpLIN = function(){
+    		return DllHandle.LIN_XmtWakeUp(Client,HWconnected)//读取数据
+    	}
+    	
     	
     	
     	

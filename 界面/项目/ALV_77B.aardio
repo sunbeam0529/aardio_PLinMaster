@@ -2,89 +2,83 @@ import win.ui;
 /*DSG{{*/
 var winform = win.form(text="ALV-77B";right=749;bottom=449)
 winform.add(
-button={cls="button";text="右流水";left=343;top=63;right=399;bottom=95;z=73};
-button10={cls="button";text="渐变";left=214;top=63;right=270;bottom=95;z=6};
-button11={cls="button";text="左流水";left=279;top=63;right=335;bottom=95;z=7};
-button13={cls="button";text="白色";left=22;top=103;right=78;bottom=135;z=8};
-button14={cls="button";text="绿色";left=86;top=103;right=142;bottom=135;z=9};
-button15={cls="button";text="红色";left=150;top=103;right=206;bottom=135;z=10};
-button16={cls="button";text="蓝色";left=214;top=103;right=270;bottom=135;z=11};
-button17={cls="button";text="黄色";left=278;top=103;right=334;bottom=135;z=12};
-button18={cls="button";text="冰蓝";left=342;top=103;right=398;bottom=135;z=13};
-button2={cls="button";text="流水";left=408;top=64;right=464;bottom=96;z=76};
-button20={cls="button";text="OFF";left=22;top=143;right=78;bottom=175;z=14};
-button21={cls="button";text="亮度1";left=86;top=143;right=142;bottom=175;z=15};
-button22={cls="button";text="亮度2";left=150;top=143;right=206;bottom=175;z=16};
-button23={cls="button";text="亮度3";left=214;top=143;right=270;bottom=175;z=17};
-button24={cls="button";text="亮度4";left=278;top=143;right=334;bottom=175;z=18};
-button25={cls="button";text="亮度5";left=342;top=143;right=398;bottom=175;z=19};
-button26={cls="button";text="亮度6";left=406;top=143;right=462;bottom=175;z=20};
-button27={cls="button";text="周期1";left=22;top=183;right=78;bottom=215;z=21};
-button28={cls="button";text="周期2";left=86;top=183;right=142;bottom=213;z=22};
-button29={cls="button";text="周期3";left=150;top=183;right=206;bottom=215;z=23};
-button30={cls="button";text="周期4";left=214;top=183;right=270;bottom=215;z=24};
-button31={cls="button";text="周期5";left=278;top=183;right=334;bottom=215;z=25};
-button32={cls="button";text="周期6";left=342;top=183;right=398;bottom=215;z=26};
-button33={cls="button";text="周期7";left=406;top=183;right=462;bottom=215;z=27};
-button7={cls="button";text="常亮";left=22;top=63;right=78;bottom=95;z=3};
-button8={cls="button";text="闪烁";left=86;top=63;right=142;bottom=95;z=4};
-button9={cls="button";text="呼吸";left=150;top=63;right=206;bottom=95;z=5};
-checkbox={cls="checkbox";text="English";left=683;top=6;right=744;bottom=23;checked=1;z=74};
-groupbox2={cls="groupbox";text="氛围灯";left=5;top=24;right=477;bottom=249;edge=1;z=2};
-groupbox4={cls="groupbox";text="按键数据";left=485;top=25;right=733;bottom=249;edge=1;z=72};
-groupbox5={cls="groupbox";text="压力数据";left=13;top=272;right=285;bottom=368;edge=1;z=1};
-static={cls="static";text="左压力1";left=21;top=288;right=77;bottom=312;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=28};
-static10={cls="static";text="0";left=85;top=336;right=141;bottom=360;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=36};
-static11={cls="static";text="0";left=221;top=288;right=277;bottom=312;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=37};
-static12={cls="static";text="0";left=221;top=312;right=277;bottom=336;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=38};
-static13={cls="static";text="0";left=221;top=336;right=277;bottom=360;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=39};
-static14={cls="static";text="按键1";left=493;top=49;right=549;bottom=73;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=40};
-static15={cls="static";text="按键2";left=493;top=73;right=549;bottom=97;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=41};
-static16={cls="static";text="按键3";left=493;top=97;right=549;bottom=121;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=42};
-static17={cls="static";text="按键4";left=493;top=121;right=549;bottom=145;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=43};
-static18={cls="static";text="按键5";left=493;top=145;right=549;bottom=169;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=44};
-static19={cls="static";text="按键6";left=493;top=169;right=549;bottom=193;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=45};
-static2={cls="static";text="左压力2";left=21;top=312;right=77;bottom=336;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=29};
-static20={cls="static";text="按键7";left=493;top=193;right=549;bottom=217;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=46};
-static21={cls="static";text="按键8";left=493;top=217;right=549;bottom=241;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=47};
-static22={cls="static";text="0";left=533;top=49;right=589;bottom=73;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=48};
-static23={cls="static";text="0";left=533;top=73;right=589;bottom=97;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=49};
-static24={cls="static";text="0";left=533;top=97;right=589;bottom=121;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=50};
-static25={cls="static";text="0";left=533;top=121;right=589;bottom=145;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=51};
-static26={cls="static";text="0";left=533;top=145;right=589;bottom=169;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=52};
-static27={cls="static";text="0";left=533;top=169;right=589;bottom=193;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=53};
-static28={cls="static";text="0";left=533;top=193;right=589;bottom=217;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=54};
-static29={cls="static";text="0";left=533;top=217;right=589;bottom=241;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=55};
-static3={cls="static";text="左压力3";left=21;top=336;right=77;bottom=360;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=30};
-static30={cls="static";text="按键1";left=629;top=49;right=685;bottom=73;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=56};
-static31={cls="static";text="按键2";left=629;top=73;right=685;bottom=97;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=57};
-static32={cls="static";text="按键3";left=629;top=97;right=685;bottom=121;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=58};
-static33={cls="static";text="按键4";left=629;top=121;right=685;bottom=145;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=59};
-static34={cls="static";text="按键5";left=629;top=145;right=685;bottom=169;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=60};
-static35={cls="static";text="按键6";left=629;top=169;right=685;bottom=193;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=61};
-static36={cls="static";text="按键7";left=629;top=193;right=685;bottom=217;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=62};
-static37={cls="static";text="按键8";left=629;top=217;right=685;bottom=241;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=63};
-static38={cls="static";text="0";left=669;top=49;right=725;bottom=73;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=64};
-static39={cls="static";text="0";left=669;top=73;right=725;bottom=97;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=65};
-static4={cls="static";text="右压力1";left=157;top=288;right=213;bottom=312;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=31};
-static40={cls="static";text="0";left=669;top=97;right=725;bottom=121;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=66};
-static41={cls="static";text="0";left=669;top=121;right=725;bottom=145;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=67};
-static42={cls="static";text="0";left=669;top=145;right=725;bottom=169;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=68};
-static43={cls="static";text="0";left=669;top=169;right=725;bottom=193;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=69};
-static44={cls="static";text="0";left=669;top=193;right=725;bottom=217;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=70};
-static45={cls="static";text="0";left=669;top=217;right=725;bottom=241;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=71};
-static5={cls="static";text="右压力2";left=157;top=313;right=213;bottom=337;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=32};
-static6={cls="static";text="右压力3";left=157;top=336;right=213;bottom=360;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=33};
-static7={cls="static";text="V0.1_20211217";left=588;top=423;right=740;bottom=447;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=75};
-static8={cls="static";text="0";left=85;top=288;right=141;bottom=312;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=34};
-static9={cls="static";text="0";left=85;top=312;right=141;bottom=336;align="center";border=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=35}
+button={cls="button";text="右流水";left=467;top=95;right=541;bottom=134;z=27};
+button10={cls="button";text="渐变";left=314;top=95;right=388;bottom=134;z=5};
+button11={cls="button";text="左流水";left=390;top=95;right=464;bottom=134;z=6};
+button13={cls="button";text="白色";left=85;top=142;right=159;bottom=181;z=7};
+button14={cls="button";text="绿色";left=162;top=142;right=236;bottom=181;z=8};
+button15={cls="button";text="红色";left=239;top=142;right=313;bottom=181;z=9};
+button16={cls="button";text="蓝色";left=315;top=142;right=389;bottom=181;z=10};
+button17={cls="button";text="黄色";left=392;top=142;right=466;bottom=181;z=11};
+button18={cls="button";text="冰蓝";left=469;top=142;right=543;bottom=181;z=12};
+button2={cls="button";text="流水";left=543;top=95;right=617;bottom=134;z=30};
+button20={cls="button";text="OFF";left=84;top=188;right=158;bottom=227;z=13};
+button21={cls="button";text="亮度1";left=161;top=188;right=235;bottom=227;z=14};
+button22={cls="button";text="亮度2";left=237;top=188;right=311;bottom=227;z=15};
+button23={cls="button";text="亮度3";left=314;top=188;right=388;bottom=227;z=16};
+button24={cls="button";text="亮度4";left=391;top=188;right=465;bottom=227;z=17};
+button25={cls="button";text="亮度5";left=467;top=188;right=541;bottom=227;z=18};
+button26={cls="button";text="亮度6";left=544;top=188;right=618;bottom=227;z=19};
+button27={cls="button";text="周期1";left=85;top=235;right=159;bottom=274;z=20};
+button28={cls="button";text="周期2";left=162;top=235;right=236;bottom=274;z=21};
+button29={cls="button";text="周期3";left=238;top=235;right=312;bottom=274;z=22};
+button30={cls="button";text="周期4";left=315;top=235;right=389;bottom=274;z=23};
+button31={cls="button";text="周期5";left=391;top=235;right=465;bottom=274;z=24};
+button32={cls="button";text="周期6";left=468;top=235;right=542;bottom=274;z=25};
+button33={cls="button";text="周期7";left=544;top=235;right=618;bottom=274;z=26};
+button7={cls="button";text="常亮";left=85;top=95;right=159;bottom=134;z=2};
+button8={cls="button";text="闪烁";left=161;top=95;right=235;bottom=134;z=3};
+button9={cls="button";text="呼吸";left=238;top=95;right=312;bottom=134;z=4};
+checkbox={cls="checkbox";text="English";left=683;top=6;right=744;bottom=23;checked=1;z=28};
+groupbox2={cls="groupbox";text="氛围灯";left=45;top=47;right=690;bottom=349;edge=1;z=1};
+static7={cls="static";text="V0.1_20211217";left=588;top=423;right=740;bottom=447;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=29}
 )
 /*}}*/
-
+import thread.command;
 lbMode = 0;
 lbBright = 0;
 lbFreq = 0;
 lbColor = 0;
+var listener = thread.command();
+var txnum=0;
+listener.tx = function(){
+	if(LINDevMng == null)
+	{
+		return;
+	}
+	
+	select(txnum) {
+		case 1 {
+			TxMsg();
+		}
+		case 2 {
+			LINDevMng.TransmitID(0x19);
+		}
+		case 3 {
+			LINDevMng.TransmitID(0x1A);
+		}
+		else {
+		}
+	}
+	
+	txnum += 1;
+	if(txnum > 3){
+		txnum = 1;
+	}
+}
+
+var thrdHandle = thread.create(
+    function(hwnd){ 
+    
+        //必须在线程函数内部导入需要的库
+        import thread.command;
+        
+        while(1){
+        	thread.command.tx();
+			win.delay(10);
+        }       
+    },listener.hwnd
+)
 
 TxMsg = function(){
 	data = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -98,138 +92,138 @@ TxMsg = function(){
 
 winform.button20.oncommand = function(id,event){
 	lbBright = 1;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button21.oncommand = function(id,event){
 	lbBright = 2;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button22.oncommand = function(id,event){
 	lbBright = 3;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button23.oncommand = function(id,event){
 	lbBright = 4;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button24.oncommand = function(id,event){
 	lbBright = 5;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button25.oncommand = function(id,event){
 	lbBright = 6;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button26.oncommand = function(id,event){
 	lbBright = 7;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button13.oncommand = function(id,event){
 	lbColor = 1;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button14.oncommand = function(id,event){
 	lbColor = 2;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button15.oncommand = function(id,event){
 	lbColor = 3;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button16.oncommand = function(id,event){
 	lbColor = 4;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button17.oncommand = function(id,event){
 	lbColor = 5;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button18.oncommand = function(id,event){
 	lbColor = 6;
-	TxMsg();
+	//TxMsg();
 }
 
 
 winform.button7.oncommand = function(id,event){
 	lbMode = 0;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button8.oncommand = function(id,event){
 	lbMode = 1;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button9.oncommand = function(id,event){
 	lbMode = 2;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button10.oncommand = function(id,event){
 	lbMode = 3;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button11.oncommand = function(id,event){
 	lbMode = 4;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button.oncommand = function(id,event){
 	lbMode = 5;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button2.oncommand = function(id,event){
 	lbMode = 6;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button27.oncommand = function(id,event){
 	lbFreq = 1;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button28.oncommand = function(id,event){
 	lbFreq = 2;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button29.oncommand = function(id,event){
 	lbFreq = 3;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button30.oncommand = function(id,event){
 	lbFreq = 4;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button31.oncommand = function(id,event){
 	lbFreq = 5;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button32.oncommand = function(id,event){
 	lbFreq = 6;
-	TxMsg();
+	//TxMsg();
 }
 
 winform.button33.oncommand = function(id,event){
 	lbFreq = 7;
-	TxMsg();
+	//TxMsg();
 }
 
 

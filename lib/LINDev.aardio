@@ -63,7 +63,7 @@ namespace LINDev{
 				ret = PLinHw.Connect(chn,19200)
 			}
 			elseif(SelectedDev == "USB2LIN"){
-				ret = USB2LINHw.OpenDevice(1)//todo:任意设备
+				ret = USB2LINHw.OpenDevice(chn)
 			}
 			if(ret == 0){
 				ConnectedDev = SelectedDev
@@ -78,20 +78,20 @@ namespace LINDev{
 		
 		Disconnect = function(){
 			if(ConnectedDev == "PCAN/PLIN"){
-				PLinHw.Disconnect()//断开连接
+				PLinHw.Disconnect();//断开连接
 			}
 			elseif(ConnectedDev == "USB2LIN"){
-				USB2LINHw.CloseDevice(1)//todo:任意设备
+				USB2LINHw.CloseDevice();
 			}
 			
 		}
 		
 		TransmitID = function(id){
 			if(ConnectedDev == "PCAN/PLIN"){
-				PLinHw.TransmitID(id)//发送ID
+				PLinHw.TransmitID(id);//发送ID
 			}
 			elseif(ConnectedDev == "USB2LIN"){
-				//USB2LIN待完善
+				USB2LINHw.WriteID(id);
 			}
 		}
 		Listen = function(){
@@ -104,47 +104,40 @@ namespace LINDev{
 		
 		Transmit3C = function(data){
 			import win;
-			if(ConnectedDev == "PCAN/PLIN"){
-				//this.TransmitID(0x01)
-				//sleep(10)
-				if(#data <= 8){
-					this.TransmitData(0x3C,data)
-					win.delay(10);//sleep(10);
-					data = this.ReadID(0x3D)
-					var alldata={}; 
-					var count = 1;
-					if(data == null){
-						return null;
+			if(#data <= 8){
+				this.TransmitData(0x3C,data)
+				win.delay(10);//sleep(10);
+				data = this.ReadID(0x3D)
+				var alldata={}; 
+				var count = 1;
+				if(data == null){
+					return null;
+				}
+				if(data[2] == 0x10){//多帧
+					//首帧
+					var len = data[3]; 
+					for(i=4;#data;1){
+						alldata[count] = data[i]
+						count += 1
 					}
-					if(data[2] == 0x10){//多帧
-						//首帧
-						var len = data[3]; 
-						for(i=4;#data;1){
-							alldata[count] = data[i]
-							count += 1
-						}
-						//续帧
-						while(len > 6){
-							len -= 5
-							data = this.ReadID(0x3D)
-							for(i=3;#data;1){
-								alldata[count] = data[i]
-								count += 1
-							}
-							
-						}
-					}
-					else {//单帧
+					//续帧
+					while(len > 6){
+						len -= 5
+						data = this.ReadID(0x3D)
 						for(i=3;#data;1){
 							alldata[count] = data[i]
 							count += 1
 						}
+						
 					}
-					return alldata; 
 				}
-			}
-			elseif(ConnectedDev == "USB2LIN"){
-				//USB2LIN待完善
+				else {//单帧
+					for(i=3;#data;1){
+						alldata[count] = data[i]
+						count += 1
+					}
+				}
+				return alldata; 
 			}
 		}
 		
@@ -154,7 +147,7 @@ namespace LINDev{
 				PLinHw.TransmitData(id,data)//发送数据
 			}
 			elseif(ConnectedDev == "USB2LIN"){
-				//USB2LIN待完善
+				USB2LINHw.WriteData(id,data)
 			}
 		}
 		
@@ -181,56 +174,49 @@ namespace LINDev{
 				return null; 
 			}
 			elseif(ConnectedDev == "USB2LIN"){
-				//USB2LIN待完善
+				var ret,readbuf = USB2LINHw.ReadData(id);
+				return readbuf;
 			}
 		}
 		
 		ReadDID = function(nad,did){
 			import UserLib;
 			import win;
-			if(ConnectedDev == "PCAN/PLIN"){
-				var data = {nad,0x03,0x22,did>>8,did&0xff,0xff,0xff,0xff}; 
-				return this.Transmit3C(data);
-			}
-			elseif(ConnectedDev == "USB2LIN"){
-				//USB2LIN待完善
-			}
+			var data = {nad,0x03,0x22,did>>8,did&0xff,0xff,0xff,0xff}; 
+			return this.Transmit3C(data);
+
 		}
 		
 		Transmit3CBlock = function(nad,blockno,data,len){
 			import win;
-			if(ConnectedDev == "PCAN/PLIN"){
-				var txdata = {nad,0x10,len+2,0x36,blockno,data[1],data[2],data[3]}; 
-				var txnum = 4;
-				var txno = 0x21;
-				this.TransmitData(0x3C,txdata);
-				win.delay(10);//sleep(10);
-				while(txnum <= len){
-					txdata = {nad,txno,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-					for(i=3;8;1){
-						txdata[i] = data[txnum];
-						txnum += 1;
-						if(txnum > len){
-							break;
-						}
-					}
-					this.TransmitData(0x3C,txdata);
-					win.delay(10);//sleep(10);
-					txno += 1;
-					if(txno > 0x2e){
-						txno = 0x20;
+			var txdata = {nad,0x10,len+2,0x36,blockno,data[1],data[2],data[3]}; 
+			var txnum = 4;
+			var txno = 0x21;
+			this.TransmitData(0x3C,txdata);
+			win.delay(10);//sleep(10);
+			while(txnum <= len){
+				txdata = {nad,txno,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+				for(i=3;8;1){
+					txdata[i] = data[txnum];
+					txnum += 1;
+					if(txnum > len){
+						break;
 					}
 				}
-				
-				
-				
-				
-			}
-			elseif(ConnectedDev == "USB2LIN"){
-				//USB2LIN待完善
-			}
+				this.TransmitData(0x3C,txdata);
+				win.delay(7);//sleep(10);
+				txno += 1;
+				if(txno > 0x2e){
+					txno = 0x20;
+				}
+			}	
 		}
 		
+		WakeUpLIN = function(){
+			if(ConnectedDev == "PCAN/PLIN"){
+				return PLinHw.WakeUpLIN();
+			}
+		}
 		
 		
 		

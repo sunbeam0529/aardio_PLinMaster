@@ -3,25 +3,24 @@ import win.ui;
 var winform = win.form(text="Bootloader";right=749;bottom=449)
 winform.add(
 button={cls="button";text="APP模式";left=32;top=88;right=104;bottom=120;z=3};
-button11={cls="button";text="打开";left=408;top=16;right=480;bottom=48;z=13};
-button12={cls="button";text="自定义测试3D";left=376;top=168;right=456;bottom=200;z=14};
-button13={cls="button";text="校验";left=192;top=168;right=264;bottom=200;z=15};
+button11={cls="button";text="打开";left=408;top=16;right=480;bottom=48;z=12};
+button13={cls="button";text="校验";left=192;top=168;right=264;bottom=200;z=13};
 button2={cls="button";text="BOOT模式";left=112;top=88;right=184;bottom=120;z=4};
-button3={cls="button";text="扩展模式";left=192;top=88;right=264;bottom=120;z=5};
-button4={cls="button";text="解锁";left=32;top=168;right=104;bottom=200;z=7};
-button5={cls="button";text="复位";left=112;top=128;right=184;bottom=160;z=8};
-button6={cls="button";text="软件版本号";left=32;top=128;right=104;bottom=160;z=9};
-button7={cls="button";text="Button";left=283;top=296;right=406;bottom=338;z=20};
-button8={cls="button";text="当前会话";left=192;top=128;right=264;bottom=160;z=10};
-button9={cls="button";text="刷写";left=112;top=168;right=184;bottom=200;z=11};
-edit={cls="edit";left=488;top=8;right=744;bottom=424;edge=1;multiline=1;readonly=1;vscroll=1;z=6};
-editPath={cls="edit";left=16;top=16;right=408;bottom=48;edge=1;multiline=1;z=12};
-groupbox={cls="groupbox";text="诊断功能";left=24;top=64;right=272;bottom=216;edge=1;z=2};
+button4={cls="button";text="解锁";left=32;top=168;right=104;bottom=200;z=6};
+button5={cls="button";text="复位";left=112;top=128;right=184;bottom=160;z=7};
+button6={cls="button";text="软件版本号";left=32;top=128;right=104;bottom=160;z=8};
+button7={cls="button";text="一键刷写";left=348;top=276;right=471;bottom=318;z=18};
+button8={cls="button";text="当前会话";left=192;top=88;right=264;bottom=120;z=9};
+button9={cls="button";text="刷写";left=112;top=168;right=184;bottom=200;z=10};
+edit={cls="edit";left=488;top=8;right=744;bottom=424;edge=1;multiline=1;readonly=1;vscroll=1;z=5};
+editPath={cls="edit";left=16;top=16;right=408;bottom=48;edge=1;multiline=1;z=11};
+groupbox={cls="groupbox";text="诊断功能";left=24;top=64;right=272;bottom=210;edge=1;z=2};
 groupbox2={cls="groupbox";text="线路板选择";left=288;top=64;right=456;bottom=144;edge=1;z=1};
-progress={cls="progress";left=24;top=229;right=472;bottom=255;db=1;edge=1;max=100;min=0;z=18};
-radiobutton={cls="radiobutton";text="左板";left=304;top=88;right=352;bottom=112;checked=1;group=1;z=16};
-radiobutton2={cls="radiobutton";text="右板";left=304;top=112;right=352;bottom=136;z=17};
-static={cls="static";text="V0.2_20211224";left=8;top=424;right=128;bottom=448;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=19}
+progress={cls="progress";left=24;top=243;right=472;bottom=269;db=1;edge=1;max=100;min=0;z=16};
+radiobutton={cls="radiobutton";text="左板";left=304;top=88;right=352;bottom=112;checked=1;group=1;z=14};
+radiobutton2={cls="radiobutton";text="右板";left=304;top=112;right=352;bottom=136;z=15};
+static={cls="static";text="V0.3_20211228";left=8;top=424;right=128;bottom=448;font=LOGFONT(h=-16;name='微软雅黑');transparent=1;z=17};
+static2={cls="static";text="0%";left=411;top=206;right=467;bottom=227;align="right";center=1;transparent=1;z=19}
 )
 /*}}*/
 
@@ -29,7 +28,39 @@ import fsys.dlg;
 import console;
 import UserLib;
 var nad = 0x20;
+sanddatastate = 0;
+var Display = function(str){
+	winform.edit.print(str);
+}
+
+var DisplayTable = function(tab,head){
+	var str = "msg "
+	if(type(head) == type(str)){
+		str = head
+	}
+	if(#tab < 1){
+		return ; 
+	}
+	//console.print(tab)
+	for(i=1;#tab;1){
+		
+		str += tostring(tab[i],16)
+		str += " "
+	}
+	Display(str)
+}
+
+var WakeupLIN = function(){
+	LINDevMng.TransmitID(0x00);
+	sleep(10);
+}
+
+
+fileinfo = ""
 winform.button11.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
 	var path = fsys.dlg.open('S19文件|*.sx;*.s19;*.srec|所有文件|*.*||',,,winform);
 	if(io.exist( path )){
 		winform.editPath.text = path;
@@ -51,7 +82,7 @@ winform.button11.oncommand = function(id,event){
 				case "S0"{
 					//S0为文件信息
 					var fileinfobuf = string.slice(str,9,-3);//取出文件信息
-					var fileinfo = "file info:"+string.unhex(fileinfobuf,"")//解码
+					fileinfo = "file info:"+string.unhex(fileinfobuf,"")//解码
 					fileinfo = string.replace(fileinfo,"\z"," ");//替换空字符
 					Display(fileinfo)//显示
 					continue;
@@ -138,7 +169,7 @@ winform.button11.oncommand = function(id,event){
 	blocknum = 1;
 }
 
-AppVerify = function(){
+var AppVerify = function(){
 	import UserLib;
 	if(FlashData == null){
 		Display("请打开正确的烧录文件")
@@ -148,57 +179,76 @@ AppVerify = function(){
 	var data = {nad,0x04,0x34,0x03,crc>>8,crc&0xff,0xff,0xff};
 	LINDevMng.TransmitData(0x3c,data);
 	Display("crc="+tostring(crc,16));
-	data = LINDevMng.ReadID(0x3D);
-	if(data != null){
-		if(data[3]){
-			;
+	var delaytime=0;
+	do{
+		delaytime += 1;
+		win.delay(100);
+		data = LINDevMng.ReadID(0x3D);
+		if(data != null){
+			if(data[3] == 0x74){
+				return 1;
+			}
 		}
-	}
+	}while(delaytime < 3)
+	return 0;
 }
 
-
-Display = function(str){
-	winform.edit.print(str);
-}
-DisplayTable = function(tab,head){
-	var str = "msg "
-	if(type(head) == type(str)){
-		str = head
-	}
-	//console.print(tab)
-	for(i=1;#tab;1){
-		
-		str += tostring(tab[i],16)
-		str += " "
-	}
-	Display(str)
-}
-
-winform.button.oncommand = function(id,event){
+var GotoMode = function(mode){
 	if(LINDevMng == null){
 		return;
 	}
-	var data = {nad,0x02,0x10,0x01,0xff,0xff,0xff,0xff};
+	var data = {nad,0x02,0x10,mode,0xff,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
 }
 
-winform.button2.oncommand = function(id,event){
+var GetMode = function(){
 	if(LINDevMng == null){
 		return;
 	}
-	var data = {nad,0x02,0x10,0x02,0xff,0xff,0xff,0xff};
+	var data = {nad,0x03,0x22,0xF1,0x86,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
+	if(data == null){
+		Display("无响应")
+	}
+	elseif(data[1] = 0x62 && data[2] = 0xF1 && data[3] = 0x86){
+		Display("当前会话: " + tostring(data[4]))
+		return data[4]; 
+	}
+	else {
+		Display("错误")
+		DisplayTable(data,"0x3D:");
+	}
+	return 0;
 }
 
-winform.button3.oncommand = function(id,event){
+var ShowSWVersion = function(){
 	if(LINDevMng == null){
 		return;
 	}
-	var data = {nad,0x02,0x10,0x03,0xff,0xff,0xff,0xff};
+	var data = {nad,0x03,0x22,0xF1,0x94,0xff,0xff,0xff};
+	data = LINDevMng.Transmit3C(data)
+	if(data == null){
+		Display("无响应")
+	}
+	elseif(data[1] = 0x62 && data[2] = 0xF1 && data[3] = 0x94){
+		Display("软件版本: " + UserLib.Ascii2str(table.slice(data,4,9)));
+	}
+	else {
+		Display("错误")
+		DisplayTable(data,"0x3D:");
+	}
+}
+
+
+var ECUReset = function(){
+	if(LINDevMng == null){
+		return;
+	}
+	var data = {nad,0x02,0x11,0x03,0xff,0xff,0xff,0xff};
 	data = LINDevMng.Transmit3C(data)
 }
 
-winform.button4.oncommand = function(id,event){
+var UnlockECU = function(){
 	if(LINDevMng == null){
 		return;
 	}
@@ -221,30 +271,19 @@ winform.button4.oncommand = function(id,event){
 	if(data[1] == 0x67 && data[2] == 0x02){
 		//正确
 		Display("解锁成功");
+		return 0x01; 
 	}
 	else {
 		//错误
 		Display("解锁失败");
 	}
+	return 0;
 }
 
-
-winform.button12.oncommand = function(id,event){
-	var data = {0x01,0x02,0x10,0x02,0xff,0xff,0xff,0xff,
-				0x01,0x02,0x10,0x02,0xff,0xff,0xff,0xb0,
-				0xb0,0x02,0x10,0x02,0xff,0xff,0xff,0xff,};
-	//LINDevMng.Transmit3CBlock(0x20,1,data,24);
-	LINDevMng.ReadID(0x3D);
-}
-
-winform.button13.oncommand = function(id,event){
-	AppVerify();
-}
-
-winform.button9.oncommand = function(id,event){
+var SendData = function(){
 	var alldata = 0;
 	var senddata = 0;
-
+	sanddatastate = 1;
 	for(i=1;#FlashData;1){
 		alldata += #FlashData[i]["data"];
 	}
@@ -253,6 +292,7 @@ winform.button9.oncommand = function(id,event){
 	for(i=1;#FlashData;1){
 		var address = FlashData[i]["address"];
 		var datalen = #FlashData[i]["data"];
+		Display("请求下载");
 		var data = {nad,0x10,0x08,0x34,0x01,address>>16,address>>8,address&0xff};
 		LINDevMng.TransmitData(0x3c,data);
 		sleep(10);
@@ -263,6 +303,7 @@ winform.button9.oncommand = function(id,event){
 		//winform.progress.pos = 300;
 		var blockcount = 1;
 		var blockdata = {}; 
+		Display("开始发送数据");
 		for(j=1;#FlashData[i]["data"];1){
 			table.push(blockdata,FlashData[i]["data"][j]);
 			if(#blockdata >= 64){
@@ -271,13 +312,15 @@ winform.button9.oncommand = function(id,event){
 				table.shift(blockdata,64);
 				blockcount += 1;
 				winform.progress.pos = senddata/64;
+				winform.static2.text = string.format("%.1f %%",(senddata/alldata)*100 )
 				sleep(10);
 				data = LINDevMng.ReadID(0x3D);
 				if(data != null){
 					if(data[3]!=0x76){
 						//失败
 						Display("失败");
-						return ; 
+						sanddatastate = 0;
+						return 0; 
 					}
 				}
 
@@ -290,68 +333,145 @@ winform.button9.oncommand = function(id,event){
 		 
 	}
 	winform.progress.pos = winform.progress.max;
+	winform.static2.text = "100%"
+	sanddatastate = 0;
+	return 1; 
+}
+ 
+
+
+
+
+
+winform.button.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
+	WakeupLIN();
+	GotoMode(0x01);//APP模式
+}
+
+winform.button2.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
+	WakeupLIN();
+	GotoMode(0x02);//Boot模式
+}
+
+
+winform.button4.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
+	WakeupLIN();
+	UnlockECU();
+}
+
+
+winform.button13.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
+	WakeupLIN();
+	AppVerify();
+}
+
+winform.button9.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
+	WakeupLIN();
+	SendData();
 }
 
 winform.radiobutton.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
 	nad = 0x20;
 }
 
 winform.radiobutton2.oncommand = function(id,event){
+	if(sanddatastate == 1){
+		return ; 
+	}
 	nad = 0x21;
 }
 
 winform.button8.oncommand = function(id,event){
-	if(LINDevMng == null){
-		return;
+	if(sanddatastate == 1){
+		return ; 
 	}
-	var data = {nad,0x03,0x22,0xF1,0x86,0xff,0xff,0xff};
-	data = LINDevMng.Transmit3C(data)
-	if(data == null){
-		Display("无响应")
-	}
-	elseif(data[1] = 0x62 && data[2] = 0xF1 && data[3] = 0x86){
-		Display("当前会话: " + tostring(data[4]))
-	}
-	else {
-		Display("错误")
-		DisplayTable(data,"0x3D:");
-	}
+	WakeupLIN();
 	
-	
+	GetMode();
 }
 
 winform.button5.oncommand = function(id,event){
-	if(LINDevMng == null){
-		return;
+	if(sanddatastate == 1){
+		return ; 
 	}
-	var data = {nad,0x02,0x11,0x03,0xff,0xff,0xff,0xff};
-	data = LINDevMng.Transmit3C(data)
+	WakeupLIN();
+	ECUReset();
 }
 
 winform.button6.oncommand = function(id,event){
-	if(LINDevMng == null){
-		return;
+	if(sanddatastate == 1){
+		return ; 
 	}
-	var data = {nad,0x03,0x22,0xF1,0x94,0xff,0xff,0xff};
-	data = LINDevMng.Transmit3C(data)
-	if(data == null){
-		Display("无响应")
-	}
-	elseif(data[1] = 0x62 && data[2] = 0xF1 && data[3] = 0x94){
-		
-		Display("软件版本: " + UserLib.Ascii2str(table.slice(data,4,9)));
-	}
-	else {
-		Display("错误")
-		DisplayTable(data,"0x3D:");
-	}
+	WakeupLIN();
+	ShowSWVersion();
 }
 
 winform.button7.oncommand = function(id,event){
-	var blockdata = {0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55,0x55,0xaa,0xaa,0x55};
-	LINDevMng.Transmit3CBlock(nad,0x25,blockdata,#blockdata);	
-	//var data = {nad,0x}
-	//LINDevMng.TransmitData(0x3C,data)
+	if(sanddatastate == 1){
+		return ; 
+	}
+	WakeupLIN();
+	if(nad == 0x20){
+		if(fileinfo != "file info:DMK_ALV_77_001.srec"){
+			Display("请选择正确的文件");
+			return ;
+		}
+	}
+	elseif(nad == 0x21){
+		if(fileinfo != "file info:DMK_ALV_77_002.srec"){
+			Display("请选择正确的文件");
+			return ; 
+		}
+	}
+	win.delay(100);
+	var ret = GetMode();
+	if(ret == 2){//app模式
+		ECUReset();
+		sleep(100);
+	}
+	elseif(ret == 1){
+	}
+	else {
+		Display("读取当前模式失败，请检查样件状态");
+		return ; 
+	}
+	GotoMode(0x02);
+	Display("进入BOOT模式");
+	ShowSWVersion();
+	win.delay(10);
+	ret = UnlockECU();
+	if(ret == 0){
+		return ; 
+	}
+	ret = SendData();
+	if(ret == 0){
+		return;
+	}
+	ret = AppVerify();
+	if(ret == 1){
+		Display("校验OK，刷写完成");
+		GotoMode(0x01);
+		Display("进入APP模式");
+	}
+	
 }
 
 winform.show();

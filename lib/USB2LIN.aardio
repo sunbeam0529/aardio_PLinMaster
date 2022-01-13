@@ -30,7 +30,7 @@ namespace USB2LIN{
 				import win;
 				DllHandle = null;
 				//win.msgboxErr("加载USB2LIN的DLL失败，请检查USB2XXX.dll和libusb-1.0.dll文件","错误",);
-				//win.msgboxTimeout("加载USB2LIN的DLL失败，请检查USB2XXX.dll和libusb-1.0.dll文件","错误",1000,);
+				win.msgboxTimeout("加载USB2LIN的DLL失败，请检查USB2XXX.dll和libusb-1.0.dll文件","错误",1000,);
 			}
 			//DllHandle = ..raw.loadDll("\USB2XXX.dll")
 			if(DllHandle == null)return 1;
@@ -45,11 +45,16 @@ namespace USB2LIN{
         		return 0; 
         	}
         	var arr_temp = {int value[] = { length = 10/*可以使用变量*/ } }//类似动态数组
-        	USB_ScanDevice = DllHandle.api("USB_ScanDevice","int (struct &)")
-        	HwNum = USB_ScanDevice(arr_temp)
+        	//USB_ScanDevice = DllHandle.api("USB_ScanDevice","int (struct &)")
+        	HwNum = DllHandle.USB_ScanDevice(arr_temp)
         	arr_DevHandle = {}
         	for(i=1;HwNum;1){
-        		arr_DevHandle[i] = arr_temp.value[i]
+        		var devtemp = {};
+        		devtemp.devnum = i;
+        		devtemp.channel = 1;
+        		devtemp.hLINHW = arr_temp.value[i];
+        		devtemp.name = "dev-" + i + ":" + tostring(arr_temp.value[i]);
+        		..table.push(arr_DevHandle,devtemp);
         	}
         	
         	//console.dumpJson(arr_DevHandle)
@@ -68,20 +73,15 @@ namespace USB2LIN{
 			{
 				return 0; 
 			}
-			USB_OpenDevice = DllHandle.api("USB_OpenDevice","int (int)")
-			var ret = USB_OpenDevice(arr_DevHandle[index])
-			//console.print("............OpenDevice............")
-			//console.print("ret = "++ret)
+			var ret = DllHandle.USB_OpenDevice(arr_DevHandle[index].hLINHW)
 			
-			LIN_EX_Init = DllHandle.api("LIN_EX_Init","int (int,BYTE,INT,BYTE)")
-			ret = LIN_EX_Init(arr_DevHandle[index],0,19200,1)
+			ret = DllHandle.LIN_EX_Init(arr_DevHandle[index].hLINHW,0,19200,1)
 			if(ret == -4){
-				closeflag = 1
 				for(i=1;10;1){
-					owner.CloseDevice(arr_DevHandle[index])
+					owner.CloseDevice(arr_DevHandle[index].hLINHW)
 					sleep(1000)
-					USB_OpenDevice(arr_DevHandle[index])
-					ret = LIN_EX_Init(arr_DevHandle[index],0,19200,1)
+					USB_OpenDevice(arr_DevHandle[index].hLINHW)
+					ret = LIN_EX_Init(arr_DevHandle[index].hLINHW,0,19200,1)
 					if(ret == 0)
 					{
 						break;
@@ -89,29 +89,14 @@ namespace USB2LIN{
 				}
 				
 			}
-			else {
-				closeflag = 0
-			}
-			
-			//console.print("............LIN_EX_Init............")
-			//console.print("ret = "++ret)
-			//console.pause()
+
 			
 			if(ret == 0){
-				Hwconnected = arr_DevHandle[index]
-				//console.print("Hwconnected = arr_DevHandle[index] = "++Hwconnected)
-				//console.dump(Hwconnected)
+				Hwconnected = arr_DevHandle[index].hLINHW
 			}
 			else 
 			{
-				//console.print("....................Hwconnected = null ! ")
-				//console.dump(ret)
 				Hwconnected = null
-			}
-			
-			if(closeflag == 1)
-			{
-				//console.pause()
 			}
 			
 			return ret; 
@@ -120,43 +105,21 @@ namespace USB2LIN{
 		GetDeviceInfo = function(){
 			if(Hwconnected == null)
 			{
-				//console.print("硬件未连接")
 				return 0; 
 			}
 			
-			DEV_GetDeviceInfo = DllHandle.api("DEV_GetDeviceInfo","int (int,struct&,string)")
 			var devinfo = ..USB2LIN.DEVICE_INFO()
 			var str = ..raw.buffer(256)
-			var ret = DEV_GetDeviceInfo(Hwconnected,devinfo,str)
-			
-			//console.print(str)
-			//console.dumpJson(devinfo)
-			//console.printf("Firmware Info:");
-			//console.printf("Firmware Name:%s",devinfo.FirmwareName);
-			//console.printf("Firmware Build Date:%s",devinfo.BuildDate);
-			//console.printf("Firmware Version:v%d.%d.%d",(devinfo.FirmwareVersion>>24)&0xFF,(devinfo.FirmwareVersion>>16)&0xFF,devinfo.FirmwareVersion&0xFFFF);
-			//console.printf("Hardware Version:v%d.%d.%d",(devinfo.HardwareVersion>>24)&0xFF,(devinfo.HardwareVersion>>16)&0xFF,devinfo.HardwareVersion&0xFFFF);
-			//console.printf("Firmware Functions:%s",str);
-			//console.printf("Firmware SerialNumber:%08X%08X%08X",devinfo.SerialNumber[1],devinfo.SerialNumber[2],devinfo.SerialNumber[3]);
-			
-			if(closeflag == 1)
-			{
-				//console.print("ret = "++ret)
-				//console.print("Hwconnected = "++Hwconnected)
-				//console.print(str)
-				//console.dumpJson(devinfo)
-				//console.pause()
-			}
+			var ret = DllHandle.DEV_GetDeviceInfo(Hwconnected,devinfo,str)
+			return devinfo;
 		}
 		
 		Output12V = function(en){
 			if(Hwconnected == null)
 			{
-				//console.print("硬件未连接")
 				return 0; 
 			}
-			LIN_EX_CtrlPowerOut = DllHandle.api("LIN_EX_CtrlPowerOut","int (int,BYTE)")
-			LIN_EX_CtrlPowerOut(Hwconnected,en)
+			DllHandle.LIN_EX_CtrlPowerOut(Hwconnected,en)
 		}
 		
 		GetVbatValue = function(){
@@ -165,9 +128,8 @@ namespace USB2LIN{
 				//console.print("硬件未连接")
 				return 0; 
 			}
-			LIN_EX_GetVbatValue = DllHandle.api("LIN_EX_GetVbatValue","int (int,PTR)")
 			var temp = ..raw.buffer(4)
-			LIN_EX_GetVbatValue(Hwconnected,temp)
+			DllHandle.LIN_EX_GetVbatValue(Hwconnected,temp)
 			
 			//测试有问题，待定
 			var vbat = temp[1];
@@ -182,11 +144,9 @@ namespace USB2LIN{
 		WriteID = function(id){
 			if(Hwconnected == null)
 			{
-				//console.print("硬件未连接")
 				return 0; 
 			}
-			LIN_EX_MasterWrite = DllHandle.api("LIN_EX_MasterWrite","int (INT,BYTE,BYTE,ptr,BYTE,BYTE)")
-			LIN_EX_MasterWrite(Hwconnected,0,id,null,0,1)
+			DllHandle.LIN_EX_MasterWrite(Hwconnected,0,id,null,0,1);
 		}
 		
 		WriteData = function(id,data){
@@ -199,14 +159,13 @@ namespace USB2LIN{
 			for(i=1;8;1){
 				txbuf[i] = data[i]
 			}
-			//console.dumpJson(txbuf)
-			LIN_EX_MasterWrite = DllHandle.api("LIN_EX_MasterWrite","int (INT,BYTE,BYTE,ptr,BYTE,BYTE)")
+			
 			if(id == 0x3c)
 			{
-				ret = LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,0)
+				ret = DllHandle.LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,0)
 			}
 			else {
-				ret = LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,1)
+				ret = DllHandle.LIN_EX_MasterWrite(Hwconnected,0,id,txbuf,8,1)
 			}
 			
 			return ret; 
@@ -220,8 +179,7 @@ namespace USB2LIN{
 				return 0; 
 			}
 			var rxbuf = ..raw.buffer(8)
-			LIN_EX_MasterRead = DllHandle.api("LIN_EX_MasterRead","int (INT,BYTE,BYTE,ptr)")
-			var ret = LIN_EX_MasterRead(Hwconnected,0,id,rxbuf)
+			var ret = DllHandle.LIN_EX_MasterRead(Hwconnected,0,id,rxbuf)
 			return ret,rxbuf; 
 		}
 		
@@ -229,23 +187,15 @@ namespace USB2LIN{
 		
 		
 		
-		CloseDevice = function(hwhandle = 0){
+		CloseDevice = function(){
 			//console.print("-----------------CloseDevice ---------")
-			if(hwhandle == 0)
+			if(Hwconnected == null)
 			{
-				hwhandle = arr_DevHandle[1]
+				return; 
 			}
-			USB_CloseDevice = DllHandle.api("USB_CloseDevice","int (int)")
 			try{
-				USB_CloseDevice(hwhandle)
-			}
-			catch(e)
-			{
-				//console.print("hwhandle = "++hwhandle)
-				//console.pause()
-			}
-			
-			
+				DllHandle.USB_CloseDevice(Hwconnected)
+			}			
 		}
 		
 		
